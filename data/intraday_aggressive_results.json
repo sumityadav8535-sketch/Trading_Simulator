@@ -1,0 +1,590 @@
+{
+  "target_daily": 1000.0,
+  "capital": 100000.0,
+  "trading_days": 57,
+  "target_met": false,
+  "top_20": [
+    {
+      "name": "ComboElite 1.25R r7.0% p12 x2/day",
+      "trades": 17,
+      "win_rate": 64.71,
+      "profit_factor": 3.93,
+      "total_return_pct": 2.37,
+      "net_pnl": 2373.83,
+      "max_drawdown_pct": 0.62,
+      "avg_r": 593.46,
+      "final_equity": 102373.83,
+      "params": {
+        "avg_daily_pnl": 593.46,
+        "days_above_1000": 1,
+        "max_daily_pnl": 3013.79,
+        "trading_days": 4,
+        "risk_pct": 7.0,
+        "max_positions": 12,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboElite 1.5R r7.0% p12 x2/day",
+      "trades": 16,
+      "win_rate": 62.5,
+      "profit_factor": 3.76,
+      "total_return_pct": 2.24,
+      "net_pnl": 2237.36,
+      "max_drawdown_pct": 0.62,
+      "avg_r": 559.34,
+      "final_equity": 102237.36,
+      "params": {
+        "avg_daily_pnl": 559.34,
+        "days_above_1000": 1,
+        "max_daily_pnl": 2877.32,
+        "trading_days": 4,
+        "risk_pct": 7.0,
+        "max_positions": 12,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboElite 1.25R r10.0% p15 x3/day",
+      "trades": 20,
+      "win_rate": 60.0,
+      "profit_factor": 2.28,
+      "total_return_pct": 1.97,
+      "net_pnl": 1966.62,
+      "max_drawdown_pct": 0.62,
+      "avg_r": 491.65,
+      "final_equity": 101966.62,
+      "params": {
+        "avg_daily_pnl": 491.65,
+        "days_above_1000": 1,
+        "max_daily_pnl": 2606.58,
+        "trading_days": 4,
+        "risk_pct": 10.0,
+        "max_positions": 15,
+        "trades_per_day": 3
+      }
+    },
+    {
+      "name": "ComboElite 1.25R r5.0% p10 x2/day",
+      "trades": 15,
+      "win_rate": 60.0,
+      "profit_factor": 3.34,
+      "total_return_pct": 1.9,
+      "net_pnl": 1897.97,
+      "max_drawdown_pct": 0.62,
+      "avg_r": 474.49,
+      "final_equity": 101897.97,
+      "params": {
+        "avg_daily_pnl": 474.49,
+        "days_above_1000": 1,
+        "max_daily_pnl": 2537.94,
+        "trading_days": 4,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboElite 1.5R r10.0% p15 x3/day",
+      "trades": 19,
+      "win_rate": 57.89,
+      "profit_factor": 2.19,
+      "total_return_pct": 1.83,
+      "net_pnl": 1830.15,
+      "max_drawdown_pct": 0.62,
+      "avg_r": 457.54,
+      "final_equity": 101830.15,
+      "params": {
+        "avg_daily_pnl": 457.54,
+        "days_above_1000": 1,
+        "max_daily_pnl": 2470.11,
+        "trading_days": 4,
+        "risk_pct": 10.0,
+        "max_positions": 15,
+        "trades_per_day": 3
+      }
+    },
+    {
+      "name": "ComboElite 1.5R r5.0% p10 x2/day",
+      "trades": 14,
+      "win_rate": 57.14,
+      "profit_factor": 3.1,
+      "total_return_pct": 1.7,
+      "net_pnl": 1702.97,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 425.74,
+      "final_equity": 101702.97,
+      "params": {
+        "avg_daily_pnl": 425.74,
+        "days_above_1000": 1,
+        "max_daily_pnl": 2342.94,
+        "trading_days": 4,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboElite 1.25R r3.0% p8",
+      "trades": 12,
+      "win_rate": 50.0,
+      "profit_factor": 2.54,
+      "total_return_pct": 1.25,
+      "net_pnl": 1252.83,
+      "max_drawdown_pct": 0.72,
+      "avg_r": 0.0,
+      "final_equity": 101252.83,
+      "params": {
+        "avg_daily_pnl": 21.98,
+        "trading_days": 57,
+        "risk_pct": 3.0,
+        "max_positions": 8,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "ComboElite 1.25R r5.0% p10",
+      "trades": 14,
+      "win_rate": 50.0,
+      "profit_factor": 1.81,
+      "total_return_pct": 1.01,
+      "net_pnl": 1012.9,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101012.9,
+      "params": {
+        "avg_daily_pnl": 17.77,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "ComboElite 1.5R r3.0% p8",
+      "trades": 11,
+      "win_rate": 45.45,
+      "profit_factor": 2.23,
+      "total_return_pct": 1.0,
+      "net_pnl": 999.43,
+      "max_drawdown_pct": 0.71,
+      "avg_r": 0.0,
+      "final_equity": 100999.43,
+      "params": {
+        "avg_daily_pnl": 17.53,
+        "trading_days": 57,
+        "risk_pct": 3.0,
+        "max_positions": 8,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "ComboElite 1.5R r5.0% p10",
+      "trades": 13,
+      "win_rate": 46.15,
+      "profit_factor": 1.61,
+      "total_return_pct": 0.76,
+      "net_pnl": 759.5,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 100759.5,
+      "params": {
+        "avg_daily_pnl": 13.32,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "PowerHour 2.0R r3.0% p8",
+      "trades": 740,
+      "win_rate": 35.68,
+      "profit_factor": 0.72,
+      "total_return_pct": -9.34,
+      "net_pnl": -9342.64,
+      "max_drawdown_pct": 10.47,
+      "avg_r": 0.0,
+      "final_equity": 90657.36,
+      "params": {
+        "avg_daily_pnl": -163.91,
+        "trading_days": 57,
+        "risk_pct": 3.0,
+        "max_positions": 8,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "PowerHour 1.5R r3.0% p8",
+      "trades": 804,
+      "win_rate": 39.43,
+      "profit_factor": 0.7,
+      "total_return_pct": -10.39,
+      "net_pnl": -10392.59,
+      "max_drawdown_pct": 11.4,
+      "avg_r": 0.0,
+      "final_equity": 89607.41,
+      "params": {
+        "avg_daily_pnl": -182.33,
+        "trading_days": 57,
+        "risk_pct": 3.0,
+        "max_positions": 8,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "PowerHour 1.25R r3.0% p8",
+      "trades": 844,
+      "win_rate": 41.0,
+      "profit_factor": 0.64,
+      "total_return_pct": -12.36,
+      "net_pnl": -12364.14,
+      "max_drawdown_pct": 12.83,
+      "avg_r": 0.0,
+      "final_equity": 87635.86,
+      "params": {
+        "avg_daily_pnl": -216.91,
+        "trading_days": 57,
+        "risk_pct": 3.0,
+        "max_positions": 8,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "PowerHour 2.0R r5.0% p10",
+      "trades": 906,
+      "win_rate": 35.43,
+      "profit_factor": 0.68,
+      "total_return_pct": -12.83,
+      "net_pnl": -12834.43,
+      "max_drawdown_pct": 14.04,
+      "avg_r": 0.0,
+      "final_equity": 87165.57,
+      "params": {
+        "avg_daily_pnl": -225.17,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "PowerHour 1.5R r5.0% p10",
+      "trades": 974,
+      "win_rate": 38.71,
+      "profit_factor": 0.65,
+      "total_return_pct": -14.24,
+      "net_pnl": -14244.94,
+      "max_drawdown_pct": 14.92,
+      "avg_r": 0.0,
+      "final_equity": 85755.06,
+      "params": {
+        "avg_daily_pnl": -249.91,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "PowerHour 1.5R r5.0% p10 x2/day",
+      "trades": 1011,
+      "win_rate": 37.98,
+      "profit_factor": 0.67,
+      "total_return_pct": -14.11,
+      "net_pnl": -14113.27,
+      "max_drawdown_pct": 14.44,
+      "avg_r": -252.02,
+      "final_equity": 85886.73,
+      "params": {
+        "avg_daily_pnl": -252.02,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1999.67,
+        "trading_days": 56,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "PowerHour 2.0R r5.0% p10 x2/day",
+      "trades": 932,
+      "win_rate": 34.01,
+      "profit_factor": 0.66,
+      "total_return_pct": -14.35,
+      "net_pnl": -14348.95,
+      "max_drawdown_pct": 14.64,
+      "avg_r": -256.23,
+      "final_equity": 85651.05,
+      "params": {
+        "avg_daily_pnl": -256.23,
+        "days_above_1000": 3,
+        "max_daily_pnl": 2319.25,
+        "trading_days": 56,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "EMA-Mom 1.5R r5.0% p10 x2/day",
+      "trades": 1605,
+      "win_rate": 41.99,
+      "profit_factor": 0.88,
+      "total_return_pct": -14.88,
+      "net_pnl": -14882.15,
+      "max_drawdown_pct": 21.15,
+      "avg_r": -261.09,
+      "final_equity": 85117.85,
+      "params": {
+        "avg_daily_pnl": -261.09,
+        "days_above_1000": 11,
+        "max_daily_pnl": 3729.76,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "PowerHour 1.25R r5.0% p10",
+      "trades": 1018,
+      "win_rate": 40.28,
+      "profit_factor": 0.61,
+      "total_return_pct": -16.16,
+      "net_pnl": -16156.83,
+      "max_drawdown_pct": 16.63,
+      "avg_r": 0.0,
+      "final_equity": 83843.17,
+      "params": {
+        "avg_daily_pnl": -283.45,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 1
+      }
+    },
+    {
+      "name": "PowerHour 1.25R r5.0% p10 x2/day",
+      "trades": 1053,
+      "win_rate": 40.65,
+      "profit_factor": 0.63,
+      "total_return_pct": -16.03,
+      "net_pnl": -16028.01,
+      "max_drawdown_pct": 16.14,
+      "avg_r": -286.21,
+      "final_equity": 83971.99,
+      "params": {
+        "avg_daily_pnl": -286.21,
+        "days_above_1000": 1,
+        "max_daily_pnl": 1684.42,
+        "trading_days": 56,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    }
+  ],
+  "any_day_above_1000": [
+    {
+      "name": "ComboRel 1.0R adx20 r5.0% p10 x2/day",
+      "trades": 4229,
+      "win_rate": 39.3,
+      "profit_factor": 0.46,
+      "total_return_pct": -65.57,
+      "net_pnl": -65566.3,
+      "max_drawdown_pct": 65.76,
+      "avg_r": -1150.29,
+      "final_equity": 34433.7,
+      "params": {
+        "avg_daily_pnl": -1150.29,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1294.99,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx16 r5.0% p10 x2/day",
+      "trades": 3911,
+      "win_rate": 36.97,
+      "profit_factor": 0.51,
+      "total_return_pct": -63.32,
+      "net_pnl": -63315.48,
+      "max_drawdown_pct": 63.71,
+      "avg_r": -1110.8,
+      "final_equity": 36684.52,
+      "params": {
+        "avg_daily_pnl": -1110.8,
+        "days_above_1000": 1,
+        "max_daily_pnl": 1062.27,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx16 r7.0% p12 x2/day",
+      "trades": 4540,
+      "win_rate": 37.22,
+      "profit_factor": 0.51,
+      "total_return_pct": -68.21,
+      "net_pnl": -68207.18,
+      "max_drawdown_pct": 68.5,
+      "avg_r": -1196.62,
+      "final_equity": 31792.82,
+      "params": {
+        "avg_daily_pnl": -1196.62,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1226.71,
+        "trading_days": 57,
+        "risk_pct": 7.0,
+        "max_positions": 12,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx16 r10.0% p15 x3/day",
+      "trades": 5916,
+      "win_rate": 37.47,
+      "profit_factor": 0.52,
+      "total_return_pct": -76.18,
+      "net_pnl": -76176.81,
+      "max_drawdown_pct": 76.49,
+      "avg_r": -1336.44,
+      "final_equity": 23823.19,
+      "params": {
+        "avg_daily_pnl": -1336.44,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1493.88,
+        "trading_days": 57,
+        "risk_pct": 10.0,
+        "max_positions": 15,
+        "trades_per_day": 3
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx18 r5.0% p10 x2/day",
+      "trades": 3819,
+      "win_rate": 37.29,
+      "profit_factor": 0.52,
+      "total_return_pct": -61.46,
+      "net_pnl": -61459.9,
+      "max_drawdown_pct": 61.89,
+      "avg_r": -1078.24,
+      "final_equity": 38540.1,
+      "params": {
+        "avg_daily_pnl": -1078.24,
+        "days_above_1000": 3,
+        "max_daily_pnl": 1376.76,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx18 r7.0% p12 x2/day",
+      "trades": 4447,
+      "win_rate": 36.72,
+      "profit_factor": 0.5,
+      "total_return_pct": -68.26,
+      "net_pnl": -68263.66,
+      "max_drawdown_pct": 68.54,
+      "avg_r": -1197.61,
+      "final_equity": 31736.34,
+      "params": {
+        "avg_daily_pnl": -1197.61,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1192.54,
+        "trading_days": 57,
+        "risk_pct": 7.0,
+        "max_positions": 12,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx18 r10.0% p15 x3/day",
+      "trades": 5845,
+      "win_rate": 37.19,
+      "profit_factor": 0.51,
+      "total_return_pct": -75.63,
+      "net_pnl": -75633.01,
+      "max_drawdown_pct": 75.96,
+      "avg_r": -1326.89,
+      "final_equity": 24366.99,
+      "params": {
+        "avg_daily_pnl": -1326.89,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1248.11,
+        "trading_days": 57,
+        "risk_pct": 10.0,
+        "max_positions": 15,
+        "trades_per_day": 3
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx20 r5.0% p10 x2/day",
+      "trades": 3735,
+      "win_rate": 36.87,
+      "profit_factor": 0.5,
+      "total_return_pct": -62.25,
+      "net_pnl": -62245.26,
+      "max_drawdown_pct": 62.66,
+      "avg_r": -1092.02,
+      "final_equity": 37754.74,
+      "params": {
+        "avg_daily_pnl": -1092.02,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1741.25,
+        "trading_days": 57,
+        "risk_pct": 5.0,
+        "max_positions": 10,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx20 r7.0% p12 x2/day",
+      "trades": 4272,
+      "win_rate": 36.73,
+      "profit_factor": 0.5,
+      "total_return_pct": -66.83,
+      "net_pnl": -66826.69,
+      "max_drawdown_pct": 67.15,
+      "avg_r": -1172.4,
+      "final_equity": 33173.31,
+      "params": {
+        "avg_daily_pnl": -1172.4,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1737.1,
+        "trading_days": 57,
+        "risk_pct": 7.0,
+        "max_positions": 12,
+        "trades_per_day": 2
+      }
+    },
+    {
+      "name": "ComboRel 1.25R adx20 r10.0% p15 x3/day",
+      "trades": 5462,
+      "win_rate": 37.17,
+      "profit_factor": 0.51,
+      "total_return_pct": -73.59,
+      "net_pnl": -73592.87,
+      "max_drawdown_pct": 73.97,
+      "avg_r": -1291.1,
+      "final_equity": 26407.13,
+      "params": {
+        "avg_daily_pnl": -1291.1,
+        "days_above_1000": 2,
+        "max_daily_pnl": 1355.14,
+        "trading_days": 57,
+        "risk_pct": 10.0,
+        "max_positions": 15,
+        "trades_per_day": 3
+      }
+    }
+  ]
+}

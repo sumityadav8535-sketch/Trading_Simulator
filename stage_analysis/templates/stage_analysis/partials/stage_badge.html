@@ -1,0 +1,9 @@
+{% if stage == 1 %}
+<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-medium bg-slate-700 text-slate-200">Stage 1 — Accumulation</span>
+{% elif stage == 2 %}
+<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-medium bg-emerald-900 text-emerald-300">Stage 2 — Advancing</span>
+{% elif stage == 3 %}
+<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-medium bg-amber-900 text-amber-300">Stage 3 — Distribution</span>
+{% elif stage == 4 %}
+<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-medium bg-red-900 text-red-300">Stage 4 — Declining</span>
+{% endif %}

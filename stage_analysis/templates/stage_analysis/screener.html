@@ -1,0 +1,126 @@
+{% extends "trading/base.html" %}
+{% block title %}Stage 2 Screener{% endblock %}
+{% block content %}
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+  <div>
+    <a href="{% url 'stage_analysis:dashboard' %}" class="text-sm text-slate-400 hover:text-emerald-400">← Stage Analysis</a>
+    <h2 class="text-2xl font-bold mt-1">Stage 2 Screener</h2>
+    <p class="text-slate-400 text-sm">Stocks in the <strong class="text-emerald-300">Advancing</strong> phase — Weinstein's ideal buying zone</p>
+  </div>
+  <a href="{% url 'stage_analysis:watchlist' %}" class="text-sm px-3 py-2 rounded bg-slate-800 border border-slate-700">Manage Watchlist ({{ watchlist_count }})</a>
+</div>
+
+<div class="bg-slate-900 border border-emerald-800 rounded-lg p-4 mb-8">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h3 class="font-semibold text-emerald-300">Nifty 200 Stage 2 Scan</h3>
+      <p class="text-sm text-slate-400 mt-1">Scan all Nifty 200 stocks and list those in the advancing phase (price above rising 30-week MA).</p>
+    </div>
+    <a href="{% url 'stage_analysis:screener' %}?nifty200=1"
+       class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2.5 text-sm font-medium whitespace-nowrap">
+      Scan Nifty 200 for Stage 2
+    </a>
+  </div>
+</div>
+
+{% if nifty200_scan %}
+<section class="mb-10">
+  <div class="flex flex-wrap items-baseline gap-3 mb-4">
+    <h3 class="font-semibold text-emerald-300">Nifty 200 — Stage 2 Results</h3>
+    <span class="text-sm text-slate-400">
+      {{ nifty200_scan.stage2_count }} of {{ nifty200_scan.scanned }} scanned
+      {% if nifty200_scan.skipped %}· {{ nifty200_scan.skipped }} skipped{% endif %}
+    </span>
+  </div>
+
+  {% if nifty200_scan.stage2 %}
+  <div class="overflow-x-auto mb-4">
+    <table class="w-full text-sm">
+      <thead class="text-slate-400 border-b border-slate-700">
+        <tr>
+          <th class="text-left py-2">Symbol</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>30W MA</th>
+          <th>vs MA</th>
+          <th>MA Slope</th>
+          <th>Breakout</th>
+          <th>Stop</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in nifty200_scan.stage2 %}
+        <tr class="border-b border-slate-800 hover:bg-slate-900/50">
+          <td class="py-2">
+            <a href="{% url 'stage_analysis:stock_detail' ticker=row.ticker %}" class="text-emerald-400 hover:underline font-medium">{{ row.ticker }}</a>
+          </td>
+          <td class="text-slate-400 text-xs max-w-[12rem] truncate">{{ row.company_name }}</td>
+          <td class="text-center">{{ row.current_price|floatformat:2 }}</td>
+          <td class="text-center text-blue-400">{{ row.ma_30w|floatformat:2 }}</td>
+          <td class="text-center text-emerald-400">{{ row.price_vs_ma_pct|floatformat:1 }}%</td>
+          <td class="text-center">{{ row.ma_slope_pct|floatformat:1 }}%</td>
+          <td class="text-center">{{ row.breakout_level|floatformat:2 }}</td>
+          <td class="text-center text-red-400">{{ row.stop_loss|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 text-center">
+    <p class="text-slate-400">No Nifty 200 stocks are in Stage 2 at the moment.</p>
+  </div>
+  {% endif %}
+
+  {% if nifty200_scan.errors %}
+  <details class="text-xs text-slate-500 mt-2">
+    <summary class="cursor-pointer">{{ nifty200_scan.errors|length }} symbol{{ nifty200_scan.errors|length|pluralize }} could not be analyzed</summary>
+    <ul class="mt-2 space-y-1">
+      {% for sym, err in nifty200_scan.errors %}
+      <li>{{ sym }}: {{ err }}</li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% endif %}
+</section>
+{% endif %}
+
+<section>
+  <h3 class="font-semibold text-slate-300 mb-4">Watchlist — Stage 2</h3>
+
+  {% if stage2_items %}
+  <p class="text-sm text-emerald-300 mb-4">{{ stage2_items|length }} watchlist stock{{ stage2_items|length|pluralize }} in Stage 2</p>
+  <div class="space-y-4">
+    {% for row in stage2_items %}
+    <div class="bg-slate-900 border border-emerald-800 rounded-lg p-4">
+      <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+        <h3 class="font-bold text-lg">
+          <a href="{% url 'stage_analysis:stock_detail' ticker=row.item.ticker %}" class="text-emerald-400">{{ row.item.ticker }}</a>
+          <span class="text-sm font-normal text-slate-400 ml-2">{{ row.item.company_name }}</span>
+        </h3>
+        {% include "stage_analysis/partials/stage_badge.html" with stage=2 %}
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-sm">
+        <div>Price: <strong>{{ row.analysis.current_price }}</strong></div>
+        <div>30W MA: <strong class="text-blue-400">{{ row.analysis.ma_30w }}</strong></div>
+        <div>vs MA: <strong class="text-emerald-400">{{ row.analysis.price_vs_ma_pct|floatformat:1 }}%</strong></div>
+        <div>Breakout: <strong>{{ row.analysis.breakout_level }}</strong></div>
+        <div>Stop: <strong class="text-red-400">{{ row.analysis.stop_loss }}</strong></div>
+      </div>
+      <p class="text-xs text-emerald-300/80 mt-2">{{ row.analysis.suggested_action }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 text-center">
+    <p class="text-slate-400 mb-2">No Stage 2 stocks in your watchlist.</p>
+    <p class="text-sm text-slate-500 mb-4">Use the Nifty 200 scan above, or add individual tickers to your watchlist.</p>
+    <a href="{% url 'stage_analysis:watchlist' %}" class="inline-block bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded px-6 py-2 text-sm">Go to Watchlist</a>
+  </div>
+  {% endif %}
+</section>
+
+<div class="mt-8">
+  {% include "stage_analysis/partials/stage_education.html" %}
+</div>
+{% endblock %}

@@ -1,0 +1,466 @@
+{% extends "trading/base.html" %}
+{% block title %}Intraday — Nifty 100{% endblock %}
+{% block content %}
+<div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-2xl font-bold">Intraday — Nifty 100</h2>
+    <p class="text-slate-400 text-sm mt-1">
+      Live NSE intraday quotes for all Nifty 100 constituents. Data via yfinance, refreshes every 30s.
+    </p>
+  </div>
+  <div class="flex items-center gap-3 text-sm">
+    <span id="live-status" class="px-3 py-1.5 rounded-full text-xs font-medium
+      {% if market.status == 'open' %}bg-emerald-900/60 text-emerald-300 border border-emerald-700
+      {% elif market.status == 'pre_open' %}bg-amber-900/40 text-amber-300 border border-amber-700
+      {% else %}bg-slate-800 text-slate-400 border border-slate-700{% endif %}">
+      {{ market.message|default:"—" }}
+    </span>
+    <span id="live-clock" class="text-slate-500">{{ market.now_ist }}</span>
+  </div>
+</div>
+
+{% if data_error %}
+<div class="mb-4 px-4 py-3 rounded-lg bg-red-950/50 border border-red-800 text-red-300 text-sm">
+  Data fetch error: {{ data_error }}
+</div>
+{% endif %}
+
+<!-- Index + breadth -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  <div class="md:col-span-2 bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <p class="text-xs text-slate-500 uppercase tracking-wide">Nifty 100 Index</p>
+    <div class="flex items-end gap-3 mt-1">
+      <span id="index-ltp" class="text-3xl font-bold text-emerald-300">{% if index.ltp %}{{ index.ltp }}{% else %}—{% endif %}</span>
+      <span id="index-change" class="text-sm mb-1 {% if index.change_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">
+        {% if index.change_pct %}{{ index.change_pct }}% ({{ index.change }}){% endif %}
+      </span>
+    </div>
+    <div id="index-ohlc" class="grid grid-cols-3 gap-2 text-xs text-slate-400 mt-3">
+      {% if index.open %}
+      <span>Open <strong class="text-slate-200">{{ index.open }}</strong></span>
+      <span>High <strong class="text-emerald-400">{{ index.high }}</strong></span>
+      <span>Low <strong class="text-red-400">{{ index.low }}</strong></span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <p class="text-xs text-slate-500 uppercase tracking-wide">Market Breadth</p>
+    <div id="breadth-stats" class="mt-2 space-y-1 text-sm">
+      <div><span class="text-emerald-400 font-semibold" id="advancers">{{ advancers }}</span> <span class="text-slate-400">advancing</span></div>
+      <div><span class="text-red-400 font-semibold" id="decliners">{{ decliners }}</span> <span class="text-slate-400">declining</span></div>
+      <div><span class="text-slate-300 font-semibold" id="unchanged">{{ unchanged }}</span> <span class="text-slate-400">unchanged</span></div>
+    </div>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <p class="text-xs text-slate-500 uppercase tracking-wide">Universe</p>
+    <p class="text-2xl font-bold mt-1" id="symbol-count">{{ symbol_count }}</p>
+    <p class="text-xs text-slate-500 mt-1">Nifty 100 stocks</p>
+    <p class="text-xs text-slate-500 mt-2" id="updated-at">Updated {{ updated_at|default:"—" }}</p>
+  </div>
+</div>
+
+<!-- Top movers -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <h3 class="text-sm font-semibold text-emerald-400 mb-3">Top Gainers</h3>
+    <div id="top-gainers" class="space-y-2 text-sm">
+      {% for q in gainers %}
+      <div class="flex justify-between">
+        <a href="?symbol={{ q.symbol }}&interval={{ interval }}&sort={{ sort_key }}" class="text-emerald-300 hover:underline">{{ q.symbol }}</a>
+        <span class="text-emerald-400">+{{ q.change_pct }}%</span>
+      </div>
+      {% empty %}
+      <p class="text-slate-500">No data</p>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <h3 class="text-sm font-semibold text-red-400 mb-3">Top Losers</h3>
+    <div id="top-losers" class="space-y-2 text-sm">
+      {% for q in losers %}
+      <div class="flex justify-between">
+        <a href="?symbol={{ q.symbol }}&interval={{ interval }}&sort={{ sort_key }}" class="text-red-300 hover:underline">{{ q.symbol }}</a>
+        <span class="text-red-400">{{ q.change_pct }}%</span>
+      </div>
+      {% empty %}
+      <p class="text-slate-500">No data</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<form method="get" id="intraday-filters" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-4 flex flex-wrap gap-4 items-end text-sm">
+  <label>Interval
+    <select name="interval" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+      {% for val, label in form.fields.interval.choices %}
+      <option value="{{ val }}" {% if interval == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Sort by
+    <select name="sort" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+      {% for val, label in form.fields.sort.choices %}
+      <option value="{{ val }}" {% if sort_key == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Symbol
+    <input type="text" name="symbol" value="{{ selected_symbol }}" placeholder="e.g. RELIANCE"
+           class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-36 uppercase">
+  </label>
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-5 py-2 font-medium">Apply</button>
+  <button type="button" id="refresh-now" class="bg-slate-700 hover:bg-slate-600 rounded px-5 py-2">Refresh now</button>
+  <button type="button" id="btn-fetch-history"
+          class="bg-indigo-700 hover:bg-indigo-600 rounded px-5 py-2 font-medium"
+          title="Download missing 5m bars for Nifty 100 + F&amp;O indices through today">
+    Fetch history to today
+  </button>
+  <div class="flex flex-col gap-0.5 self-center min-w-[14rem]">
+    <span id="history-coverage" class="text-xs text-slate-500">
+      Stored 5m:
+      equities {% if history_coverage.equities.last_date %}→ {{ history_coverage.equities.last_date }}{% else %}none{% endif %}
+      · F&amp;O {% if history_coverage.fno.instruments.NIFTY.last_date %}→ {{ history_coverage.fno.instruments.NIFTY.last_date }}{% else %}none{% endif %}
+    </span>
+    <span id="history-sync-status" class="text-xs text-slate-400"></span>
+  </div>
+</form>
+{% csrf_token %}
+
+<!-- Live table -->
+<div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden mb-6">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm" id="quotes-table">
+      <thead class="text-slate-400 border-b border-slate-800 bg-slate-900/80">
+        <tr>
+          <th class="p-3 text-left">Symbol</th>
+          <th class="p-3 text-left hidden lg:table-cell">Company</th>
+          <th class="p-3 text-right">LTP</th>
+          <th class="p-3 text-right">Change</th>
+          <th class="p-3 text-right">Change %</th>
+          <th class="p-3 text-right hidden md:table-cell">Open</th>
+          <th class="p-3 text-right hidden md:table-cell">High</th>
+          <th class="p-3 text-right hidden md:table-cell">Low</th>
+          <th class="p-3 text-right hidden sm:table-cell">Volume</th>
+          <th class="p-3 text-right hidden xl:table-cell">Last bar</th>
+        </tr>
+      </thead>
+      <tbody id="quotes-body">
+        {% for q in quotes %}
+        <tr class="border-b border-slate-800/80 hover:bg-slate-800/40 cursor-pointer quote-row {% if selected_symbol == q.symbol %}bg-slate-800/60{% endif %}"
+            data-symbol="{{ q.symbol }}">
+          <td class="p-3 font-medium text-emerald-300">{{ q.symbol }}</td>
+          <td class="p-3 text-slate-400 hidden lg:table-cell max-w-[200px] truncate">{{ q.name }}</td>
+          <td class="p-3 text-right font-mono">{{ q.ltp }}</td>
+          <td class="p-3 text-right font-mono {% if q.change >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">
+            {% if q.change >= 0 %}+{% endif %}{{ q.change }}
+          </td>
+          <td class="p-3 text-right font-mono {% if q.change_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">
+            {% if q.change_pct >= 0 %}+{% endif %}{{ q.change_pct }}%
+          </td>
+          <td class="p-3 text-right font-mono hidden md:table-cell text-slate-300">{{ q.open }}</td>
+          <td class="p-3 text-right font-mono hidden md:table-cell text-emerald-400/80">{{ q.high }}</td>
+          <td class="p-3 text-right font-mono hidden md:table-cell text-red-400/80">{{ q.low }}</td>
+          <td class="p-3 text-right font-mono hidden sm:table-cell text-slate-400">{{ q.volume|floatformat:0 }}</td>
+          <td class="p-3 text-right hidden xl:table-cell text-slate-500">{{ q.last_bar_time|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="10" class="p-8 text-center text-slate-500">Loading quotes…</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Intraday chart -->
+<section class="bg-slate-900 border border-slate-800 rounded-lg p-4 md:p-6">
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <h3 class="text-lg font-semibold text-emerald-300" id="chart-title">
+      {% if selected_symbol %}{{ selected_symbol }} — {{ interval }} chart{% else %}Select a symbol for intraday chart{% endif %}
+    </h3>
+    {% if selected_symbol %}
+    <a href="{% url 'chart' %}?symbol={{ selected_symbol }}" class="text-xs text-slate-400 hover:text-emerald-300">Open daily chart →</a>
+    {% endif %}
+  </div>
+  <div id="intraday-chart" class="w-full" style="min-height:420px">
+    {% if chart_json %}
+    <div id="chart-mount"></div>
+    {% else %}
+    <p class="text-slate-500 text-sm py-16 text-center">Click any row or enter a symbol above to view the intraday candlestick chart.</p>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+(function() {
+  const quotesApi = "{% url 'intraday_quotes_api' %}";
+  const chartApiBase = "{% url 'intraday_chart_api' symbol='PLACEHOLDER' %}".replace("PLACEHOLDER", "");
+  const interval = "{{ interval }}";
+  const sortKey = "{{ sort_key }}";
+  let selectedSymbol = "{{ selected_symbol|escapejs }}";
+  let refreshTimer = null;
+
+  function fmtNum(n) {
+    if (n === null || n === undefined) return "—";
+    return Number(n).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  }
+
+  function fmtVol(n) {
+    if (!n) return "0";
+    return Number(n).toLocaleString("en-IN", { maximumFractionDigits: 0 });
+  }
+
+  function sortQuotes(quotes) {
+    const copy = [...quotes];
+    if (sortKey === "symbol") copy.sort((a, b) => a.symbol.localeCompare(b.symbol));
+    else if (sortKey === "ltp") copy.sort((a, b) => b.ltp - a.ltp);
+    else if (sortKey === "volume") copy.sort((a, b) => b.volume - a.volume);
+    else copy.sort((a, b) => b.change_pct - a.change_pct);
+    return copy;
+  }
+
+  function renderMovers(quotes) {
+    const sorted = [...quotes].sort((a, b) => b.change_pct - a.change_pct);
+    const gainers = sorted.slice(0, 5);
+    const losers = [...quotes].sort((a, b) => a.change_pct - b.change_pct).slice(0, 5);
+
+    document.getElementById("top-gainers").innerHTML = gainers.map(q => `
+      <div class="flex justify-between">
+        <a href="?symbol=${q.symbol}&interval=${interval}&sort=${sortKey}" class="text-emerald-300 hover:underline">${q.symbol}</a>
+        <span class="text-emerald-400">+${q.change_pct}%</span>
+      </div>
+    `).join("") || '<p class="text-slate-500">No data</p>';
+
+    document.getElementById("top-losers").innerHTML = losers.map(q => `
+      <div class="flex justify-between">
+        <a href="?symbol=${q.symbol}&interval=${interval}&sort=${sortKey}" class="text-red-300 hover:underline">${q.symbol}</a>
+        <span class="text-red-400">${q.change_pct}%</span>
+      </div>
+    `).join("") || '<p class="text-slate-500">No data</p>';
+  }
+
+  function renderQuotes(quotes) {
+    const sorted = sortQuotes(quotes);
+    const tbody = document.getElementById("quotes-body");
+    if (!sorted.length) {
+      tbody.innerHTML = '<tr><td colspan="10" class="p-8 text-center text-slate-500">No live data available.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = sorted.map(q => {
+      const pos = q.change_pct >= 0;
+      const sel = q.symbol === selectedSymbol ? "bg-slate-800/60" : "";
+      return `
+        <tr class="border-b border-slate-800/80 hover:bg-slate-800/40 cursor-pointer quote-row ${sel}" data-symbol="${q.symbol}">
+          <td class="p-3 font-medium text-emerald-300">${q.symbol}</td>
+          <td class="p-3 text-slate-400 hidden lg:table-cell max-w-[200px] truncate">${q.name || ""}</td>
+          <td class="p-3 text-right font-mono">${fmtNum(q.ltp)}</td>
+          <td class="p-3 text-right font-mono ${pos ? "text-emerald-400" : "text-red-400"}">${pos ? "+" : ""}${fmtNum(q.change)}</td>
+          <td class="p-3 text-right font-mono ${pos ? "text-emerald-400" : "text-red-400"}">${pos ? "+" : ""}${q.change_pct}%</td>
+          <td class="p-3 text-right font-mono hidden md:table-cell text-slate-300">${fmtNum(q.open)}</td>
+          <td class="p-3 text-right font-mono hidden md:table-cell text-emerald-400/80">${fmtNum(q.high)}</td>
+          <td class="p-3 text-right font-mono hidden md:table-cell text-red-400/80">${fmtNum(q.low)}</td>
+          <td class="p-3 text-right font-mono hidden sm:table-cell text-slate-400">${fmtVol(q.volume)}</td>
+          <td class="p-3 text-right hidden xl:table-cell text-slate-500">${q.last_bar_time || "—"}</td>
+        </tr>
+      `;
+    }).join("");
+
+    document.querySelectorAll(".quote-row").forEach(row => {
+      row.addEventListener("click", () => loadChart(row.dataset.symbol));
+    });
+  }
+
+  function updateHeader(data) {
+    const m = data.market || {};
+    const idx = data.index || {};
+    const statusEl = document.getElementById("live-status");
+    if (m.message) {
+      statusEl.textContent = m.message;
+      statusEl.className = "px-3 py-1.5 rounded-full text-xs font-medium " + (
+        m.status === "open" ? "bg-emerald-900/60 text-emerald-300 border border-emerald-700" :
+        m.status === "pre_open" ? "bg-amber-900/40 text-amber-300 border border-amber-700" :
+        "bg-slate-800 text-slate-400 border border-slate-700"
+      );
+    }
+    if (m.now_ist) document.getElementById("live-clock").textContent = m.now_ist;
+    if (idx.ltp) {
+      document.getElementById("index-ltp").textContent = fmtNum(idx.ltp);
+      const chg = document.getElementById("index-change");
+      chg.textContent = `${idx.change_pct}% (${idx.change >= 0 ? "+" : ""}${fmtNum(idx.change)})`;
+      chg.className = "text-sm mb-1 " + (idx.change_pct >= 0 ? "text-emerald-400" : "text-red-400");
+      document.getElementById("index-ohlc").innerHTML = `
+        <span>Open <strong class="text-slate-200">${fmtNum(idx.open)}</strong></span>
+        <span>High <strong class="text-emerald-400">${fmtNum(idx.high)}</strong></span>
+        <span>Low <strong class="text-red-400">${fmtNum(idx.low)}</strong></span>
+      `;
+    }
+    document.getElementById("advancers").textContent = data.advancers ?? 0;
+    document.getElementById("decliners").textContent = data.decliners ?? 0;
+    document.getElementById("unchanged").textContent = data.unchanged ?? 0;
+    document.getElementById("symbol-count").textContent = data.symbol_count ?? 0;
+    if (data.updated_at) {
+      const t = new Date(data.updated_at);
+      document.getElementById("updated-at").textContent = "Updated " + t.toLocaleTimeString("en-IN");
+    }
+  }
+
+  function loadChart(symbol) {
+    selectedSymbol = symbol;
+    document.getElementById("chart-title").textContent = symbol + " — " + interval + " chart";
+    const mount = document.getElementById("intraday-chart");
+    mount.innerHTML = '<p class="text-slate-400 text-sm py-16 text-center">Loading chart…</p>';
+
+    const url = chartApiBase + encodeURIComponent(symbol) + "/?interval=" + interval;
+    fetch(url)
+      .then(r => r.json())
+      .then(data => {
+        mount.innerHTML = '<div id="chart-mount" class="w-full" style="min-height:420px"></div>';
+        if (data.chart && data.chart.data) {
+          Plotly.newPlot("chart-mount", data.chart.data, data.chart.layout, { responsive: true });
+        } else {
+          mount.innerHTML = '<p class="text-slate-500 text-sm py-16 text-center">No intraday chart data for ' + symbol + '.</p>';
+        }
+        document.querySelectorAll(".quote-row").forEach(row => {
+          row.classList.toggle("bg-slate-800/60", row.dataset.symbol === symbol);
+        });
+      })
+      .catch(err => {
+        mount.innerHTML = '<p class="text-red-400 text-sm py-16 text-center">Chart error: ' + err.message + '</p>';
+      });
+  }
+
+  function refreshQuotes(force) {
+    const params = new URLSearchParams({ interval });
+    if (force) params.set("refresh", "1");
+    fetch(quotesApi + "?" + params.toString())
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) throw new Error(data.error);
+        updateHeader(data);
+        renderQuotes(data.quotes || []);
+        renderMovers(data.quotes || []);
+      })
+      .catch(err => console.warn("Intraday refresh failed:", err));
+  }
+
+  document.getElementById("refresh-now").addEventListener("click", () => refreshQuotes(true));
+
+  // ---- History backfill (5m pickles through click day) ----
+  const historyStatusApi = "{% url 'intraday_history_status_api' %}";
+  const historySyncApi = "{% url 'intraday_history_sync_api' %}";
+  let historyPollTimer = null;
+
+  function getCsrfToken() {
+    const el = document.querySelector("[name=csrfmiddlewaretoken]");
+    if (el && el.value) return el.value;
+    const m = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : "";
+  }
+
+  function renderHistoryCoverage(cov) {
+    const el = document.getElementById("history-coverage");
+    if (!el || !cov) return;
+    const eq = cov.equities || {};
+    const fno = (cov.fno && cov.fno.instruments) || {};
+    const nifty = (fno.NIFTY && fno.NIFTY.last_date) || "—";
+    el.textContent = "Stored 5m: equities → " + (eq.last_date || "—")
+      + " · F&O → " + nifty
+      + (cov.target_date ? " (target " + cov.target_date + ")" : "");
+  }
+
+  function setHistoryStatus(text, kind) {
+    const el = document.getElementById("history-sync-status");
+    if (!el) return;
+    el.textContent = text || "";
+    el.className = "text-xs " + (
+      kind === "ok" ? "text-emerald-400" :
+      kind === "err" ? "text-red-400" :
+      kind === "run" ? "text-amber-300" :
+      "text-slate-400"
+    );
+  }
+
+  function stopHistoryPoll() {
+    if (historyPollTimer) {
+      clearInterval(historyPollTimer);
+      historyPollTimer = null;
+    }
+  }
+
+  function pollHistoryStatus() {
+    fetch(historyStatusApi)
+      .then(r => r.json())
+      .then(cov => {
+        renderHistoryCoverage(cov);
+        const s = cov.sync || {};
+        const btn = document.getElementById("btn-fetch-history");
+        if (s.running) {
+          const p = s.progress || {};
+          const frac = p.total ? ` ${p.done}/${p.total}` : "";
+          setHistoryStatus((s.message || "Syncing…") + frac, "run");
+          if (btn) btn.disabled = true;
+        } else {
+          if (btn) btn.disabled = false;
+          if (s.error) {
+            setHistoryStatus(s.message || s.error, "err");
+            stopHistoryPoll();
+          } else if (s.finished_at) {
+            setHistoryStatus(s.message || "History up to date", "ok");
+            stopHistoryPoll();
+          }
+        }
+      })
+      .catch(err => setHistoryStatus("Status check failed: " + err.message, "err"));
+  }
+
+  document.getElementById("btn-fetch-history")?.addEventListener("click", () => {
+    const btn = document.getElementById("btn-fetch-history");
+    if (btn) btn.disabled = true;
+    setHistoryStatus("Starting fetch through today…", "run");
+    fetch(historySyncApi, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCsrfToken(),
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then(async r => {
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok && !data.started) {
+          throw new Error(data.error || data.message || ("HTTP " + r.status));
+        }
+        setHistoryStatus(data.message || "Sync running…", "run");
+        stopHistoryPoll();
+        historyPollTimer = setInterval(pollHistoryStatus, 2000);
+        pollHistoryStatus();
+      })
+      .catch(err => {
+        setHistoryStatus("Fetch failed: " + err.message, "err");
+        if (btn) btn.disabled = false;
+      });
+  });
+
+  // Resume UI if a sync is already running
+  pollHistoryStatus();
+
+  document.querySelectorAll(".quote-row").forEach(row => {
+    row.addEventListener("click", () => loadChart(row.dataset.symbol));
+  });
+
+  {% if chart_json %}
+  (function() {
+    const chartData = {{ chart_json|safe }};
+    const mount = document.getElementById("chart-mount");
+    if (mount && chartData) {
+      const parsed = typeof chartData === "string" ? JSON.parse(chartData) : chartData;
+      Plotly.newPlot("chart-mount", parsed.data, parsed.layout, { responsive: true });
+    }
+  })();
+  {% endif %}
+
+  refreshTimer = setInterval(() => refreshQuotes(false), 30000);
+})();
+</script>
+{% endblock %}

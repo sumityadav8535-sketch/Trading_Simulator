@@ -1,0 +1,39 @@
+{% extends "trading/base.html" %}
+{% block title %}Trade Journal{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Trade Journal</h2>
+
+<div class="grid grid-cols-3 gap-4 mb-6 max-w-lg text-sm">
+  <div class="bg-slate-900 border border-slate-800 rounded p-3">Open: <strong>{{ stats.open }}</strong></div>
+  <div class="bg-slate-900 border border-slate-800 rounded p-3">Winners: <strong>{{ stats.winners }}</strong></div>
+  <div class="bg-slate-900 border border-slate-800 rounded p-3">P&amp;L: <strong>₹{{ stats.total_pnl|floatformat:0 }}</strong></div>
+</div>
+
+<form method="post" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="col-span-2 bg-emerald-600 hover:bg-emerald-500 rounded px-4 py-2">Log Trade</button>
+</form>
+
+<div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg">
+  <table class="w-full text-sm">
+    <thead class="text-slate-400 border-b border-slate-700">
+      <tr><th class="p-2 text-left">Stock</th><th>Entry</th><th>Exit</th><th>Qty</th><th>Status</th><th>PnL</th></tr>
+    </thead>
+    <tbody>
+      {% for e in entries %}
+      <tr class="border-b border-slate-800">
+        <td class="p-2">{{ e.stock.symbol }}</td>
+        <td class="text-center">{{ e.entry_date }} @ {{ e.entry_price }}</td>
+        <td class="text-center">{% if e.exit_date %}{{ e.exit_date }} @ {{ e.exit_price }}{% else %}—{% endif %}</td>
+        <td class="text-center">{{ e.quantity }}</td>
+        <td class="text-center">{{ e.status }}</td>
+        <td class="text-center {% if e.pnl and e.pnl >= 0 %}text-emerald-400{% elif e.pnl %}text-red-400{% endif %}">{{ e.pnl|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="p-4 text-slate-500 text-center">No trades logged yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

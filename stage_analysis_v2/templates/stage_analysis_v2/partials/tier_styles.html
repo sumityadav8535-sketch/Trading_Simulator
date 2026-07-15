@@ -1,0 +1,12 @@
+{% comment %}Color tiers: high=strong green, average=light green, base=blue, top=orange, decline=red{% endcomment %}
+{% if tier == "high" or quality_score >= 75 and weekly_stage == 2 %}
+  {% with border_class="border-emerald-500 ring-1 ring-emerald-600" bg_class="bg-emerald-950/40" text_class="text-emerald-300" badge_class="bg-emerald-600 text-white" %}
+{% elif tier == "average" or quality_score >= 50 and weekly_stage == 2 %}
+  {% with border_class="border-emerald-800" bg_class="bg-emerald-950/20" text_class="text-emerald-400/80" badge_class="bg-emerald-900 text-emerald-300" %}
+{% elif weekly_stage == 1 or tier == "base" %}
+  {% with border_class="border-blue-800" bg_class="bg-blue-950/20" text_class="text-blue-300" badge_class="bg-blue-900 text-blue-200" %}
+{% elif weekly_stage == 3 or tier == "top" %}
+  {% with border_class="border-amber-800" bg_class="bg-amber-950/20" text_class="text-amber-300" badge_class="bg-amber-900 text-amber-200" %}
+{% else %}
+  {% with border_class="border-red-800" bg_class="bg-red-950/20" text_class="text-red-300" badge_class="bg-red-900 text-red-200" %}
+{% endif %}

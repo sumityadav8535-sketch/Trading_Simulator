@@ -1,0 +1,34 @@
+{% extends "trading/base.html" %}
+{% block title %}Risk Calculator{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Risk &amp; Position Sizing</h2>
+
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm max-w-3xl">
+  <label>Capital ₹<input type="number" name="capital" value="{{ form.capital.value|default:100000 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+  <label>Risk %<input type="number" step="0.1" name="risk_pct" value="{{ form.risk_pct.value|default:2.0 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+  <label>Entry<input type="number" step="0.01" name="entry_price" value="{{ form.entry_price.value|default:1000 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+  <label>Stop Loss<input type="number" step="0.01" name="stop_loss" value="{{ form.stop_loss.value|default:980 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+  <button type="submit" class="col-span-2 bg-emerald-600 hover:bg-emerald-500 rounded px-4 py-2">Calculate</button>
+</form>
+
+{% if result %}
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <p class="text-slate-400 text-sm">Shares</p>
+    <p class="text-2xl font-bold text-emerald-400">{{ result.position.quantity }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <p class="text-slate-400 text-sm">Risk Amount</p>
+    <p class="text-2xl font-bold">₹{{ result.position.risk_amount|floatformat:0 }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <p class="text-slate-400 text-sm">Capital Deployed</p>
+    <p class="text-2xl font-bold">₹{{ result.position.capital_deployed|floatformat:0 }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <p class="text-slate-400 text-sm">2R Target</p>
+    <p class="text-2xl font-bold text-blue-400">{{ result.target_2r|floatformat:2 }}</p>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

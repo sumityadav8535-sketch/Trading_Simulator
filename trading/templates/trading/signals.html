@@ -1,0 +1,273 @@
+{% extends "trading/base.html" %}
+{% block title %}Signals — {{ strategy_name }}{% endblock %}
+{% block content %}
+<div class="mb-6">
+  <h2 class="text-2xl font-bold text-emerald-400">{{ strategy_name }}</h2>
+  <p class="text-slate-400 text-sm mt-1">Strong/engulfing · 3-bar HL · ADX≥20 · RSI 48–58 · Rs 1L · 2% risk · 2R target · Nifty 200</p>
+</div>
+
+<!-- Nifty 50 context (informational — not used to filter entries) -->
+{% if market_regime %}
+<div class="rounded-lg p-4 mb-6 border border-slate-700 bg-slate-900/80">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <p class="text-xs uppercase tracking-wide text-slate-400 font-semibold">
+        Nifty 50 context (informational only)
+      </p>
+      <p class="text-sm text-slate-200 mt-1">{{ market_regime.message }}</p>
+      <p class="text-xs text-slate-500 mt-1">As of {{ market_regime.eval_date }} · regime filter disabled for entries</p>
+    </div>
+    {% if market_regime.index %}
+    <div class="text-right text-sm">
+      <p class="font-semibold text-slate-200">Nifty 50: {{ market_regime.index.close }}</p>
+      <p class="text-xs text-slate-400">50 EMA: {{ market_regime.index.ema_50 }}{% if market_regime.index.ema_200 %} · 200 EMA: {{ market_regime.index.ema_200 }}{% endif %}</p>
+      <p class="text-xs mt-1 {% if market_regime.index.above_50ema %}text-emerald-400{% else %}text-red-400{% endif %}">
+        {% if market_regime.index.above_50ema %}Above 50 EMA ↑{% else %}Below 50 EMA ↓{% endif %}
+        {% if market_regime.index.above_200ema != None %} · {% if market_regime.index.above_200ema %}above{% else %}below{% endif %} 200 EMA{% endif %}
+      </p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Annual Returns (Rs 1L, 2% risk) -->
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-6">
+  <h3 class="text-lg font-semibold text-emerald-300 mb-2">Annual Returns — Rs {{ tournament_meta.capital|floatformat:0 }}, {{ tournament_meta.risk_pct }}% risk/trade</h3>
+  <p class="text-slate-400 text-xs mb-4">Research snapshot (Jun 2022–Jun 2025, smaller stock universe). Use <strong>Run Backtest</strong> below for fresh results on current data. 30% annual target = Rs 1L → Rs 1.3L.</p>
+  <div class="overflow-x-auto mb-3">
+    <table class="w-full text-sm">
+      <thead class="text-slate-400 border-b border-slate-700">
+        <tr><th class="p-2 text-left">Year</th><th>Period</th><th>Trades</th><th>Win Rate</th><th>Return</th><th>Rs 1L becomes</th><th>30% target</th></tr>
+      </thead>
+      <tbody>
+        {% for a in annual_results %}
+        <tr class="border-b border-slate-800 {% if a.target_30pct %}bg-emerald-950/30{% endif %}">
+          <td class="p-2 font-medium">{{ a.year }}</td>
+          <td class="p-2 text-slate-400 text-xs">{{ a.label }}</td>
+          <td class="text-center">{{ a.trades }}</td>
+          <td class="text-center {% if a.win_rate >= 50 %}text-emerald-400{% else %}text-amber-400{% endif %}">{{ a.win_rate }}%</td>
+          <td class="text-center {% if a.return_pct >= 30 %}text-emerald-400 font-semibold{% elif a.return_pct >= 0 %}text-slate-200{% else %}text-red-400{% endif %}">{{ a.return_pct }}%</td>
+          <td class="text-center">₹{{ a.final_capital|floatformat:0 }}</td>
+          <td class="text-center text-xs">{% if a.target_30pct %}<span class="text-emerald-400">✓ Pass</span>{% else %}<span class="text-amber-400">—</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Walk-Forward Validation -->
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-6">
+  <h3 class="text-lg font-semibold text-emerald-300 mb-2">Walk-Forward Validation</h3>
+  <p class="text-slate-400 text-xs mb-2">{{ walk_forward_meta.note }} · Static research table — not auto-updated.</p>
+  <p class="text-slate-400 text-xs mb-4">In-sample: {{ walk_forward_meta.in_sample }} · Out-of-sample: {{ walk_forward_meta.out_of_sample }}</p>
+  <div class="overflow-x-auto mb-3">
+    <table class="w-full text-sm">
+      <thead class="text-slate-400 border-b border-slate-700">
+        <tr><th class="p-2 text-left">Period</th><th>Signals</th><th>Trades</th><th>Win Rate</th><th>PF</th><th>Return</th><th>Max DD</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for w in walk_forward_results %}
+        <tr class="border-b border-slate-800">
+          <td class="p-2">{{ w.period }} <span class="text-slate-500 text-xs">({{ w.label }})</span></td>
+          <td class="text-center">{{ w.signals }}</td>
+          <td class="text-center">{{ w.trades }}</td>
+          <td class="text-center">{{ w.win_rate }}%</td>
+          <td class="text-center">{{ w.pf }}</td>
+          <td class="text-center {% if w.return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ w.return_pct }}%</td>
+          <td class="text-center text-red-400">{{ w.max_dd }}%</td>
+          <td class="text-center text-xs">{% if w.passed %}<span class="text-emerald-400">✓ Pass</span>{% else %}<span class="text-amber-400">—</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-slate-300">{{ walk_forward_verdict }}</p>
+</div>
+
+<!-- Tournament Results -->
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-6">
+  <h3 class="text-lg font-semibold text-emerald-300 mb-2">3-Year Filter Comparison (22 variants tested)</h3>
+  <p class="text-slate-400 text-xs mb-4">{{ tournament_meta.period }} · {{ tournament_meta.universe }} · Rs {{ tournament_meta.capital|floatformat:0 }} · {{ tournament_meta.rules }}</p>
+  <p class="text-sm text-slate-300 mb-4">{{ champion_description }}</p>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="text-slate-400 border-b border-slate-700">
+        <tr><th class="p-2 text-left">#</th><th>Strategy</th><th>Signals</th><th>Trades</th><th>Win Rate</th><th>PF</th><th>Return</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for r in tournament_rankings %}
+        <tr class="border-b border-slate-800 {% if r.selected %}bg-emerald-950/40{% endif %}">
+          <td class="p-2">{{ r.rank }}</td>
+          <td class="p-2 {% if r.selected %}text-emerald-300 font-medium{% endif %}">{{ r.name }}</td>
+          <td class="text-center">{{ r.signals }}</td>
+          <td class="text-center">{{ r.trades }}</td>
+          <td class="text-center {% if r.win_rate >= 50 %}text-emerald-400{% elif r.win_rate >= 40 %}text-amber-400{% else %}text-red-400{% endif %}">{{ r.win_rate }}%</td>
+          <td class="text-center">{{ r.pf }}</td>
+          <td class="text-center {% if r.return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ r.return_pct }}%</td>
+          <td class="text-center text-xs">{% if r.selected %}✓ Active{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-xs text-slate-500 mt-3">Filter comparison returns use proportional sizing (WR &amp; trade counts are risk-independent). See Annual Returns above for Rs 1L @ 2% risk.</p>
+</div>
+
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm items-end">
+  <label>Start Date<input type="date" name="start_date" value="{{ form.start_date.value|date:'Y-m-d' }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+  <label>End Date<input type="date" name="end_date" value="{{ form.end_date.value|date:'Y-m-d' }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+  <label>Capital ₹<input type="number" name="capital" value="{{ form.capital.value|default:100000 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+  <input type="hidden" name="refresh" value="1">
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2 font-medium h-fit">Run Backtest</button>
+</form>
+
+{% if bt_result %}
+<!-- KPI Cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 text-center">
+    <p class="text-slate-500 text-xs">Signals</p>
+    <p class="text-lg font-bold">{{ bt_result.total_signals }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 text-center">
+    <p class="text-slate-500 text-xs">Trades</p>
+    <p class="text-lg font-bold">{{ bt_result.total_trades }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 text-center">
+    <p class="text-slate-500 text-xs">Win Rate</p>
+    <p class="text-lg font-bold {% if bt_result.win_rate >= 60 %}text-emerald-400{% else %}text-amber-400{% endif %}">{{ bt_result.win_rate }}%</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 text-center">
+    <p class="text-slate-500 text-xs">Profit Factor</p>
+    <p class="text-lg font-bold">{{ bt_result.profit_factor }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 text-center">
+    <p class="text-slate-500 text-xs">Expectancy</p>
+    <p class="text-lg font-bold">{{ bt_result.expectancy_r }}R</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 text-center">
+    <p class="text-slate-500 text-xs">Max DD</p>
+    <p class="text-lg font-bold text-red-400">{{ bt_result.max_drawdown_pct }}%</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 text-center">
+    <p class="text-slate-500 text-xs">Return</p>
+    <p class="text-lg font-bold {% if bt_result.total_return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ bt_result.total_return_pct }}%</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 text-center">
+    <p class="text-slate-500 text-xs">Avg Hold</p>
+    <p class="text-lg font-bold">{{ bt_result.avg_hold_days }}d</p>
+  </div>
+</div>
+
+<!-- Charts Row 1 -->
+<div class="grid md:grid-cols-2 gap-4 mb-4">
+  <div id="equity-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[300px]"></div>
+  <div id="winloss-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[300px]"></div>
+</div>
+
+<!-- Charts Row 2 -->
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+  <div id="exit-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[280px]"></div>
+  <div id="monthly-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[280px]"></div>
+  <div id="drawdown-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[280px]"></div>
+</div>
+
+<!-- Signal History Table -->
+<h3 class="text-lg font-semibold mb-3">Historical Signals ({{ bt_result.signal_history|length }})</h3>
+<p class="text-slate-500 text-xs mb-3">All signals generated in the backtest period — use this list to manually verify each setup on charts.</p>
+<div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg mb-6 max-h-[500px] overflow-y-auto">
+  <table class="w-full text-sm">
+    <thead class="text-slate-400 border-b border-slate-700 sticky top-0 bg-slate-900">
+      <tr>
+        <th class="p-2 text-left">Symbol</th>
+        <th>Signal Date</th>
+        <th>Entry</th>
+        <th>Stop</th>
+        <th>2R Target</th>
+        <th>Path</th>
+        <th>Score</th>
+        <th>Outcome</th>
+        <th>Why win/loss</th>
+        <th>Exit</th>
+        <th>PnL</th>
+        <th>RR</th>
+        <th>Chart</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in bt_result.signal_history %}
+      <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+        <td class="p-2 font-medium">{{ s.symbol }}</td>
+        <td class="text-center text-xs">{{ s.signal_date }}</td>
+        <td class="text-center">{{ s.entry_price }}</td>
+        <td class="text-center text-red-400">{{ s.stop_loss }}</td>
+        <td class="text-center text-blue-400">{{ s.target_2r }}</td>
+        <td class="text-center text-xs text-slate-400">{{ s.entry_path|default:"—" }}</td>
+        <td class="text-center">{{ s.confluence_score }}</td>
+        <td class="text-center">
+          {% if s.outcome == "win" %}<span class="text-emerald-400">WIN</span>
+          {% elif s.outcome == "loss" %}<span class="text-red-400">LOSS</span>
+          {% else %}<span class="text-slate-500">—</span>{% endif %}
+        </td>
+        <td class="p-2 text-xs text-slate-300 max-w-xs" title="{{ s.outcome_detail|default:'' }}">
+          {% if s.outcome_detail %}{{ s.outcome_detail }}
+          {% elif s.exit_reason %}{{ s.exit_reason }}
+          {% else %}<span class="text-slate-500">—</span>{% endif %}
+        </td>
+        <td class="text-center text-xs">{{ s.exit_date|default:"—" }} {% if s.exit_price %}@ {{ s.exit_price }}{% endif %}{% if s.actual_entry_price %} <span class="text-slate-500">(in {{ s.actual_entry_price }})</span>{% endif %}</td>
+        <td class="text-center {% if s.pnl > 0 %}text-emerald-400{% elif s.pnl < 0 %}text-red-400{% endif %}">{{ s.pnl|default:"—" }}</td>
+        <td class="text-center">{{ s.rr_achieved|default:"—" }}</td>
+        <td class="text-center"><a href="{% url 'chart' %}?symbol={{ s.symbol }}" class="text-emerald-400 hover:underline text-xs">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Trade Log -->
+{% if bt_result.trades %}
+<h3 class="text-lg font-semibold mb-3">Executed Trades</h3>
+<div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg">
+  <table class="w-full text-sm">
+    <thead class="text-slate-400 border-b border-slate-700">
+      <tr><th class="p-2 text-left">Symbol</th><th>Signal</th><th>Entry</th><th>Exit</th><th>PnL</th><th>RR</th><th>Why win/loss</th></tr>
+    </thead>
+    <tbody>
+      {% for t in bt_result.trades %}
+      <tr class="border-b border-slate-800">
+        <td class="p-2">{{ t.symbol }}</td>
+        <td class="text-center text-xs">{{ t.signal_date }}</td>
+        <td class="text-center text-xs">{{ t.entry_date }} @ {{ t.entry_price }}</td>
+        <td class="text-center text-xs">{{ t.exit_date }} @ {{ t.exit_price }}</td>
+        <td class="text-center {% if t.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ t.pnl }}</td>
+        <td class="text-center">{{ t.rr_achieved }}</td>
+        <td class="p-2 text-xs text-slate-300 max-w-xs">{% if t.outcome_detail %}{{ t.outcome_detail }}{% else %}{{ t.exit_reason }}{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% if charts.equity %}
+<script>
+  const eq = {{ charts.equity|safe }};
+  const wl = {{ charts.win_loss|safe }};
+  const ex = {{ charts.exits|safe }};
+  const mo = {{ charts.monthly|safe }};
+  const dd = {{ charts.drawdown|safe }};
+  Plotly.newPlot('equity-chart', eq.data, eq.layout, {responsive: true});
+  Plotly.newPlot('winloss-chart', wl.data, wl.layout, {responsive: true});
+  Plotly.newPlot('exit-chart', ex.data, ex.layout, {responsive: true});
+  Plotly.newPlot('monthly-chart', mo.data, mo.layout, {responsive: true});
+  Plotly.newPlot('drawdown-chart', dd.data, dd.layout, {responsive: true});
+</script>
+{% endif %}
+
+{% else %}
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-8 text-center text-slate-400">
+  <p>Click <strong class="text-white">Run Backtest</strong> to generate the full signal history and dashboard.</p>
+</div>
+{% endif %}
+{% endblock %}

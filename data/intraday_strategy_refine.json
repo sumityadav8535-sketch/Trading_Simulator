@@ -1,0 +1,671 @@
+{
+  "high_win_rate": [
+    {
+      "name": "Combo 1.25R adx18 r1.0% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx18 r1.5% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx20 r1.0% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx20 r1.5% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx18 r1.0% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx18 r1.5% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx20 r1.0% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx20 r1.5% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx18 r1.0% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx18 r1.5% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx20 r1.0% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx20 r1.5% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    }
+  ],
+  "profitable": [
+    {
+      "name": "Combo 1.0R adx18 r1.0% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx18 r1.5% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx20 r1.0% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx20 r1.5% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx18 r1.0% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx18 r1.5% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx20 r1.0% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx20 r1.5% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx18 r1.0% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx18 r1.5% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx20 r1.0% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx20 r1.5% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    }
+  ],
+  "best_pnl": [
+    {
+      "name": "Combo 1.25R adx18 r1.0% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx18 r1.5% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx20 r1.0% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.25R adx20 r1.5% p5",
+      "trades": 9,
+      "win_rate": 55.56,
+      "profit_factor": 3.05,
+      "total_return_pct": 1.33,
+      "net_pnl": 1332.69,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101332.69,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx18 r1.0% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx18 r1.5% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx20 r1.0% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.0R adx20 r1.5% p5",
+      "trades": 12,
+      "win_rate": 66.67,
+      "profit_factor": 2.92,
+      "total_return_pct": 1.25,
+      "net_pnl": 1245.91,
+      "max_drawdown_pct": 0.64,
+      "avg_r": 0.0,
+      "final_equity": 101245.91,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx18 r1.0% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx18 r1.5% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx20 r1.0% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo 1.5R adx20 r1.5% p5",
+      "trades": 8,
+      "win_rate": 50.0,
+      "profit_factor": 2.66,
+      "total_return_pct": 1.08,
+      "net_pnl": 1079.29,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 101079.29,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "RSI-Rev 1.25R r1.0% p5",
+      "trades": 106,
+      "win_rate": 47.17,
+      "profit_factor": 0.89,
+      "total_return_pct": -1.02,
+      "net_pnl": -1022.71,
+      "max_drawdown_pct": 2.6,
+      "avg_r": 0.0,
+      "final_equity": 98977.29,
+      "params": {
+        "family": "rsi",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "RSI-Rev 1.25R r1.5% p5",
+      "trades": 106,
+      "win_rate": 47.17,
+      "profit_factor": 0.89,
+      "total_return_pct": -1.02,
+      "net_pnl": -1022.71,
+      "max_drawdown_pct": 2.6,
+      "avg_r": 0.0,
+      "final_equity": 98977.29,
+      "params": {
+        "family": "rsi",
+        "risk_pct": 1.5,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "RSI-Rev 1.0R r1.0% p5",
+      "trades": 106,
+      "win_rate": 50.94,
+      "profit_factor": 0.86,
+      "total_return_pct": -1.18,
+      "net_pnl": -1177.97,
+      "max_drawdown_pct": 2.23,
+      "avg_r": 0.0,
+      "final_equity": 98822.03,
+      "params": {
+        "family": "rsi",
+        "risk_pct": 1.0,
+        "max_positions": 5,
+        "market_filter": false
+      }
+    }
+  ]
+}

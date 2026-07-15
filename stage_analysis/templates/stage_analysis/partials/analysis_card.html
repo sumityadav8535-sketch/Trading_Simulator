@@ -1,0 +1,43 @@
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+  <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
+    <div>
+      <h3 class="font-bold text-lg">
+        <a href="{% url 'stage_analysis:stock_detail' ticker=result.ticker %}" class="text-emerald-400 hover:underline">{{ result.ticker }}</a>
+        <span class="text-sm font-normal text-slate-400 ml-2">{{ result.company_name }}</span>
+      </h3>
+      <p class="text-2xl font-bold mt-1">{{ result.current_price|floatformat:2 }}</p>
+    </div>
+    {% include "stage_analysis/partials/stage_badge.html" with stage=result.stage %}
+  </div>
+
+  <p class="text-sm text-slate-300 mb-3">{{ result.stage_description }}</p>
+  <p class="text-sm font-medium text-emerald-300 mb-4">{{ result.suggested_action }}</p>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-4">
+    <div class="bg-slate-800/50 rounded p-2">
+      <p class="text-slate-500 text-xs">30-Week MA</p>
+      <p class="font-semibold">{{ result.ma_30w|floatformat:2 }}</p>
+    </div>
+    <div class="bg-slate-800/50 rounded p-2">
+      <p class="text-slate-500 text-xs">vs MA</p>
+      <p class="font-semibold {% if result.price_vs_ma_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ result.price_vs_ma_pct|floatformat:1 }}%</p>
+    </div>
+    <div class="bg-slate-800/50 rounded p-2">
+      <p class="text-slate-500 text-xs">Breakout</p>
+      <p class="font-semibold text-blue-400">{{ result.breakout_level|floatformat:2 }}</p>
+    </div>
+    <div class="bg-slate-800/50 rounded p-2">
+      <p class="text-slate-500 text-xs">Stop Loss</p>
+      <p class="font-semibold text-red-400">{{ result.stop_loss|floatformat:2 }}</p>
+    </div>
+  </div>
+
+  <details class="text-xs text-slate-400">
+    <summary class="cursor-pointer text-slate-300 hover:text-emerald-300">Why this stage?</summary>
+    <ul class="mt-2 space-y-1 list-disc list-inside">
+      {% for reason in result.reasons %}
+      <li>{{ reason }}</li>
+      {% endfor %}
+    </ul>
+  </details>
+</div>

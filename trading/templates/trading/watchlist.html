@@ -1,0 +1,30 @@
+{% extends "trading/base.html" %}
+{% block title %}Watchlist{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Watchlist</h2>
+
+<form method="post" class="flex gap-4 mb-6 text-sm">
+  {% csrf_token %}
+  <input type="text" name="symbol" placeholder="RELIANCE" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" required>
+  <input type="text" name="notes" placeholder="Notes (optional)" class="bg-slate-800 border border-slate-700 rounded px-3 py-2">
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-4 py-2">Add</button>
+</form>
+
+<div class="space-y-3">
+  {% for s in statuses %}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 flex justify-between items-center">
+    <div>
+      <a href="{% url 'chart' %}?symbol={{ s.item.stock.symbol }}" class="font-bold text-emerald-400">{{ s.item.stock.symbol }}</a>
+      <span class="text-sm text-slate-400 ml-2">Score {{ s.eval.confluence_score }}/10</span>
+      {% if s.eval.is_valid %}<span class="text-xs bg-emerald-900 text-emerald-300 px-2 py-0.5 rounded ml-2">A+</span>{% endif %}
+      {% if s.item.notes %}<p class="text-xs text-slate-500 mt-1">{{ s.item.notes }}</p>{% endif %}
+    </div>
+    <form method="post" action="{% url 'watchlist_remove' s.item.pk %}">{% csrf_token %}
+      <button type="submit" class="text-red-400 text-sm hover:underline">Remove</button>
+    </form>
+  </div>
+  {% empty %}
+  <p class="text-slate-500">Watchlist empty. Add symbols above.</p>
+  {% endfor %}
+</div>
+{% endblock %}

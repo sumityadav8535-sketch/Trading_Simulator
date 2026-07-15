@@ -1,0 +1,401 @@
+{% extends "trading/base.html" %}
+{% block title %}Paper Trading — F&O Simulator{% endblock %}
+{% block content %}
+<div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-2xl font-bold">Paper Trading</h2>
+    <p class="text-slate-400 text-sm mt-1">
+      Fake money · real market prices · auto orders on <span class="text-emerald-400">{{ dash.strategy_name }}</span>.
+      Forward-test for weeks/months before live capital.
+    </p>
+  </div>
+  <div class="flex items-center gap-3 text-sm">
+    <span id="mkt-status" class="px-3 py-1.5 rounded-full text-xs font-medium
+      {% if dash.market.status == 'open' %}bg-emerald-900/60 text-emerald-300 border border-emerald-700
+      {% elif dash.market.status == 'pre_open' %}bg-amber-900/40 text-amber-300 border border-amber-700
+      {% else %}bg-slate-800 text-slate-400 border border-slate-700{% endif %}">
+      {{ dash.market.message }}
+    </span>
+    <span id="mkt-clock" class="text-slate-500">{{ dash.market.now_ist }}</span>
+  </div>
+</div>
+
+{% csrf_token %}
+
+{# —— Account strip —— #}
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6 text-sm">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 col-span-2">
+    <p class="text-xs text-slate-500">Equity</p>
+    <p id="eq-equity" class="text-2xl font-bold text-emerald-400">₹{{ dash.account.equity|floatformat:0 }}</p>
+    <p class="text-xs text-slate-500 mt-1">Start ₹{{ dash.account.starting_capital|floatformat:0 }} ·
+      <span id="eq-ret" class="{% if dash.account.return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">
+        {{ dash.account.return_pct }}%
+      </span>
+    </p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+    <p class="text-xs text-slate-500">Cash</p>
+    <p id="eq-cash" class="text-lg font-semibold">₹{{ dash.account.cash|floatformat:0 }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+    <p class="text-xs text-slate-500">Margin blocked</p>
+    <p id="eq-margin" class="text-lg font-semibold">₹{{ dash.account.margin_blocked|floatformat:0 }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+    <p class="text-xs text-slate-500">Open MTM</p>
+    <p id="eq-mtm" class="text-lg font-semibold {% if dash.account.open_mtm >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">
+      ₹{{ dash.account.open_mtm|floatformat:0 }}
+    </p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+    <p class="text-xs text-slate-500">Realized P&amp;L</p>
+    <p id="eq-realized" class="text-lg font-semibold {% if dash.account.realized_pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">
+      ₹{{ dash.account.realized_pnl|floatformat:0 }}
+    </p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+    <p class="text-xs text-slate-500">Drawdown</p>
+    <p id="eq-dd" class="text-lg font-semibold text-amber-400">{{ dash.account.drawdown_pct }}%</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+    <p class="text-xs text-slate-500">Win rate</p>
+    <p id="eq-wr" class="text-lg font-semibold">{{ dash.stats.win_rate }}% <span class="text-xs text-slate-500">({{ dash.stats.trades }})</span></p>
+  </div>
+</div>
+
+{# —— Controls —— #}
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 flex flex-wrap gap-3 items-end text-sm">
+  <div>
+    <p class="text-xs text-slate-500 mb-1">Auto trade</p>
+    <button type="button" id="btn-auto"
+            class="px-4 py-2 rounded font-medium
+            {% if dash.account.auto_trade %}bg-emerald-700 hover:bg-emerald-600{% else %}bg-slate-700 hover:bg-slate-600{% endif %}">
+      {% if dash.account.auto_trade %}ON — placing signals{% else %}OFF — enable to auto-place{% endif %}
+    </button>
+  </div>
+  <label>Capital (₹)
+    <input type="number" id="inp-capital" value="{{ dash.account.starting_capital|floatformat:0 }}"
+           class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-36" step="10000" min="10000">
+  </label>
+  <button type="button" id="btn-set-capital" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded">Set capital</button>
+  <label>Deposit (₹)
+    <input type="number" id="inp-deposit" value="50000"
+           class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-28" step="10000" min="1000">
+  </label>
+  <button type="button" id="btn-deposit" class="px-3 py-2 bg-indigo-700 hover:bg-indigo-600 rounded">Deposit</button>
+  <label>Risk %
+    <input type="number" id="inp-risk" value="{{ dash.account.risk_pct }}"
+           class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-20" step="0.1" min="0.1" max="5">
+  </label>
+  <label>Max trades/day
+    <input type="number" id="inp-max-trades" value="{{ dash.account.max_trades_per_day }}"
+           class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-20" min="1" max="20">
+  </label>
+  <button type="button" id="btn-risk" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded">Save risk</button>
+  <button type="button" id="btn-tick" class="px-3 py-2 bg-emerald-800 hover:bg-emerald-700 rounded">Tick now</button>
+  <button type="button" id="btn-reset" class="px-3 py-2 bg-red-900/60 hover:bg-red-800 rounded text-red-200">Reset account</button>
+  <div class="text-xs text-slate-500 self-center ml-auto">
+    Last tick: <span id="last-tick">{{ dash.account.last_tick_at|default:"—" }}</span><br>
+    Today: <span id="today-trades">{{ dash.stats.today_trades }}</span> / {{ dash.account.max_trades_per_day }} trades ·
+    Instruments: {{ dash.account.instruments|join:", " }}
+  </div>
+</div>
+
+<p id="action-msg" class="text-sm text-slate-400 mb-4 hidden"></p>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+  {# Open positions #}
+  <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+      <h3 class="font-semibold">Open positions</h3>
+      <span id="open-count" class="text-xs text-slate-500">{{ dash.open_positions|length }} open</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-xs text-slate-500 bg-slate-950/50">
+          <tr>
+            <th class="text-left px-3 py-2">Instrument</th>
+            <th class="text-left px-3 py-2">Side</th>
+            <th class="text-right px-3 py-2">Lots</th>
+            <th class="text-right px-3 py-2">Entry</th>
+            <th class="text-right px-3 py-2">LTP</th>
+            <th class="text-right px-3 py-2">SL / Target</th>
+            <th class="text-right px-3 py-2">MTM</th>
+            <th class="text-right px-3 py-2"></th>
+          </tr>
+        </thead>
+        <tbody id="open-tbody">
+          {% for p in dash.open_positions %}
+          <tr class="border-t border-slate-800/80">
+            <td class="px-3 py-2 font-medium">{{ p.instrument }}</td>
+            <td class="px-3 py-2 text-red-400">{{ p.side }}</td>
+            <td class="px-3 py-2 text-right">{{ p.lots }}</td>
+            <td class="px-3 py-2 text-right font-mono">{{ p.entry_price }}</td>
+            <td class="px-3 py-2 text-right font-mono">{{ p.ltp }}</td>
+            <td class="px-3 py-2 text-right font-mono text-xs">{{ p.stop_loss }} / {{ p.target }}</td>
+            <td class="px-3 py-2 text-right font-semibold {% if p.mtm >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ p.mtm|floatformat:0 }}</td>
+            <td class="px-3 py-2 text-right">
+              <button type="button" data-close="{{ p.id }}" class="btn-close text-xs px-2 py-1 rounded bg-slate-800 hover:bg-red-900/50 text-slate-300">Close</button>
+            </td>
+          </tr>
+          {% empty %}
+          <tr id="open-empty"><td colspan="8" class="px-3 py-8 text-center text-slate-500">No open positions — enable Auto trade and wait for an active signal.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {# How to run 2-3 months #}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-sm space-y-3">
+    <h3 class="font-semibold">How to run 2–3 months</h3>
+    <ol class="list-decimal list-inside text-slate-400 space-y-2 text-xs leading-relaxed">
+      <li>Set capital (e.g. ₹5,00,000) and risk %.</li>
+      <li>Turn <strong class="text-emerald-400">Auto trade ON</strong>.</li>
+      <li>Either leave this page open (ticks every 45s) <em>or</em> run the background engine:</li>
+    </ol>
+    <pre class="bg-slate-950 border border-slate-800 rounded p-3 text-xs text-emerald-300 overflow-x-auto">python manage.py run_paper_trading --auto-on</pre>
+    <p class="text-xs text-slate-500">
+      Uses live Nifty/Bank Nifty 5m index prices (same as F&amp;O Live).
+      Orders are <strong class="text-amber-300">paper only</strong> — no Upstox / real money.
+      SL, target, 0.5pt slippage, margin block, force exit 15:15 IST.
+    </p>
+    <a href="{% url 'fno_live' %}" class="inline-block text-xs text-indigo-400 hover:text-indigo-300">Open F&amp;O Live signals →</a>
+  </div>
+</div>
+
+{# Stats + trades #}
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6 text-sm">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">Trades</p><p id="st-trades" class="font-semibold">{{ dash.stats.trades }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">Wins</p><p id="st-wins" class="font-semibold text-emerald-400">{{ dash.stats.wins }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">Losses</p><p id="st-losses" class="font-semibold text-red-400">{{ dash.stats.losses }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">Profit factor</p><p id="st-pf" class="font-semibold">{{ dash.stats.profit_factor }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">Total P&amp;L</p><p id="st-pnl" class="font-semibold {% if dash.stats.total_pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ dash.stats.total_pnl|floatformat:0 }}</p></div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-800"><h3 class="font-semibold">Closed trades</h3></div>
+    <div class="overflow-x-auto max-h-[28rem] overflow-y-auto">
+      <table class="w-full text-sm">
+        <thead class="text-xs text-slate-500 bg-slate-950/50 sticky top-0">
+          <tr>
+            <th class="text-left px-3 py-2">Exit</th>
+            <th class="text-left px-3 py-2">Inst</th>
+            <th class="text-left px-3 py-2">Side</th>
+            <th class="text-right px-3 py-2">Entry→Exit</th>
+            <th class="text-right px-3 py-2">Lots</th>
+            <th class="text-left px-3 py-2">Reason</th>
+            <th class="text-right px-3 py-2">R</th>
+            <th class="text-right px-3 py-2">P&amp;L</th>
+          </tr>
+        </thead>
+        <tbody id="trades-tbody">
+          {% for t in dash.trades %}
+          <tr class="border-t border-slate-800/80">
+            <td class="px-3 py-2 text-xs text-slate-400">{{ t.exit_time }}</td>
+            <td class="px-3 py-2">{{ t.instrument }}</td>
+            <td class="px-3 py-2">{{ t.side }}</td>
+            <td class="px-3 py-2 text-right font-mono text-xs">{{ t.entry_price }}→{{ t.exit_price }}</td>
+            <td class="px-3 py-2 text-right">{{ t.lots }}</td>
+            <td class="px-3 py-2 text-xs">{{ t.exit_reason }}</td>
+            <td class="px-3 py-2 text-right">{{ t.r_multiple }}</td>
+            <td class="px-3 py-2 text-right font-semibold {% if t.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ t.pnl|floatformat:0 }}</td>
+          </tr>
+          {% empty %}
+          <tr id="trades-empty"><td colspan="8" class="px-3 py-6 text-center text-slate-500">No closed trades yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-800"><h3 class="font-semibold">Engine log</h3></div>
+    <ul id="events-list" class="text-xs max-h-[28rem] overflow-y-auto divide-y divide-slate-800/80">
+      {% for e in dash.events %}
+      <li class="px-3 py-2 {% if e.level == 'trade' %}text-emerald-300{% elif e.level == 'warn' %}text-amber-300{% elif e.level == 'error' %}text-red-300{% else %}text-slate-400{% endif %}">
+        <span class="text-slate-600">{{ e.created_at }}</span> {{ e.message }}
+      </li>
+      {% empty %}
+      <li class="px-3 py-6 text-center text-slate-500">No events yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+(function () {
+  const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  const msgEl = document.getElementById('action-msg');
+
+  function showMsg(text, isErr) {
+    msgEl.textContent = text;
+    msgEl.classList.remove('hidden');
+    msgEl.className = 'text-sm mb-4 ' + (isErr ? 'text-red-400' : 'text-emerald-400');
+    setTimeout(() => msgEl.classList.add('hidden'), 4000);
+  }
+
+  function inr(n) {
+    return '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
+  }
+
+  function pnlClass(n) {
+    return Number(n) >= 0 ? 'text-emerald-400' : 'text-red-400';
+  }
+
+  function render(dash) {
+    if (!dash || !dash.account) return;
+    const a = dash.account, s = dash.stats;
+
+    document.getElementById('eq-equity').textContent = inr(a.equity);
+    document.getElementById('eq-cash').textContent = inr(a.cash);
+    document.getElementById('eq-margin').textContent = inr(a.margin_blocked);
+    const mtm = document.getElementById('eq-mtm');
+    mtm.textContent = inr(a.open_mtm);
+    mtm.className = 'text-lg font-semibold ' + pnlClass(a.open_mtm);
+    const real = document.getElementById('eq-realized');
+    real.textContent = inr(a.realized_pnl);
+    real.className = 'text-lg font-semibold ' + pnlClass(a.realized_pnl);
+    document.getElementById('eq-dd').textContent = a.drawdown_pct + '%';
+    document.getElementById('eq-wr').innerHTML = s.win_rate + '% <span class="text-xs text-slate-500">(' + s.trades + ')</span>';
+    document.getElementById('eq-ret').textContent = a.return_pct + '%';
+    document.getElementById('eq-ret').className = pnlClass(a.return_pct);
+    document.getElementById('last-tick').textContent = a.last_tick_at || '—';
+    document.getElementById('today-trades').textContent = s.today_trades;
+    document.getElementById('st-trades').textContent = s.trades;
+    document.getElementById('st-wins').textContent = s.wins;
+    document.getElementById('st-losses').textContent = s.losses;
+    document.getElementById('st-pf').textContent = s.profit_factor;
+    const sp = document.getElementById('st-pnl');
+    sp.textContent = inr(s.total_pnl);
+    sp.className = 'font-semibold ' + pnlClass(s.total_pnl);
+
+    const btn = document.getElementById('btn-auto');
+    if (a.auto_trade) {
+      btn.textContent = 'ON — placing signals';
+      btn.className = 'px-4 py-2 rounded font-medium bg-emerald-700 hover:bg-emerald-600';
+    } else {
+      btn.textContent = 'OFF — enable to auto-place';
+      btn.className = 'px-4 py-2 rounded font-medium bg-slate-700 hover:bg-slate-600';
+    }
+
+    if (dash.market) {
+      document.getElementById('mkt-clock').textContent = dash.market.now_ist || '';
+      document.getElementById('mkt-status').textContent = dash.market.message || '';
+    }
+
+    // Open positions
+    const tbody = document.getElementById('open-tbody');
+    document.getElementById('open-count').textContent = (dash.open_positions || []).length + ' open';
+    if (!dash.open_positions || !dash.open_positions.length) {
+      tbody.innerHTML = '<tr><td colspan="8" class="px-3 py-8 text-center text-slate-500">No open positions — enable Auto trade and wait for an active signal.</td></tr>';
+    } else {
+      tbody.innerHTML = dash.open_positions.map(p => `
+        <tr class="border-t border-slate-800/80">
+          <td class="px-3 py-2 font-medium">${p.instrument}</td>
+          <td class="px-3 py-2 text-red-400">${p.side}</td>
+          <td class="px-3 py-2 text-right">${p.lots}</td>
+          <td class="px-3 py-2 text-right font-mono">${p.entry_price}</td>
+          <td class="px-3 py-2 text-right font-mono">${p.ltp}</td>
+          <td class="px-3 py-2 text-right font-mono text-xs">${p.stop_loss} / ${p.target}</td>
+          <td class="px-3 py-2 text-right font-semibold ${pnlClass(p.mtm)}">${inr(p.mtm)}</td>
+          <td class="px-3 py-2 text-right">
+            <button type="button" data-close="${p.id}" class="btn-close text-xs px-2 py-1 rounded bg-slate-800 hover:bg-red-900/50 text-slate-300">Close</button>
+          </td>
+        </tr>`).join('');
+      tbody.querySelectorAll('[data-close]').forEach(b => {
+        b.addEventListener('click', () => action({ action: 'close', position_id: Number(b.dataset.close) }));
+      });
+    }
+
+    // Trades
+    const tb = document.getElementById('trades-tbody');
+    if (!dash.trades || !dash.trades.length) {
+      tb.innerHTML = '<tr><td colspan="8" class="px-3 py-6 text-center text-slate-500">No closed trades yet.</td></tr>';
+    } else {
+      tb.innerHTML = dash.trades.map(t => `
+        <tr class="border-t border-slate-800/80">
+          <td class="px-3 py-2 text-xs text-slate-400">${t.exit_time}</td>
+          <td class="px-3 py-2">${t.instrument}</td>
+          <td class="px-3 py-2">${t.side}</td>
+          <td class="px-3 py-2 text-right font-mono text-xs">${t.entry_price}→${t.exit_price}</td>
+          <td class="px-3 py-2 text-right">${t.lots}</td>
+          <td class="px-3 py-2 text-xs">${t.exit_reason}</td>
+          <td class="px-3 py-2 text-right">${t.r_multiple}</td>
+          <td class="px-3 py-2 text-right font-semibold ${pnlClass(t.pnl)}">${inr(t.pnl)}</td>
+        </tr>`).join('');
+    }
+
+    // Events
+    const ul = document.getElementById('events-list');
+    if (!dash.events || !dash.events.length) {
+      ul.innerHTML = '<li class="px-3 py-6 text-center text-slate-500">No events yet.</li>';
+    } else {
+      ul.innerHTML = dash.events.map(e => {
+        let c = 'text-slate-400';
+        if (e.level === 'trade') c = 'text-emerald-300';
+        else if (e.level === 'warn') c = 'text-amber-300';
+        else if (e.level === 'error') c = 'text-red-300';
+        return `<li class="px-3 py-2 ${c}"><span class="text-slate-600">${e.created_at}</span> ${e.message}</li>`;
+      }).join('');
+    }
+  }
+
+  async function action(payload) {
+    try {
+      const res = await fetch('{% url "paper_action_api" %}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        showMsg(data.error || 'Action failed', true);
+        return;
+      }
+      showMsg('Updated');
+      render(data.dashboard);
+    } catch (err) {
+      showMsg(String(err), true);
+    }
+  }
+
+  async function poll() {
+    try {
+      const res = await fetch('{% url "paper_status_api" %}?tick=1');
+      const data = await res.json();
+      if (data.ok) render(data.dashboard);
+    } catch (_) { /* ignore */ }
+  }
+
+  document.getElementById('btn-auto').addEventListener('click', () => {
+    const on = document.getElementById('btn-auto').textContent.startsWith('ON');
+    action({ action: on ? 'auto_off' : 'auto_on' });
+  });
+  document.getElementById('btn-set-capital').addEventListener('click', () => {
+    action({ action: 'capital', amount: Number(document.getElementById('inp-capital').value) });
+  });
+  document.getElementById('btn-deposit').addEventListener('click', () => {
+    action({ action: 'deposit', amount: Number(document.getElementById('inp-deposit').value) });
+  });
+  document.getElementById('btn-risk').addEventListener('click', () => {
+    action({
+      action: 'risk',
+      risk_pct: Number(document.getElementById('inp-risk').value),
+      max_trades_per_day: Number(document.getElementById('inp-max-trades').value),
+    });
+  });
+  document.getElementById('btn-tick').addEventListener('click', () => poll());
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    if (!confirm('Reset paper account? This clears all trades and positions.')) return;
+    action({ action: 'reset', amount: Number(document.getElementById('inp-capital').value) });
+  });
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => action({ action: 'close', position_id: Number(b.dataset.close) }));
+  });
+
+  setInterval(poll, 45000);
+})();
+</script>
+{% endblock %}

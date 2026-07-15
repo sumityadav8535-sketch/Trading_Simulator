@@ -1,0 +1,541 @@
+{% extends "trading/base.html" %}
+{% block title %}F&O Live — Elite ML Short v2{% endblock %}
+{% block content %}
+<div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-2xl font-bold">F&O Live — {{ strategy_name }}</h2>
+    <p class="text-slate-400 text-sm mt-1">
+      Nifty / Bank Nifty ML short strategy. Index 5m proxy · refreshes every 30s.
+    </p>
+  </div>
+  <div class="flex items-center gap-3 text-sm">
+    <span id="live-status" class="px-3 py-1.5 rounded-full text-xs font-medium
+      {% if signal.market.status == 'open' %}bg-emerald-900/60 text-emerald-300 border border-emerald-700
+      {% elif signal.market.status == 'pre_open' %}bg-amber-900/40 text-amber-300 border border-amber-700
+      {% else %}bg-slate-800 text-slate-400 border border-slate-700{% endif %}">
+      {{ signal.market.message|default:"—" }}
+    </span>
+    <span id="live-clock" class="text-slate-500">{{ signal.market.now_ist }}</span>
+  </div>
+</div>
+
+<form method="get" id="fno-filters" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-4 flex flex-wrap gap-4 items-end text-sm">
+  <label>Instrument
+    <select name="instrument" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+      {% for val, label in form.fields.instrument.choices %}
+      <option value="{{ val }}" {% if instrument == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 rounded text-sm font-medium">Apply</button>
+  <button type="button" id="btn-refresh" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm">Refresh now</button>
+  <button type="button" id="btn-fetch-history"
+          class="px-4 py-2 bg-indigo-700 hover:bg-indigo-600 rounded text-sm font-medium"
+          title="Download missing 5m bars for Nifty 100 + F&amp;O indices through today">
+    Fetch history to today
+  </button>
+  <button type="button" id="btn-run-backtest"
+          class="px-4 py-2 bg-amber-700 hover:bg-amber-600 rounded text-sm font-medium"
+          title="Train ML + backtest Elite ML Short v2 on stored 5m data through today">
+    Run backtest to today
+  </button>
+  <div class="flex flex-col gap-0.5 self-center min-w-[12rem]">
+    <span class="text-slate-500 text-xs" id="updated-at">Updated {{ updated_at|default:"—" }}</span>
+    <span id="history-coverage" class="text-xs text-slate-500">
+      5m history:
+      {% if history_coverage.fno.instruments.NIFTY.last_date %}NIFTY → {{ history_coverage.fno.instruments.NIFTY.last_date }}{% endif %}
+      {% if history_coverage.fno.instruments.BANKNIFTY.last_date %} · BN → {{ history_coverage.fno.instruments.BANKNIFTY.last_date }}{% endif %}
+    </span>
+    <span id="history-sync-status" class="text-xs text-slate-400"></span>
+    <span id="backtest-status" class="text-xs text-slate-400"></span>
+  </div>
+</form>
+{% csrf_token %}
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  {% for inst in instruments %}
+  <a href="?instrument={{ inst.key }}"
+     class="block bg-slate-900 border rounded-lg p-4 transition
+     {% if instrument == inst.key %}border-emerald-600{% else %}border-slate-800 hover:border-slate-700{% endif %}">
+    <div class="flex justify-between items-start">
+      <div>
+        <p class="text-xs text-slate-500 uppercase">{{ inst.key }}</p>
+        <p class="font-semibold">{{ inst.name }}</p>
+      </div>
+      <span class="text-lg font-bold text-slate-200">{{ inst.ltp|default:"—" }}</span>
+    </div>
+    <div class="mt-2 flex gap-2 text-xs">
+      <span class="px-2 py-0.5 rounded
+        {% if inst.status == 'active' %}bg-red-900/50 text-red-300
+        {% elif inst.status == 'watch' %}bg-amber-900/40 text-amber-300
+        {% else %}bg-slate-800 text-slate-400{% endif %}">{{ inst.status|default:"—" }}</span>
+      {% if inst.ml_prob %}<span class="text-slate-400">ML {{ inst.ml_prob }}</span>{% endif %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+<div id="signal-card" class="mb-6 rounded-lg border p-5
+  {% if signal.status == 'active' %}bg-red-950/30 border-red-700
+  {% elif signal.status == 'watch' %}bg-amber-950/20 border-amber-700
+  {% else %}bg-slate-900 border-slate-800{% endif %}">
+  <div class="flex flex-wrap justify-between gap-4">
+    <div>
+      <p class="text-xs uppercase tracking-wide text-slate-500">Live signal — {{ signal.name }}</p>
+      <h3 id="signal-title" class="text-2xl font-bold mt-1
+        {% if signal.status == 'active' %}text-red-400{% elif signal.status == 'watch' %}text-amber-400{% else %}text-slate-200{% endif %}">
+        {% if signal.side %}{{ signal.side }}{% else %}NO TRADE{% endif %}
+      </h3>
+      <p id="signal-message" class="text-sm text-slate-400 mt-1">{{ signal.message }}</p>
+      <p class="text-xs text-slate-500 mt-2">Bar: <span id="bar-time">{{ signal.bar_time }}</span></p>
+    </div>
+    <div class="text-right">
+      <p class="text-xs text-slate-500">LTP</p>
+      <p id="signal-ltp" class="text-3xl font-bold">{{ signal.ltp|default:"—" }}</p>
+      {% if signal.ml_prob %}
+      <p class="text-sm mt-1">
+        <span class="text-slate-400">P(win)</span>
+        <span id="ml-prob" class="font-semibold {% if signal.ml_prob >= signal.ml_threshold %}text-emerald-400{% else %}text-amber-400{% endif %}">{{ signal.ml_prob }}</span>
+        <span class="text-slate-500">/ {{ signal.ml_threshold }}</span>
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  {% if signal.stop %}
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 pt-4 border-t border-slate-700/50 text-sm">
+    <div><p class="text-xs text-slate-500">Stop (EMA21)</p><p id="signal-stop" class="text-red-400 font-semibold">{{ signal.stop }}</p></div>
+    <div><p class="text-xs text-slate-500">Target ({{ signal.target_r }}R)</p><p id="signal-target" class="text-emerald-400 font-semibold">{{ signal.target }}</p></div>
+    <div><p class="text-xs text-slate-500">Lots / Risk</p><p id="signal-lots" class="font-semibold">{{ signal.lots }} lots · ₹{{ signal.risk_inr|floatformat:0 }}</p></div>
+    <div><p class="text-xs text-slate-500">Target P&L</p><p id="signal-target-pnl" class="text-emerald-400 font-semibold">₹{{ signal.target_inr|floatformat:0 }}</p></div>
+  </div>
+  {% endif %}
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6 text-sm">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">EMA 9/21/50</p><p id="ind-ema" class="font-mono text-xs mt-1">{{ signal.ema_9 }} / {{ signal.ema_21 }} / {{ signal.ema_50 }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">RSI</p><p id="ind-rsi" class="font-semibold">{{ signal.rsi }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">VWAP</p><p id="ind-vwap" class="font-semibold">{{ signal.vwap|default:"—" }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">ADX</p><p id="ind-adx" class="font-semibold">{{ signal.adx|default:"—" }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">Range pos</p><p id="ind-range" class="font-semibold">{{ signal.range_pos|default:"—" }}</p></div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-3"><p class="text-xs text-slate-500">Model</p><p id="ind-model" class="font-semibold text-xs">{{ signal.ml_model|default:"random_forest" }}</p></div>
+</div>
+
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6">
+  <h3 class="text-sm font-semibold text-slate-300 mb-3">{{ signal.name }} — 5m chart</h3>
+  <div id="fno-chart" class="w-full" style="min-height:420px">
+    {% if chart_json %}<script type="application/json" id="chart-data">{{ chart_json|safe }}</script>
+    {% else %}<p class="text-slate-500 text-sm py-16 text-center">No chart data.</p>{% endif %}
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <h3 class="text-sm font-semibold text-emerald-400 mb-3">Strategy rules</h3>
+    <ul class="text-sm text-slate-400 space-y-2">
+      <li><span class="text-slate-300">Side:</span> SHORT (Nifty / Bank Nifty futures)</li>
+      <li><span class="text-slate-300">Setup:</span> EMA9 &lt; EMA21, price &lt; TWAP, RSI 40–65</li>
+      <li><span class="text-slate-300">ML filter:</span> P(win) ≥ {{ strategy_filters.ml_threshold|default:"0.58" }}</li>
+      <li><span class="text-slate-300">Max stop:</span> {{ strategy_filters.max_risk_pts|default:"22" }} index points</li>
+      <li><span class="text-slate-300">Stop / Target:</span> EMA21 / 1.5R · Exit 15:15 IST</li>
+      <li><span class="text-slate-300">Capital / Risk:</span> ₹5L @ {{ signal.risk_pct }}% per trade</li>
+    </ul>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+      <h3 class="text-sm font-semibold text-emerald-400">Backtest summary</h3>
+      <button type="button" id="btn-run-backtest-2"
+              class="px-3 py-1 bg-amber-700 hover:bg-amber-600 rounded text-xs font-medium">
+        Run backtest to today
+      </button>
+    </div>
+    {% if results.full_period.summary %}
+    <div class="grid grid-cols-2 gap-3 text-sm" id="backtest-summary-grid">
+      <div><p class="text-xs text-slate-500">Trades</p><p class="font-bold text-lg" id="bt-trades">{{ results.full_period.summary.trades }}</p></div>
+      <div><p class="text-xs text-slate-500">Win rate</p><p class="font-bold text-lg text-emerald-400" id="bt-wr">{{ results.full_period.summary.win_rate }}%</p></div>
+      <div><p class="text-xs text-slate-500">W / L</p><p class="font-bold" id="bt-wl">{{ results.full_period.wins }} / {{ results.full_period.losses }}</p></div>
+      <div><p class="text-xs text-slate-500">₹/day</p><p class="font-bold text-emerald-400" id="bt-daily">₹{{ results.full_period.summary.avg_daily|floatformat:0 }}</p></div>
+      <div><p class="text-xs text-slate-500">Net P&L</p><p class="font-bold" id="bt-pnl">₹{{ results.full_period.summary.net_pnl|floatformat:0 }}</p></div>
+      <div><p class="text-xs text-slate-500">Max DD</p><p class="font-bold" id="bt-dd">{{ results.full_period.summary.max_dd_pct }}%</p></div>
+    </div>
+    {% if results.data_range %}
+    <p class="text-xs text-slate-500 mt-2" id="bt-range">
+      Data: {{ results.data_range.first_date }} → {{ results.data_range.last_date }}
+      ({{ results.data_range.bars }} bars)
+    </p>
+    {% else %}
+    <p class="text-xs text-slate-500 mt-2" id="bt-range"></p>
+    {% endif %}
+    {% if results.oos.summary %}
+    <p class="text-xs text-slate-500 mt-1" id="bt-oos">OOS: {{ results.oos.summary.trades }} trades · ₹{{ results.oos.summary.avg_daily|floatformat:0 }}/day</p>
+    {% else %}
+    <p class="text-xs text-slate-500 mt-1" id="bt-oos"></p>
+    {% endif %}
+    {% else %}
+    <p class="text-slate-500 text-sm" id="bt-empty">
+      No backtest yet. Click <strong class="text-amber-300">Run backtest to today</strong> (uses stored 5m NIFTY data).
+    </p>
+    <div class="grid grid-cols-2 gap-3 text-sm hidden" id="backtest-summary-grid">
+      <div><p class="text-xs text-slate-500">Trades</p><p class="font-bold text-lg" id="bt-trades">—</p></div>
+      <div><p class="text-xs text-slate-500">Win rate</p><p class="font-bold text-lg text-emerald-400" id="bt-wr">—</p></div>
+      <div><p class="text-xs text-slate-500">W / L</p><p class="font-bold" id="bt-wl">—</p></div>
+      <div><p class="text-xs text-slate-500">₹/day</p><p class="font-bold text-emerald-400" id="bt-daily">—</p></div>
+      <div><p class="text-xs text-slate-500">Net P&L</p><p class="font-bold" id="bt-pnl">—</p></div>
+      <div><p class="text-xs text-slate-500">Max DD</p><p class="font-bold" id="bt-dd">—</p></div>
+    </div>
+    <p class="text-xs text-slate-500 mt-2" id="bt-range"></p>
+    <p class="text-xs text-slate-500 mt-1" id="bt-oos"></p>
+    {% endif %}
+    <p class="text-xs mt-2" id="backtest-status-2"></p>
+  </div>
+</div>
+
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6">
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+    <div>
+      <h3 class="text-sm font-semibold text-emerald-400">Executed trades — {{ strategy_name }}</h3>
+      <p class="text-xs text-slate-500 mt-1">Full backtest entry log (lot 75, 1.5% risk).</p>
+    </div>
+    <div class="flex gap-2 text-xs">
+      <a href="?instrument={{ instrument }}&trades=full"
+         class="px-3 py-1.5 rounded border {% if trade_period == 'full' %}bg-emerald-900/40 border-emerald-600 text-emerald-300{% else %}border-slate-700 text-slate-400{% endif %}">
+        Full ({{ trade_summary.count }})
+      </a>
+      <a href="?instrument={{ instrument }}&trades=oos"
+         class="px-3 py-1.5 rounded border {% if trade_period == 'oos' %}bg-emerald-900/40 border-emerald-600 text-emerald-300{% else %}border-slate-700 text-slate-400{% endif %}">
+        OOS ({{ trades_data.oos.trades|length|default:0 }})
+      </a>
+    </div>
+  </div>
+
+  {% if trade_summary.count %}
+  <div class="overflow-x-auto max-h-[520px] overflow-y-auto">
+    <table class="w-full text-xs text-left">
+      <thead class="text-slate-500 uppercase sticky top-0 bg-slate-900 border-b border-slate-800">
+        <tr>
+          <th class="py-2 pr-3">#</th><th class="py-2 pr-3">Date</th><th class="py-2 pr-3">Signal</th>
+          <th class="py-2 pr-3">Entry</th><th class="py-2 pr-3">Exit</th><th class="py-2 pr-3">Stop</th>
+          <th class="py-2 pr-3">Target</th><th class="py-2 pr-3">Lots</th><th class="py-2 pr-3">ML P</th>
+          <th class="py-2 pr-3">P&L</th><th class="py-2">Result</th>
+        </tr>
+      </thead>
+      <tbody class="text-slate-300 font-mono">
+        {% for t in strategy_trades %}
+        <tr class="border-b border-slate-800/40 hover:bg-slate-800/30">
+          <td class="py-1.5 pr-3 text-slate-500">{{ t.trade_no }}</td>
+          <td class="py-1.5 pr-3">{{ t.session_date }}</td>
+          <td class="py-1.5 pr-3">{{ t.signal_time|slice:"11:16" }}</td>
+          <td class="py-1.5 pr-3">{{ t.entry_price }} <span class="text-slate-500">{{ t.entry_time|slice:"11:16" }}</span></td>
+          <td class="py-1.5 pr-3">{{ t.exit_price }} <span class="text-slate-500">{{ t.exit_time|slice:"11:16" }}</span></td>
+          <td class="py-1.5 pr-3 text-red-400">{{ t.stop }}</td>
+          <td class="py-1.5 pr-3 text-emerald-400">{{ t.target }}</td>
+          <td class="py-1.5 pr-3">{{ t.lots }}</td>
+          <td class="py-1.5 pr-3">{{ t.ml_prob|default:"—" }}</td>
+          <td class="py-1.5 pr-3 {% if t.pnl_inr >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ t.pnl_inr|floatformat:0 }}</td>
+          <td class="py-1.5"><span class="px-1.5 py-0.5 rounded text-[10px] font-sans {% if t.result == 'WIN' %}bg-emerald-900/50 text-emerald-300{% else %}bg-red-900/50 text-red-300{% endif %}">{{ t.result }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-slate-500 text-sm py-8 text-center">No trades yet. Run <code class="text-emerald-400">venv\Scripts\python.exe manage.py optimize_fno_ml</code></p>
+  {% endif %}
+</div>
+
+<script>
+(function() {
+  const signalApi = "{% url 'fno_signal_api' %}";
+  const chartApiBase = "{% url 'fno_chart_api' instrument='NIFTY' %}".replace("/NIFTY/", "/");
+  const instrument = "{{ instrument }}";
+
+  function renderChart(chartJson) {
+    const mount = document.getElementById("fno-chart");
+    if (!chartJson?.data) return;
+    Plotly.newPlot(mount, chartJson.data, chartJson.layout, {responsive: true, displayModeBar: false});
+  }
+  const chartEl = document.getElementById("chart-data");
+  if (chartEl) try { renderChart(JSON.parse(chartEl.textContent)); } catch (e) {}
+
+  function updateSignal(s) {
+    if (!s) return;
+    document.getElementById("signal-title").textContent = s.side || "NO TRADE";
+    document.getElementById("signal-message").textContent = s.message || "";
+    document.getElementById("bar-time").textContent = s.bar_time || "—";
+    document.getElementById("signal-ltp").textContent = s.ltp ?? "—";
+    if (s.ml_prob != null) {
+      const p = document.getElementById("ml-prob");
+      if (p) { p.textContent = s.ml_prob; p.className = "font-semibold " + (s.ml_prob >= s.ml_threshold ? "text-emerald-400" : "text-amber-400"); }
+    }
+    document.getElementById("ind-ema").textContent = [s.ema_9, s.ema_21, s.ema_50].join(" / ");
+    ["rsi","vwap","adx","range"].forEach(k => {
+      const el = document.getElementById("ind-" + (k === "range" ? "range" : k));
+      if (el) el.textContent = s[k === "range" ? "range_pos" : k] ?? "—";
+    });
+  }
+
+  async function poll(refresh) {
+    try {
+      const res = await fetch(signalApi + "?instrument=" + instrument + (refresh ? "&refresh=1" : ""));
+      const data = await res.json();
+      updateSignal(data.signal);
+      document.getElementById("updated-at").textContent = "Updated " + (data.updated_at || "—");
+      if (refresh) {
+        const cr = await fetch(chartApiBase + instrument + "/?refresh=1");
+        const cd = await cr.json();
+        if (cd.chart) renderChart(cd.chart);
+      }
+    } catch (e) {}
+  }
+  document.getElementById("btn-refresh")?.addEventListener("click", () => poll(true));
+  setInterval(() => poll(false), 30000);
+
+  // ---- History backfill (5m pickles through click day) ----
+  const historyStatusApi = "{% url 'intraday_history_status_api' %}";
+  const historySyncApi = "{% url 'intraday_history_sync_api' %}";
+  let historyPollTimer = null;
+
+  function getCsrfToken() {
+    const el = document.querySelector("[name=csrfmiddlewaretoken]");
+    if (el && el.value) return el.value;
+    const m = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : "";
+  }
+
+  function renderHistoryCoverage(cov) {
+    const el = document.getElementById("history-coverage");
+    if (!el || !cov) return;
+    const fno = (cov.fno && cov.fno.instruments) || {};
+    const n = fno.NIFTY && fno.NIFTY.last_date;
+    const b = fno.BANKNIFTY && fno.BANKNIFTY.last_date;
+    const eq = cov.equities || {};
+    el.textContent = "5m history: NIFTY → " + (n || "—")
+      + " · BN → " + (b || "—")
+      + " · equities → " + (eq.last_date || "—");
+  }
+
+  function setHistoryStatus(text, kind) {
+    const el = document.getElementById("history-sync-status");
+    if (!el) return;
+    el.textContent = text || "";
+    el.className = "text-xs " + (
+      kind === "ok" ? "text-emerald-400" :
+      kind === "err" ? "text-red-400" :
+      kind === "run" ? "text-amber-300" :
+      "text-slate-400"
+    );
+  }
+
+  function stopHistoryPoll() {
+    if (historyPollTimer) {
+      clearInterval(historyPollTimer);
+      historyPollTimer = null;
+    }
+  }
+
+  function pollHistoryStatus() {
+    fetch(historyStatusApi)
+      .then(r => r.json())
+      .then(cov => {
+        renderHistoryCoverage(cov);
+        const s = cov.sync || {};
+        const btn = document.getElementById("btn-fetch-history");
+        if (s.running) {
+          const p = s.progress || {};
+          const frac = p.total ? ` ${p.done}/${p.total}` : "";
+          setHistoryStatus((s.message || "Syncing…") + frac, "run");
+          if (btn) btn.disabled = true;
+        } else {
+          if (btn) btn.disabled = false;
+          if (s.error) {
+            setHistoryStatus(s.message || s.error, "err");
+            stopHistoryPoll();
+          } else if (s.finished_at) {
+            setHistoryStatus(s.message || "History up to date", "ok");
+            stopHistoryPoll();
+          }
+        }
+      })
+      .catch(err => setHistoryStatus("Status check failed: " + err.message, "err"));
+  }
+
+  document.getElementById("btn-fetch-history")?.addEventListener("click", () => {
+    const btn = document.getElementById("btn-fetch-history");
+    if (btn) btn.disabled = true;
+    setHistoryStatus("Starting fetch through today…", "run");
+    fetch(historySyncApi, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCsrfToken(),
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then(async r => {
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok && !data.started) {
+          throw new Error(data.error || data.message || ("HTTP " + r.status));
+        }
+        setHistoryStatus(data.message || "Sync running…", "run");
+        stopHistoryPoll();
+        historyPollTimer = setInterval(pollHistoryStatus, 2000);
+        pollHistoryStatus();
+      })
+      .catch(err => {
+        setHistoryStatus("Fetch failed: " + err.message, "err");
+        if (btn) btn.disabled = false;
+      });
+  });
+
+  pollHistoryStatus();
+
+  // ---- One-click F&O backtest through today ----
+  const backtestStatusApi = "{% url 'fno_backtest_status_api' %}";
+  const backtestRunApi = "{% url 'fno_backtest_run_api' %}";
+  let backtestPollTimer = null;
+  // Only reload once after a backtest started from THIS page session
+  // (avoids infinite reload: finished status persists in the server process)
+  let backtestWatching = false;
+  let backtestReloadScheduled = false;
+
+  function setBacktestStatus(text, kind) {
+    ["backtest-status", "backtest-status-2"].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = text || "";
+      el.className = "text-xs " + (
+        kind === "ok" ? "text-emerald-400" :
+        kind === "err" ? "text-red-400" :
+        kind === "run" ? "text-amber-300" :
+        "text-slate-400"
+      );
+    });
+  }
+
+  function setBacktestButtonsDisabled(disabled) {
+    ["btn-run-backtest", "btn-run-backtest-2"].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.disabled = disabled;
+    });
+  }
+
+  function stopBacktestPoll() {
+    if (backtestPollTimer) {
+      clearInterval(backtestPollTimer);
+      backtestPollTimer = null;
+    }
+  }
+
+  function applyBacktestSummary(s) {
+    if (!s) return;
+    const empty = document.getElementById("bt-empty");
+    if (empty) empty.classList.add("hidden");
+    const grid = document.getElementById("backtest-summary-grid");
+    if (grid) grid.classList.remove("hidden");
+    const fmt = n => Number(n).toLocaleString("en-IN", { maximumFractionDigits: 0 });
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set("bt-trades", s.trades);
+    set("bt-wr", s.win_rate + "%");
+    set("bt-wl", (s.wins ?? "—") + " / " + (s.losses ?? "—"));
+    set("bt-daily", "₹" + fmt(s.avg_daily));
+    set("bt-pnl", "₹" + fmt(s.net_pnl));
+    set("bt-dd", s.max_dd_pct + "%");
+    if (s.data_range) {
+      set("bt-range", "Data: " + s.data_range.first_date + " → " + s.data_range.last_date
+        + " (" + s.data_range.bars + " bars)");
+    }
+    if (s.oos_trades != null) {
+      const oosDaily = s.oos_avg_daily != null ? " · ₹" + fmt(s.oos_avg_daily) + "/day" : "";
+      set("bt-oos", "OOS: " + s.oos_trades + " trades" + oosDaily);
+    }
+  }
+
+  function pollBacktestStatus() {
+    fetch(backtestStatusApi)
+      .then(r => r.json())
+      .then(s => {
+        if (s.running) {
+          const p = s.progress || {};
+          const frac = p.total ? ` (${p.step}/${p.total})` : "";
+          setBacktestStatus((s.message || "Running…") + frac, "run");
+          setBacktestButtonsDisabled(true);
+          // Resume watching if a job is mid-flight after navigation
+          if (!backtestPollTimer) {
+            backtestWatching = true;
+            backtestPollTimer = setInterval(pollBacktestStatus, 1500);
+          }
+          return;
+        }
+
+        setBacktestButtonsDisabled(false);
+        stopBacktestPoll();
+
+        if (s.error) {
+          setBacktestStatus(s.message || s.error, "err");
+          backtestWatching = false;
+          return;
+        }
+
+        if (s.finished_at && s.result_summary) {
+          // Only act on completion if we were watching a run from this session
+          // or the user just started one (backtestWatching). On cold page load,
+          // finished_at is stale — do NOT reload.
+          if (backtestWatching) {
+            setBacktestStatus(s.message || "Backtest complete — refreshing…", "ok");
+            applyBacktestSummary(s.result_summary);
+            if (!backtestReloadScheduled) {
+              backtestReloadScheduled = true;
+              backtestWatching = false;
+              setTimeout(() => { window.location.reload(); }, 800);
+            }
+          } else {
+            // Stale last-run message; leave server-rendered stats alone
+            setBacktestStatus(s.message || "", "ok");
+          }
+          return;
+        }
+
+        if (s.finished_at && backtestWatching) {
+          setBacktestStatus(s.message || "Done", "ok");
+          backtestWatching = false;
+        }
+      })
+      .catch(err => setBacktestStatus("Status check failed: " + err.message, "err"));
+  }
+
+  function startBacktest() {
+    backtestWatching = true;
+    backtestReloadScheduled = false;
+    setBacktestButtonsDisabled(true);
+    setBacktestStatus("Starting backtest through today…", "run");
+    fetch(backtestRunApi, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCsrfToken(),
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then(async r => {
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok && !data.started) {
+          throw new Error(data.error || data.message || ("HTTP " + r.status));
+        }
+        setBacktestStatus(data.message || "Backtest running…", "run");
+        stopBacktestPoll();
+        backtestPollTimer = setInterval(pollBacktestStatus, 1500);
+        pollBacktestStatus();
+      })
+      .catch(err => {
+        setBacktestStatus("Backtest failed: " + err.message, "err");
+        setBacktestButtonsDisabled(false);
+        backtestWatching = false;
+      });
+  }
+
+  document.getElementById("btn-run-backtest")?.addEventListener("click", startBacktest);
+  document.getElementById("btn-run-backtest-2")?.addEventListener("click", startBacktest);
+  // Check once on load (resume UI if a job is still running) — never auto-reload on stale finish
+  pollBacktestStatus();
+})();
+</script>
+{% endblock %}

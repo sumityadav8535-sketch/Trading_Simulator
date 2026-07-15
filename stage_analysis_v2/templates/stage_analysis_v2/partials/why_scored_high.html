@@ -1,0 +1,10 @@
+{% if why_high %}
+<div class="bg-emerald-950/30 border border-emerald-800 rounded-lg p-4 mt-4">
+  <h4 class="text-sm font-semibold text-emerald-300 mb-2">Why this stock scored high</h4>
+  <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
+    {% for reason in why_high %}
+    <li>{{ reason }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

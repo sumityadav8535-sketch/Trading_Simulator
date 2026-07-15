@@ -1,0 +1,17 @@
+<div class="bg-slate-900 border border-emerald-800 rounded-lg p-4">
+  <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+    <h3 class="font-bold text-lg">
+      <a href="{% url 'stage_analysis:stock_detail' ticker=row.ticker %}" class="text-emerald-400">{{ row.ticker }}</a>
+      <span class="text-sm font-normal text-slate-400 ml-2">{{ row.company_name }}</span>
+    </h3>
+    {% include "stage_analysis/partials/stage_badge.html" with stage=2 %}
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-sm">
+    <div>Price: <strong>{{ row.current_price|floatformat:2 }}</strong></div>
+    <div>30W MA: <strong class="text-blue-400">{{ row.ma_30w|floatformat:2 }}</strong></div>
+    <div>vs MA: <strong class="text-emerald-400">{{ row.price_vs_ma_pct|floatformat:1 }}%</strong></div>
+    <div>Breakout: <strong>{{ row.breakout_level|floatformat:2 }}</strong></div>
+    <div>Stop: <strong class="text-red-400">{{ row.stop_loss|floatformat:2 }}</strong></div>
+  </div>
+  <p class="text-xs text-emerald-300/80 mt-2">{{ row.suggested_action }}</p>
+</div>

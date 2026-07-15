@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Local / generated data caches (keep JSON results if needed)
+data/*.sqlite
+data/**/*.pkl
+data/**/*.pickle
+
+# Environment / secrets
+.env
+.env.*
+*.pem
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Tooling / session artifacts
+terminals/
+agent-tools/
+0.2.40
+*.txt.bak

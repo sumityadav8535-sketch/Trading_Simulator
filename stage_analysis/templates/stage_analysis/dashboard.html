@@ -1,0 +1,96 @@
+{% extends "trading/base.html" %}
+{% load static %}
+{% block title %}Stage Analysis — Dashboard{% endblock %}
+{% block content %}
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-2xl font-bold">Stage Analysis</h2>
+    <p class="text-slate-400 text-sm mt-1">Stan Weinstein's 4-stage method using the 30-week moving average</p>
+  </div>
+  <div class="flex gap-2 text-sm">
+    <a href="{% url 'stage_analysis:watchlist' %}" class="px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700">My Watchlist ({{ watchlist_count }})</a>
+    <a href="{% url 'stage_analysis:screener' %}?nifty200=1" class="px-3 py-2 rounded bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 text-white font-medium">Scan Nifty 200 Stage 2</a>
+    <a href="{% url 'stage_analysis:screener' %}" class="px-3 py-2 rounded bg-emerald-900/50 hover:bg-emerald-800/50 border border-emerald-800 text-emerald-300">Stage 2 Screener</a>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+    <p class="text-slate-400 text-xs">Stage 1</p>
+    <p class="text-xl font-bold text-slate-300">{{ stage_counts.1 }}</p>
+  </div>
+  <div class="bg-slate-900 rounded-lg p-4 border border-emerald-800">
+    <p class="text-slate-400 text-xs">Stage 2</p>
+    <p class="text-xl font-bold text-emerald-400">{{ stage_counts.2 }}</p>
+  </div>
+  <div class="bg-slate-900 rounded-lg p-4 border border-amber-800">
+    <p class="text-slate-400 text-xs">Stage 3</p>
+    <p class="text-xl font-bold text-amber-400">{{ stage_counts.3 }}</p>
+  </div>
+  <div class="bg-slate-900 rounded-lg p-4 border border-red-800">
+    <p class="text-slate-400 text-xs">Stage 4</p>
+    <p class="text-xl font-bold text-red-400">{{ stage_counts.4 }}</p>
+  </div>
+</div>
+
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 flex flex-wrap gap-4 items-end text-sm"
+      hx-get="{% url 'stage_analysis:dashboard' %}" hx-target="#analyze-panel" hx-select="#analyze-panel" hx-push-url="true">
+  <label class="block">
+    <span class="text-slate-400">Analyze ticker</span>
+    {{ form.ticker }}
+  </label>
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2 font-medium">Analyze</button>
+  <p class="text-xs text-slate-500 w-full">US: <code class="text-emerald-400">AAPL</code> · India: <code class="text-emerald-400">RELIANCE.NS</code>, <code class="text-emerald-400">TCS.NS</code></p>
+</form>
+
+<div id="analyze-panel">
+{% if analyze_result %}
+  {% include "stage_analysis/partials/analysis_card.html" with result=analyze_result %}
+  <div class="mt-4 flex gap-3 text-sm">
+    <a href="{% url 'stage_analysis:stock_detail' ticker=analyze_result.ticker %}" class="text-emerald-400 hover:underline">Full detail & chart →</a>
+  </div>
+{% elif request.GET.ticker %}
+  <p class="text-slate-500 text-sm">Could not analyze {{ request.GET.ticker }}. Check the symbol and try again.</p>
+{% else %}
+  <p class="text-slate-500 text-sm">Enter a ticker above to run stage analysis with live yfinance data.</p>
+{% endif %}
+</div>
+
+{% if recent_analyses %}
+<section class="mt-8">
+  <h3 class="font-semibold text-emerald-300 mb-4">Recent Analyses</h3>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="text-slate-400 border-b border-slate-700">
+        <tr>
+          <th class="text-left py-2">Ticker</th>
+          <th>Stage</th>
+          <th>Price</th>
+          <th>30W MA</th>
+          <th>Action</th>
+          <th>Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in recent_analyses %}
+        <tr class="border-b border-slate-800 hover:bg-slate-900/50">
+          <td class="py-2">
+            <a href="{% url 'stage_analysis:stock_detail' ticker=a.ticker %}" class="text-emerald-400 hover:underline">{{ a.ticker }}</a>
+          </td>
+          <td class="text-center">{% include "stage_analysis/partials/stage_badge.html" with stage=a.stage %}</td>
+          <td class="text-center">{{ a.current_price }}</td>
+          <td class="text-center">{{ a.ma_30w }}</td>
+          <td class="text-center text-xs text-slate-400">{{ a.suggested_action }}</td>
+          <td class="text-center text-xs text-slate-500">{{ a.updated_at|date:"M d, H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+<div class="mt-8">
+  {% include "stage_analysis/partials/stage_education.html" %}
+</div>
+{% endblock %}

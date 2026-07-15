@@ -1,0 +1,86 @@
+{% extends "trading/base.html" %}
+{% block title %}Stage Analysis 2.0{% endblock %}
+{% block content %}
+<div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+  <div>
+    <h2 class="text-2xl font-bold">Stage Analysis <span class="text-emerald-400">2.0</span></h2>
+    <p class="text-slate-400 text-sm mt-1">Confluence-based Stage 2 detection · Quality Score · RS · Clean Breakouts</p>
+  </div>
+  <div class="flex flex-wrap gap-2 text-sm">
+    <a href="{% url 'stage_analysis_v2:screener' %}?run_scan=on&min_quality_score=75&min_rs_rating=60&breakout_type=clean&strong_rs_only=on" class="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500 font-medium">Strict Screener</a>
+    <a href="{% url 'stage_analysis_v2:backtest' %}" class="px-4 py-2 rounded bg-slate-800 border border-slate-700 hover:border-emerald-600">Backtest</a>
+    <a href="{% url 'stage_analysis_v2:watchlist' %}" class="px-3 py-2 rounded bg-slate-800 border border-slate-700">Watchlist ({{ watchlist_count }})</a>
+  </div>
+</div>
+
+<div class="flex flex-wrap gap-3 text-xs mb-4">
+  <span class="px-2 py-1 rounded bg-emerald-600 text-white">High Quality S2 ≥75</span>
+  <span class="px-2 py-1 rounded bg-emerald-900 text-emerald-300">Average S2 50–74</span>
+  <span class="px-2 py-1 rounded bg-blue-900 text-blue-200">Stage 1 Base</span>
+  <span class="px-2 py-1 rounded bg-amber-900 text-amber-200">Stage 3 Top</span>
+  <span class="px-2 py-1 rounded bg-red-900 text-red-200">Stage 4 Decline</span>
+</div>
+
+{% include "stage_analysis_v2/partials/market_banner.html" %}
+
+<section class="mb-8">
+  <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+    <div>
+      <h3 class="text-lg font-bold text-emerald-300">Top Stage 2 Picks</h3>
+      <p class="text-xs text-slate-500">Stage 2 · Quality &gt;75 · Strong RS · Clean Breakout · {{ cache_note }}</p>
+    </div>
+    <a href="?refresh_picks=1" class="text-xs text-emerald-400 hover:underline">Refresh scan</a>
+  </div>
+
+  {% if top_picks %}
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    {% for pick in top_picks %}
+    <div class="bg-slate-900 border border-emerald-600 rounded-lg p-4 hover:border-emerald-500 transition-colors">
+      <div class="flex justify-between items-start mb-2">
+        <div>
+          <a href="{% url 'stage_analysis_v2:stock_detail' ticker=pick.ticker %}" class="text-lg font-bold text-emerald-400">{{ pick.ticker }}</a>
+          <p class="text-xs text-slate-500">{{ pick.company_name }}{% if pick.sector %} · {{ pick.sector }}{% endif %}</p>
+        </div>
+        <span class="text-2xl font-bold text-emerald-400">{{ pick.quality_score }}</span>
+      </div>
+      <div class="flex flex-wrap gap-2 text-xs mb-2">
+        <span class="text-slate-400">W{{ pick.weekly_stage }}/D{{ pick.daily_stage }}</span>
+        <span class="text-purple-300">RS {{ pick.rs_rating|floatformat:0 }}</span>
+        <span class="text-blue-300">{{ pick.breakout_type }}</span>
+      </div>
+      {% if pick.why_high %}
+      <ul class="text-xs text-slate-400 space-y-0.5">
+        {% for r in pick.why_high|slice:":3" %}
+        <li>· {{ r|truncatechars:60 }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 text-center">
+    <p class="text-slate-400">No stocks passed the strict filter right now.</p>
+    <a href="?refresh_picks=1" class="inline-block mt-3 text-sm text-emerald-400 hover:underline">Run fresh Nifty 200 scan</a>
+  </div>
+  {% endif %}
+</section>
+
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 flex flex-wrap gap-4 items-end text-sm"
+      hx-get="{% url 'stage_analysis_v2:dashboard' %}" hx-target="#v2-result" hx-select="#v2-result" hx-push-url="true">
+  <label class="block">
+    <span class="text-slate-400">Analyze ticker</span>
+    {{ form.ticker }}
+  </label>
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2 font-medium">Analyze</button>
+</form>
+
+<div id="v2-result">
+{% if result %}
+  {% include "stage_analysis_v2/partials/analysis_card.html" %}
+  <a href="{% url 'stage_analysis_v2:stock_detail' ticker=result.ticker %}" class="inline-block mt-3 text-sm text-emerald-400 hover:underline">Weekly + Daily charts →</a>
+{% elif request.GET.ticker %}
+  <p class="text-slate-500 text-sm">Could not analyze {{ request.GET.ticker }}.</p>
+{% endif %}
+</div>
+{% endblock %}

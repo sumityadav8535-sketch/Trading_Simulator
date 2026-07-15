@@ -1,0 +1,69 @@
+{% extends "trading/base.html" %}
+{% block title %}Dashboard — Confluence Swing{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-6">Dashboard</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+    <p class="text-slate-400 text-sm">Nifty 200 Universe</p>
+    <p class="text-2xl font-bold text-emerald-400">{{ nifty_count }}</p>
+  </div>
+  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+    <p class="text-slate-400 text-sm">Market Bias</p>
+    <p class="text-2xl font-bold">{{ market_bias.trend }}</p>
+    <p class="text-xs text-slate-500">{{ market_bias.above_200ema }} above / {{ market_bias.below_200ema }} below 200 EMA</p>
+  </div>
+  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+    <p class="text-slate-400 text-sm">Open Trades</p>
+    <p class="text-2xl font-bold">{{ journal_open }}</p>
+  </div>
+  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+    <p class="text-slate-400 text-sm">Journal P&amp;L</p>
+    <p class="text-2xl font-bold {% if journal_pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ journal_pnl|floatformat:0 }}</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <section class="bg-slate-900 rounded-lg border border-slate-800 p-4">
+    <h3 class="font-semibold mb-4 text-emerald-300">Recent A+ Signals</h3>
+    {% if recent_signals %}
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-slate-400 border-b border-slate-700">
+          <tr><th class="text-left py-2">Symbol</th><th>Score</th><th>Entry</th><th>SL</th><th>2R</th><th>RR</th></tr>
+        </thead>
+        <tbody>
+          {% for s in recent_signals %}
+          <tr class="border-b border-slate-800">
+            <td class="py-2"><a href="{% url 'chart' %}?symbol={{ s.stock.symbol }}" class="text-emerald-400 hover:underline">{{ s.stock.symbol }}</a></td>
+            <td class="text-center">{{ s.confluence_score }}/10</td>
+            <td class="text-center">{{ s.entry_price }}</td>
+            <td class="text-center text-red-400">{{ s.stop_loss }}</td>
+            <td class="text-center text-blue-400">{{ s.target_2r }}</td>
+            <td class="text-center">{{ s.risk_reward }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-slate-500 text-sm">No valid signals yet. Run <code class="text-emerald-400">python manage.py scan_signals</code> or open the <a href="{% url 'scanner' %}" class="text-emerald-400">Scanner</a>.</p>
+    {% endif %}
+  </section>
+
+  <section class="bg-slate-900 rounded-lg border border-slate-800 p-4">
+    <h3 class="font-semibold mb-4 text-emerald-300">Strategy Config</h3>
+    <ul class="text-sm space-y-2 text-slate-300">
+      <li>Capital default: ₹{{ config.capital_default }}</li>
+      <li>Risk per trade: {{ config.risk_pct }}%</li>
+      <li>ADX minimum: {{ config.adx_min }} (preferred {{ config.adx_preferred }})</li>
+      <li>RSI zone: {{ config.rsi_low }}–{{ config.rsi_high }}</li>
+      <li>Volume multiplier: {{ config.volume_multiplier }}× 20d avg</li>
+      <li>Min risk-reward: {{ config.min_risk_reward }}:1</li>
+      <li>Fundamental filters: {% if config.enable_fundamental_filters %}ON{% else %}OFF (optional){% endif %}</li>
+      <li>Price bars loaded: {{ price_bars|floatformat:0 }}</li>
+    </ul>
+    <p class="mt-4 text-xs text-slate-500">Edit thresholds in <a href="/admin/trading/strategyconfig/" class="text-emerald-400">Admin → Strategy Config</a></p>
+  </section>
+</div>
+{% endblock %}

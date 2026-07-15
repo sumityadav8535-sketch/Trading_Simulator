@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Confluence Swing Trader{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+  </style>
+</head>
+<body class="h-full bg-slate-950 text-slate-100">
+  <div class="min-h-full flex">
+    <aside class="w-56 bg-slate-900 border-r border-slate-800 p-4 hidden md:block">
+      <h1 class="text-lg font-bold text-emerald-400 mb-6">EMA20 Elite</h1>
+      <nav class="space-y-1 text-sm">
+        <a href="{% url 'dashboard' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'dashboard' %}bg-slate-800 text-emerald-300{% endif %}">Dashboard</a>
+        <a href="{% url 'screener' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'screener' %}bg-slate-800 text-emerald-300{% endif %}">Screener</a>
+        <a href="{% url 'scanner' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'scanner' %}bg-slate-800 text-emerald-300{% endif %}">Signal Scanner</a>
+        <a href="{% url 'signals' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'signals' %}bg-slate-800 text-emerald-300{% endif %}">Signals</a>
+        <a href="{% url 'chart' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'chart' %}bg-slate-800 text-emerald-300{% endif %}">Chart</a>
+        <a href="{% url 'intraday' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'intraday' %}bg-slate-800 text-emerald-300{% endif %}">Intraday</a>
+        <a href="{% url 'fno_live' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'fno_live' %}bg-slate-800 text-emerald-300{% endif %}">F&O Live</a>
+        <a href="{% url 'paper_trading' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'paper_trading' %}bg-slate-800 text-emerald-300{% endif %}">Paper Trading</a>
+        <a href="{% url 'stage_analysis_v2:backtest' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'backtest' and request.resolver_match.app_name == 'stage_analysis_v2' %}bg-slate-800 text-emerald-300{% endif %}">Stage 2.0 Backtest</a>
+        <a href="{% url 'risk_calculator' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'risk_calculator' %}bg-slate-800 text-emerald-300{% endif %}">Risk Calculator</a>
+        <a href="{% url 'stage_analysis:dashboard' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.app_name == 'stage_analysis' %}bg-slate-800 text-emerald-300{% endif %}">Stage Analysis</a>
+        <a href="{% url 'stage_analysis_v2:dashboard' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.app_name == 'stage_analysis_v2' %}bg-slate-800 text-emerald-300{% endif %}">Stage Analysis 2.0</a>
+        <a href="{% url 'watchlist' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'watchlist' %}bg-slate-800 text-emerald-300{% endif %}">Watchlist</a>
+        <a href="{% url 'journal' %}" class="block px-3 py-2 rounded hover:bg-slate-800 {% if request.resolver_match.url_name == 'journal' %}bg-slate-800 text-emerald-300{% endif %}">Trade Journal</a>
+      </nav>
+      {% if active_config %}
+      <div class="mt-8 text-xs text-slate-500 border-t border-slate-800 pt-4">
+        <p>Risk: {{ active_config.risk_pct }}%</p>
+        <p>ADX min: {{ active_config.adx_min }}</p>
+        <p>Min RR: {{ active_config.min_risk_reward }}</p>
+      </div>
+      {% endif %}
+    </aside>
+
+    <main class="flex-1 p-4 md:p-8 overflow-auto">
+      {% if messages %}
+      <div class="mb-4 space-y-2">
+        {% for message in messages %}
+        <div class="px-4 py-2 rounded bg-slate-800 border border-slate-700 text-sm">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

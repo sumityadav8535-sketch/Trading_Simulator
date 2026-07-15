@@ -1,0 +1,49 @@
+{% extends "trading/base.html" %}
+{% block title %}Stage Analysis — Watchlist{% endblock %}
+{% block content %}
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+  <div>
+    <a href="{% url 'stage_analysis:dashboard' %}" class="text-sm text-slate-400 hover:text-emerald-400">← Stage Analysis</a>
+    <h2 class="text-2xl font-bold mt-1">My Watchlist</h2>
+    <p class="text-slate-400 text-sm">Track stocks and monitor their Weinstein stage</p>
+  </div>
+  <a href="{% url 'stage_analysis:screener' %}" class="text-sm px-3 py-2 rounded bg-emerald-900/50 border border-emerald-800 text-emerald-300">Stage 2 Screener →</a>
+</div>
+
+<form method="post" class="flex flex-wrap gap-4 mb-6 text-sm">
+  {% csrf_token %}
+  {{ form.ticker }}
+  {{ form.notes }}
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-4 py-2">Add to Watchlist</button>
+</form>
+
+<div class="space-y-3">
+  {% for row in items %}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex-1 min-w-0">
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="{% url 'stage_analysis:stock_detail' ticker=row.item.ticker %}" class="font-bold text-emerald-400 text-lg">{{ row.item.ticker }}</a>
+        {% if row.analysis %}
+          {% include "stage_analysis/partials/stage_badge.html" with stage=row.analysis.stage %}
+        {% endif %}
+      </div>
+      <p class="text-sm text-slate-400">{{ row.item.company_name }}</p>
+      {% if row.analysis %}
+      <p class="text-xs text-slate-500 mt-1">
+        {{ row.analysis.current_price }} · MA {{ row.analysis.ma_30w }} · {{ row.analysis.suggested_action }}
+      </p>
+      {% else %}
+      <p class="text-xs text-red-400 mt-1">Could not fetch data</p>
+      {% endif %}
+      {% if row.item.notes %}<p class="text-xs text-slate-600 mt-1">{{ row.item.notes }}</p>{% endif %}
+    </div>
+    <form method="post" action="{% url 'stage_analysis:watchlist_remove' row.item.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="text-red-400 text-sm hover:underline">Remove</button>
+    </form>
+  </div>
+  {% empty %}
+  <p class="text-slate-500">Watchlist empty. Add tickers above (e.g. RELIANCE.NS, AAPL).</p>
+  {% endfor %}
+</div>
+{% endblock %}

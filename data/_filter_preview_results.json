@@ -1,0 +1,685 @@
+{
+  "note": "PREVIEW ONLY \u2014 not applied to live F&O config",
+  "baseline": {
+    "filters": {
+      "ml_th": 0.58,
+      "adx_min": 0.0,
+      "range_pos_min": 0.0,
+      "max_risk_pts": 22,
+      "min_risk_pts": 0.0,
+      "hour_start": 9,
+      "hour_end": 14,
+      "require_ema_stack": false,
+      "rsi_min": 0.0,
+      "rsi_max": 100.0,
+      "max_trades_per_day": 4
+    },
+    "full": {
+      "name": "BASELINE Elite v2",
+      "trades": 58,
+      "win_rate": 84.48,
+      "net_pnl": 572384.64,
+      "avg_daily": 9232.01,
+      "profit_factor": 6.25,
+      "max_dd_pct": 4.03,
+      "days_above_1k": 22,
+      "period": "full"
+    },
+    "full_losses": 9,
+    "oos": {
+      "name": "BASELINE Elite v2 OOS",
+      "trades": 13,
+      "win_rate": 69.23,
+      "net_pnl": 58761.95,
+      "avg_daily": 3264.55,
+      "profit_factor": 3.36,
+      "max_dd_pct": 2.11,
+      "days_above_1k": 5,
+      "period": "OOS"
+    }
+  },
+  "recommended": {
+    "name": "rp>=0.25",
+    "filters": {
+      "ml_th": 0.58,
+      "adx_min": 0.0,
+      "range_pos_min": 0.25,
+      "max_risk_pts": 22,
+      "min_risk_pts": 0.0,
+      "hour_start": 9,
+      "hour_end": 14,
+      "require_ema_stack": false,
+      "rsi_min": 0.0,
+      "rsi_max": 100.0,
+      "max_trades_per_day": 4
+    },
+    "full": {
+      "name": "rp>=0.25",
+      "trades": 37,
+      "win_rate": 91.89,
+      "net_pnl": 399444.08,
+      "avg_daily": 6442.65,
+      "profit_factor": 14.67,
+      "max_dd_pct": 1.47,
+      "days_above_1k": 17,
+      "period": "full"
+    },
+    "full_wins": 34,
+    "full_losses": 3,
+    "oos": {
+      "name": "rp>=0.25 OOS",
+      "trades": 10,
+      "win_rate": 90.0,
+      "net_pnl": 78878.73,
+      "avg_daily": 4382.15,
+      "profit_factor": 11.85,
+      "max_dd_pct": 1.33,
+      "days_above_1k": 6,
+      "period": "OOS"
+    },
+    "oos_losses": 1,
+    "score": 17602.049999999996
+  },
+  "top15": [
+    {
+      "name": "rp>=0.25",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 0.0,
+        "range_pos_min": 0.25,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "rp>=0.25",
+        "trades": 37,
+        "win_rate": 91.89,
+        "net_pnl": 399444.08,
+        "avg_daily": 6442.65,
+        "profit_factor": 14.67,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 17,
+        "period": "full"
+      },
+      "full_losses": 3,
+      "oos": {
+        "name": "rp>=0.25 OOS",
+        "trades": 10,
+        "win_rate": 90.0,
+        "net_pnl": 78878.73,
+        "avg_daily": 4382.15,
+        "profit_factor": 11.85,
+        "max_dd_pct": 1.33,
+        "days_above_1k": 6,
+        "period": "OOS"
+      },
+      "score": 17602.049999999996
+    },
+    {
+      "name": "rp>=0.3",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 0.0,
+        "range_pos_min": 0.3,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "rp>=0.3",
+        "trades": 37,
+        "win_rate": 91.89,
+        "net_pnl": 399444.08,
+        "avg_daily": 6442.65,
+        "profit_factor": 14.67,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 17,
+        "period": "full"
+      },
+      "full_losses": 3,
+      "oos": {
+        "name": "rp>=0.3 OOS",
+        "trades": 10,
+        "win_rate": 90.0,
+        "net_pnl": 78878.73,
+        "avg_daily": 4382.15,
+        "profit_factor": 11.85,
+        "max_dd_pct": 1.33,
+        "days_above_1k": 6,
+        "period": "OOS"
+      },
+      "score": 17602.049999999996
+    },
+    {
+      "name": "G rp0.25 a15 m0.58",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 15.0,
+        "range_pos_min": 0.25,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "G rp0.25 a15 m0.58",
+        "trades": 34,
+        "win_rate": 94.12,
+        "net_pnl": 382358.98,
+        "avg_daily": 6167.08,
+        "profit_factor": 22.46,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 15,
+        "period": "full"
+      },
+      "full_losses": 2,
+      "oos": {
+        "name": "G rp0.25 a15 m0.58 OOS",
+        "trades": 9,
+        "win_rate": 88.89,
+        "net_pnl": 69817.56,
+        "avg_daily": 3878.75,
+        "profit_factor": 10.6,
+        "max_dd_pct": 1.33,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16460.08
+    },
+    {
+      "name": "G rp0.3 a15 m0.58",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 15.0,
+        "range_pos_min": 0.3,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "G rp0.3 a15 m0.58",
+        "trades": 34,
+        "win_rate": 94.12,
+        "net_pnl": 382358.98,
+        "avg_daily": 6167.08,
+        "profit_factor": 22.46,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 15,
+        "period": "full"
+      },
+      "full_losses": 2,
+      "oos": {
+        "name": "G rp0.3 a15 m0.58 OOS",
+        "trades": 9,
+        "win_rate": 88.89,
+        "net_pnl": 69817.56,
+        "avg_daily": 3878.75,
+        "profit_factor": 10.6,
+        "max_dd_pct": 1.33,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16460.08
+    },
+    {
+      "name": "BEST-A rp0.25 adx15",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 15,
+        "range_pos_min": 0.25,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "BEST-A rp0.25 adx15",
+        "trades": 34,
+        "win_rate": 94.12,
+        "net_pnl": 382358.98,
+        "avg_daily": 6167.08,
+        "profit_factor": 22.46,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 15,
+        "period": "full"
+      },
+      "full_losses": 2,
+      "oos": {
+        "name": "BEST-A rp0.25 adx15 OOS",
+        "trades": 9,
+        "win_rate": 88.89,
+        "net_pnl": 69817.56,
+        "avg_daily": 3878.75,
+        "profit_factor": 10.6,
+        "max_dd_pct": 1.33,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16460.08
+    },
+    {
+      "name": "BEST-B rp0.30 adx15",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 15,
+        "range_pos_min": 0.3,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "BEST-B rp0.30 adx15",
+        "trades": 34,
+        "win_rate": 94.12,
+        "net_pnl": 382358.98,
+        "avg_daily": 6167.08,
+        "profit_factor": 22.46,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 15,
+        "period": "full"
+      },
+      "full_losses": 2,
+      "oos": {
+        "name": "BEST-B rp0.30 adx15 OOS",
+        "trades": 9,
+        "win_rate": 88.89,
+        "net_pnl": 69817.56,
+        "avg_daily": 3878.75,
+        "profit_factor": 10.6,
+        "max_dd_pct": 1.33,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16460.08
+    },
+    {
+      "name": "BEST-R rp0.25 adx15 ml0.58 rsi40-55",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 15,
+        "range_pos_min": 0.25,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 40,
+        "rsi_max": 55,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "BEST-R rp0.25 adx15 ml0.58 rsi40-55",
+        "trades": 34,
+        "win_rate": 94.12,
+        "net_pnl": 382358.98,
+        "avg_daily": 6167.08,
+        "profit_factor": 22.46,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 15,
+        "period": "full"
+      },
+      "full_losses": 2,
+      "oos": {
+        "name": "BEST-R rp0.25 adx15 ml0.58 rsi40-55 OOS",
+        "trades": 9,
+        "win_rate": 88.89,
+        "net_pnl": 69817.56,
+        "avg_daily": 3878.75,
+        "profit_factor": 10.6,
+        "max_dd_pct": 1.33,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16460.08
+    },
+    {
+      "name": "rp>=0.35",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 0.0,
+        "range_pos_min": 0.35,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "rp>=0.35",
+        "trades": 31,
+        "win_rate": 96.77,
+        "net_pnl": 358408.92,
+        "avg_daily": 5780.79,
+        "profit_factor": 35.51,
+        "max_dd_pct": 1.29,
+        "days_above_1k": 15,
+        "period": "full"
+      },
+      "full_losses": 1,
+      "oos": {
+        "name": "rp>=0.35 OOS",
+        "trades": 9,
+        "win_rate": 88.89,
+        "net_pnl": 68870.44,
+        "avg_daily": 3826.14,
+        "profit_factor": 12.05,
+        "max_dd_pct": 1.17,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16241.57
+    },
+    {
+      "name": "G rp0.25 a18 m0.58",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 18.0,
+        "range_pos_min": 0.25,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "G rp0.25 a18 m0.58",
+        "trades": 24,
+        "win_rate": 95.83,
+        "net_pnl": 248916.51,
+        "avg_daily": 4014.78,
+        "profit_factor": 34.51,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 12,
+        "period": "full"
+      },
+      "full_losses": 1,
+      "oos": {
+        "name": "G rp0.25 a18 m0.58 OOS",
+        "trades": 8,
+        "win_rate": 100.0,
+        "net_pnl": 77087.66,
+        "avg_daily": 4282.65,
+        "profit_factor": 999,
+        "max_dd_pct": 0.0,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16072.779999999999
+    },
+    {
+      "name": "G rp0.3 a18 m0.58",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 18.0,
+        "range_pos_min": 0.3,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "G rp0.3 a18 m0.58",
+        "trades": 24,
+        "win_rate": 95.83,
+        "net_pnl": 248916.51,
+        "avg_daily": 4014.78,
+        "profit_factor": 34.51,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 12,
+        "period": "full"
+      },
+      "full_losses": 1,
+      "oos": {
+        "name": "G rp0.3 a18 m0.58 OOS",
+        "trades": 8,
+        "win_rate": 100.0,
+        "net_pnl": 77087.66,
+        "avg_daily": 4282.65,
+        "profit_factor": 999,
+        "max_dd_pct": 0.0,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16072.779999999999
+    },
+    {
+      "name": "BEST-C rp0.25 adx18",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 18,
+        "range_pos_min": 0.25,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "BEST-C rp0.25 adx18",
+        "trades": 24,
+        "win_rate": 95.83,
+        "net_pnl": 248916.51,
+        "avg_daily": 4014.78,
+        "profit_factor": 34.51,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 12,
+        "period": "full"
+      },
+      "full_losses": 1,
+      "oos": {
+        "name": "BEST-C rp0.25 adx18 OOS",
+        "trades": 8,
+        "win_rate": 100.0,
+        "net_pnl": 77087.66,
+        "avg_daily": 4282.65,
+        "profit_factor": 999,
+        "max_dd_pct": 0.0,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 16072.779999999999
+    },
+    {
+      "name": "adx>=12",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 12,
+        "range_pos_min": 0.0,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "adx>=12",
+        "trades": 57,
+        "win_rate": 85.96,
+        "net_pnl": 589204.77,
+        "avg_daily": 9503.3,
+        "profit_factor": 7.1,
+        "max_dd_pct": 2.77,
+        "days_above_1k": 22,
+        "period": "full"
+      },
+      "full_losses": 8,
+      "oos": {
+        "name": "adx>=12 OOS",
+        "trades": 13,
+        "win_rate": 69.23,
+        "net_pnl": 58761.95,
+        "avg_daily": 3264.55,
+        "profit_factor": 3.36,
+        "max_dd_pct": 2.11,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 15733.7
+    },
+    {
+      "name": "BEST-F rp0.25 adx15 risk20",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 15,
+        "range_pos_min": 0.25,
+        "max_risk_pts": 20,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "BEST-F rp0.25 adx15 risk20",
+        "trades": 32,
+        "win_rate": 93.75,
+        "net_pnl": 339599.53,
+        "avg_daily": 5477.41,
+        "profit_factor": 20.06,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 15,
+        "period": "full"
+      },
+      "full_losses": 2,
+      "oos": {
+        "name": "BEST-F rp0.25 adx15 risk20 OOS",
+        "trades": 9,
+        "win_rate": 88.89,
+        "net_pnl": 69817.56,
+        "avg_daily": 3878.75,
+        "profit_factor": 10.6,
+        "max_dd_pct": 1.33,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 15715.61
+    },
+    {
+      "name": "BASELINE Elite v2",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 0.0,
+        "range_pos_min": 0.0,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "BASELINE Elite v2",
+        "trades": 58,
+        "win_rate": 84.48,
+        "net_pnl": 572384.64,
+        "avg_daily": 9232.01,
+        "profit_factor": 6.25,
+        "max_dd_pct": 4.03,
+        "days_above_1k": 22,
+        "period": "full"
+      },
+      "full_losses": 9,
+      "oos": {
+        "name": "BASELINE Elite v2 OOS",
+        "trades": 13,
+        "win_rate": 69.23,
+        "net_pnl": 58761.95,
+        "avg_daily": 3264.55,
+        "profit_factor": 3.36,
+        "max_dd_pct": 2.11,
+        "days_above_1k": 5,
+        "period": "OOS"
+      },
+      "score": 15034.21
+    },
+    {
+      "name": "rp>=0.2",
+      "filters": {
+        "ml_th": 0.58,
+        "adx_min": 0.0,
+        "range_pos_min": 0.2,
+        "max_risk_pts": 22,
+        "min_risk_pts": 0.0,
+        "hour_start": 9,
+        "hour_end": 14,
+        "require_ema_stack": false,
+        "rsi_min": 0.0,
+        "rsi_max": 100.0,
+        "max_trades_per_day": 4
+      },
+      "full": {
+        "name": "rp>=0.2",
+        "trades": 42,
+        "win_rate": 88.1,
+        "net_pnl": 432085.29,
+        "avg_daily": 6969.12,
+        "profit_factor": 9.38,
+        "max_dd_pct": 1.47,
+        "days_above_1k": 20,
+        "period": "full"
+      },
+      "full_losses": 5,
+      "oos": {
+        "name": "rp>=0.2 OOS",
+        "trades": 12,
+        "win_rate": 75.0,
+        "net_pnl": 64536.47,
+        "avg_daily": 3585.36,
+        "profit_factor": 4.38,
+        "max_dd_pct": 1.42,
+        "days_above_1k": 6,
+        "period": "OOS"
+      },
+      "score": 14883.34
+    }
+  ]
+}

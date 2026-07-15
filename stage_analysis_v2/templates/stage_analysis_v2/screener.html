@@ -1,0 +1,82 @@
+{% extends "trading/base.html" %}
+{% block title %}V2 Screener{% endblock %}
+{% block content %}
+<div class="mb-6">
+  <div class="flex gap-3 items-center">
+    <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm text-slate-400 hover:text-emerald-400">← Stage Analysis 2.0</a>
+    <a href="{% url 'stage_analysis_v2:backtest' %}" class="text-sm text-emerald-400 hover:underline">Backtest</a>
+  </div>
+  <h2 class="text-2xl font-bold mt-1">High-Probability Stage 2 Screener</h2>
+  <p class="text-slate-400 text-sm">Default: Stage 2 · Quality &gt;75 · Strong RS · Clean Breakout</p>
+</div>
+
+{% include "stage_analysis_v2/partials/market_banner.html" %}
+
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 flex flex-wrap gap-4 items-end text-sm">
+  <input type="hidden" name="run_scan" value="on">
+  <label>Min Quality <input type="number" name="min_quality_score" value="{{ form.min_quality_score.value|default:75 }}" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-20"></label>
+  <label>Min RS <input type="number" name="min_rs_rating" value="{{ form.min_rs_rating.value|default:60 }}" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-20"></label>
+  <label>Sector {{ form.sector }}</label>
+  <label>Breakout {{ form.breakout_type }}</label>
+  <label>Daily {{ form.daily_stage }}</label>
+  <label class="flex items-center gap-2"><input type="checkbox" name="strong_rs_only" {% if form.strong_rs_only.value %}checked{% endif %}> Strong RS</label>
+  <label class="flex items-center gap-2"><input type="checkbox" name="market_favorable_only" {% if form.market_favorable_only.value %}checked{% endif %}> Market favorable</label>
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2.5 font-medium">Scan Nifty 200</button>
+</form>
+
+{% if scan_result %}
+<p class="text-sm text-emerald-300 mb-4">
+  <strong>{{ scan_result.items|length }}</strong> matches from {{ scan_result.stage2_candidates }} Stage 2 candidates
+</p>
+
+{% if scan_result.items %}
+<div class="overflow-x-auto mb-8">
+  <table class="w-full text-sm">
+    <thead class="text-slate-400 border-b border-slate-700">
+      <tr>
+        <th class="text-left py-2">#</th><th>Symbol</th><th>Score</th><th>Sector</th><th>W/D</th><th>RS</th><th>Breakout</th><th>Entry</th><th>Stop</th><th>RR</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in scan_result.items %}
+      <tr class="border-b border-slate-800 {% if r.quality_tier == 'high' %}bg-emerald-950/30{% endif %}">
+        <td class="py-2 text-slate-500">{{ forloop.counter }}</td>
+        <td class="py-2"><a href="{% url 'stage_analysis_v2:stock_detail' ticker=r.ticker %}" class="text-emerald-400 font-medium">{{ r.ticker }}</a></td>
+        <td class="text-center font-bold {% if r.quality_score >= 75 %}text-emerald-400{% else %}text-emerald-400/70{% endif %}">{{ r.quality_score }}</td>
+        <td class="text-center text-xs text-slate-400">{{ r.sector|default:"—" }}</td>
+        <td class="text-center text-xs">W{{ r.weekly_stage }}/D{{ r.daily_stage }}</td>
+        <td class="text-center">{{ r.rs_rating|floatformat:0 }}</td>
+        <td class="text-center text-xs">{{ r.breakout_type }}</td>
+        <td class="text-center">{{ r.pullback_entry|floatformat:2 }}</td>
+        <td class="text-center text-red-400">{{ r.stop_loss|floatformat:2 }}</td>
+        <td class="text-center">{{ r.risk_reward }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if scan_result.by_sector %}
+<section class="mb-8">
+  <h3 class="font-semibold text-slate-300 mb-4">By Sector</h3>
+  <div class="space-y-4">
+    {% for sector, items in scan_result.by_sector.items %}
+    <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+      <h4 class="font-medium text-emerald-300 mb-2">{{ sector }} ({{ items|length }})</h4>
+      <div class="flex flex-wrap gap-2">
+        {% for r in items %}
+        <a href="{% url 'stage_analysis_v2:stock_detail' ticker=r.ticker %}" class="px-2 py-1 rounded text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400">{{ r.ticker }} <span class="text-slate-500">{{ r.quality_score }}</span></a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% else %}
+<p class="text-slate-500">No matches. Try lowering filters or check market conditions.</p>
+{% endif %}
+{% else %}
+<p class="text-slate-500 text-sm">Click <strong class="text-emerald-400">Scan Nifty 200</strong> with strict filters pre-loaded.</p>
+{% endif %}
+{% endblock %}

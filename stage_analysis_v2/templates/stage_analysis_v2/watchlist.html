@@ -1,0 +1,33 @@
+{% extends "trading/base.html" %}
+{% block title %}V2 Watchlist{% endblock %}
+{% block content %}
+<div class="mb-6">
+  <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm text-slate-400 hover:text-emerald-400">← Stage Analysis 2.0</a>
+  <h2 class="text-2xl font-bold mt-1">Watchlist</h2>
+</div>
+
+<form method="post" class="flex flex-wrap gap-3 mb-6 text-sm">{% csrf_token %}
+  {{ form.ticker }}{{ form.notes }}
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-4 py-2">Add</button>
+</form>
+
+<div class="space-y-3">
+  {% for row in items %}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 flex flex-wrap justify-between gap-4">
+    <div>
+      <a href="{% url 'stage_analysis_v2:stock_detail' ticker=row.watch.ticker %}" class="font-bold text-emerald-400 text-lg">{{ row.watch.ticker }}</a>
+      {% if row.analysis %}
+      <span class="ml-2 text-sm font-bold {% if row.analysis.quality_score >= 70 %}text-emerald-400{% else %}text-amber-400{% endif %}">Q{{ row.analysis.quality_score }}</span>
+      <span class="ml-2 text-xs">W{{ row.analysis.weekly_stage }}/D{{ row.analysis.daily_stage }} · RS {{ row.analysis.rs_rating|floatformat:0 }}</span>
+      {% endif %}
+      <p class="text-xs text-slate-500 mt-1">{{ row.watch.company_name }}</p>
+    </div>
+    <form method="post" action="{% url 'stage_analysis_v2:watchlist_remove' row.watch.pk %}">{% csrf_token %}
+      <button class="text-red-400 text-sm hover:underline">Remove</button>
+    </form>
+  </div>
+  {% empty %}
+  <p class="text-slate-500">Watchlist empty.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,585 @@
+{
+  "capital": 500000.0,
+  "target_daily": 1000.0,
+  "trading_days": 57,
+  "target_met": false,
+  "hit_target": [],
+  "top_25": [
+    {
+      "name": "ORB-15 1.5R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "ORB-15 1.5R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "ORB-15 2R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "ORB-15 2R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "ORB-30 1.5R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "ORB-30 1.5R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "ORB-30 2R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "ORB-30 2R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "VWAP-Inst 1.25R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "VWAP-Inst 1.25R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "VWAP-Inst 1.5R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "VWAP-Inst 1.5R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "RelStrength 0.5% r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "RelStrength 0.5% r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "RelStrength 0.8% r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "RelStrength 0.8% r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "RelStrength 1.0% r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "RelStrength 1.0% r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "1stHour-Mom 1.5R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "1stHour-Mom 1.5R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "1stHour-Mom 2R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "1stHour-Mom 2R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "Vol-Breakout 1.5R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "Vol-Breakout 1.5R r4.0% p15 x3 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 4.0,
+        "max_positions": 15,
+        "trades_per_day": 3,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    },
+    {
+      "name": "Vol-Breakout 2R r3.0% p12 x2 +idx",
+      "trades": 0,
+      "win_rate": 0,
+      "profit_factor": 0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 500000.0,
+      "params": {
+        "risk_pct": 3.0,
+        "max_positions": 12,
+        "trades_per_day": 2,
+        "market_filter": true
+      },
+      "daily_stats": {
+        "avg_daily_pnl": 0.0,
+        "days_above_1000": 0,
+        "max_daily_pnl": 0,
+        "trading_days": 57
+      }
+    }
+  ],
+  "profitable_count": 0
+}

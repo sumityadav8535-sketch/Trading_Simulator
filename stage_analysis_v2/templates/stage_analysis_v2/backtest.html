@@ -1,0 +1,223 @@
+{% extends "trading/base.html" %}
+{% block title %}Stage Analysis 2.0 Backtest{% endblock %}
+{% block content %}
+<div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+  <div>
+    <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm text-slate-400 hover:text-emerald-400">← Stage Analysis 2.0</a>
+    <h2 class="text-2xl font-bold mt-2">Stage Analysis <span class="text-emerald-400">2.0</span> Backtest</h2>
+    <p class="text-slate-400 text-sm mt-1">Buy on weekly Stage 2 entry · Exit on stop, 2.5R target, stage deterioration, or 65-day max hold</p>
+  </div>
+</div>
+
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 text-sm">
+  <input type="hidden" name="run" value="1">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+    <label class="block">Universe
+      <select name="universe" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+        {% for val, label in form.fields.universe.choices %}
+        <option value="{{ val }}" {% if form.universe.value == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="block">Symbol
+      {{ form.symbol }}
+      {% if form.symbol.errors %}<span class="text-red-400 text-xs">{{ form.symbol.errors.0 }}</span>{% endif %}
+    </label>
+    <label class="block">Start date
+      <input type="date" name="start_date" value="{{ form.start_date.value|date:'Y-m-d' }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+    </label>
+    <label class="block">End date
+      <input type="date" name="end_date" value="{{ form.end_date.value|date:'Y-m-d' }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+    </label>
+    <label class="block">Capital ₹
+      <input type="number" name="capital" value="{{ form.capital.value|default:1000000 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+    </label>
+    <label class="block">Min quality (0–100)
+      <input type="number" name="min_quality_score" value="{{ form.min_quality_score.value|default:0 }}" min="0" max="100" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-24">
+    </label>
+    <label class="flex items-center gap-2 mt-6">
+      <input type="checkbox" name="market_filter" {% if form.market_filter.value %}checked{% endif %} class="rounded bg-slate-800 border-slate-600">
+      <span>Nifty Stage 1/2 only</span>
+    </label>
+    <div class="flex items-end">
+      <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2 font-medium w-full md:w-auto">Run Backtest</button>
+    </div>
+  </div>
+  <label class="block md:col-span-2">Custom symbols (comma-separated, for Custom list)
+    <textarea name="symbols" rows="2" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="TCS, INFY, HDFCBANK">{{ form.symbols.value|default:'' }}</textarea>
+    {% if form.symbols.errors %}<span class="text-red-400 text-xs">{{ form.symbols.errors.0 }}</span>{% endif %}
+  </label>
+  {% if form.non_field_errors %}
+  <p class="text-red-400 text-xs mt-2">{{ form.non_field_errors.0 }}</p>
+  {% endif %}
+</form>
+
+{% if bt_result %}
+<div class="text-xs text-slate-500 mb-4">
+  {{ bt_result.strategy_name }} · {{ bt_result.start_date }} → {{ bt_result.end_date }} ·
+  {% if symbol_list|length <= 5 %}{{ symbol_list|join:", " }}{% else %}{{ symbol_list|length }} symbols{% endif %}
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Stocks scanned</p>
+    <p class="text-xl font-bold">{{ bt_result.stocks_scanned }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Stage 2 signals</p>
+    <p class="text-xl font-bold">{{ bt_result.stage2_entries }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Trades</p>
+    <p class="text-xl font-bold">{{ bt_result.total_trades }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Win rate</p>
+    <p class="text-xl font-bold">{{ bt_result.win_rate }}%</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Profit factor</p>
+    <p class="text-xl font-bold">{{ bt_result.profit_factor }}</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Total return</p>
+    <p class="text-xl font-bold {% if bt_result.total_return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ bt_result.total_return_pct }}%</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Max drawdown</p>
+    <p class="text-xl font-bold text-red-400">{{ bt_result.max_drawdown_pct }}%</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Avg R achieved</p>
+    <p class="text-xl font-bold">{{ bt_result.avg_rr }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Avg hold (days)</p>
+    <p class="text-xl font-bold">{{ bt_result.avg_hold_days }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Expectancy (R)</p>
+    <p class="text-xl font-bold">{{ bt_result.expectancy_r }}</p>
+  </div>
+</div>
+
+{% if bt_result.exit_breakdown %}
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 text-sm">
+  <p class="text-slate-400 text-xs mb-2">Exit breakdown</p>
+  <div class="flex flex-wrap gap-3">
+    {% for reason, count in bt_result.exit_breakdown.items %}
+    <span class="px-2 py-1 rounded bg-slate-800 border border-slate-700">{{ reason }}: <strong>{{ count }}</strong></span>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="grid md:grid-cols-2 gap-4 mb-6">
+  <div id="equity-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[320px]"></div>
+  <div id="monthly-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[320px]"></div>
+</div>
+<div class="grid md:grid-cols-2 gap-4 mb-6">
+  <div id="exits-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[300px]"></div>
+  <div id="winloss-chart" class="bg-slate-900 border border-slate-800 rounded-lg min-h-[300px]"></div>
+</div>
+
+{% if bt_result.monthly_returns %}
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 overflow-x-auto">
+  <h3 class="text-sm font-semibold text-emerald-300 mb-3">Monthly P&amp;L</h3>
+  <table class="w-full text-sm">
+    <thead class="text-slate-400 border-b border-slate-700">
+      <tr><th class="p-2 text-left">Month</th><th class="text-right p-2">P&amp;L ₹</th><th class="text-right p-2">Return %</th><th class="text-right p-2">Equity</th></tr>
+    </thead>
+    <tbody>
+      {% for m in bt_result.monthly_returns %}
+      <tr class="border-b border-slate-800">
+        <td class="p-2">{{ m.month }}</td>
+        <td class="p-2 text-right {% if m.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ m.pnl|floatformat:0 }}</td>
+        <td class="p-2 text-right {% if m.return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ m.return_pct }}%</td>
+        <td class="p-2 text-right text-slate-300">{{ m.equity|floatformat:0 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% if bt_result.trades %}
+<div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg mb-6">
+  <h3 class="text-sm font-semibold text-emerald-300 p-4 pb-0">All trades ({{ bt_result.total_trades }})</h3>
+  <table class="w-full text-xs mt-2">
+    <thead class="text-slate-400 border-b border-slate-700">
+      <tr>
+        <th class="p-2 text-left">Symbol</th>
+        <th>Signal</th>
+        <th>Entry</th>
+        <th>Exit</th>
+        <th>Entry ₹</th>
+        <th>Exit ₹</th>
+        <th>Stop</th>
+        <th>Target</th>
+        <th>Qty</th>
+        <th>P&amp;L ₹</th>
+        <th>P&amp;L %</th>
+        <th>R</th>
+        <th>Q</th>
+        <th>RS</th>
+        <th>Days</th>
+        <th>Exit reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in bt_result.trades %}
+      <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+        <td class="p-2">
+          <a href="{% url 'stage_analysis_v2:stock_detail' ticker=t.symbol %}" class="text-emerald-400 font-medium">{{ t.symbol }}</a>
+        </td>
+        <td class="text-center">{{ t.signal_date }}</td>
+        <td class="text-center">{{ t.entry_date }}</td>
+        <td class="text-center">{{ t.exit_date }}</td>
+        <td class="text-center">{{ t.entry_price }}</td>
+        <td class="text-center">{{ t.exit_price }}</td>
+        <td class="text-center text-slate-400">{{ t.stop_loss }}</td>
+        <td class="text-center text-slate-400">{{ t.target }}</td>
+        <td class="text-center">{{ t.quantity }}</td>
+        <td class="text-center font-medium {% if t.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ t.pnl|floatformat:0 }}</td>
+        <td class="text-center {% if t.pnl_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ t.pnl_pct }}%</td>
+        <td class="text-center">{{ t.rr_achieved }}</td>
+        <td class="text-center">{{ t.quality_score }}</td>
+        <td class="text-center">{{ t.rs_rating|floatformat:0 }}</td>
+        <td class="text-center">{{ t.days_held }}</td>
+        <td class="text-center text-slate-400">{{ t.exit_reason }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% elif run_requested %}
+<p class="text-slate-400 text-sm">No trades in this period for the selected symbols and filters.</p>
+{% endif %}
+
+{% if charts %}
+<script>
+  {% if charts.equity %}Plotly.newPlot('equity-chart', {{ charts.equity|safe }}.data, {{ charts.equity|safe }}.layout, {responsive: true});{% endif %}
+  {% if charts.monthly %}Plotly.newPlot('monthly-chart', {{ charts.monthly|safe }}.data, {{ charts.monthly|safe }}.layout, {responsive: true});{% endif %}
+  {% if charts.exits %}Plotly.newPlot('exits-chart', {{ charts.exits|safe }}.data, {{ charts.exits|safe }}.layout, {responsive: true});{% endif %}
+  {% if charts.win_loss %}Plotly.newPlot('winloss-chart', {{ charts.win_loss|safe }}.data, {{ charts.win_loss|safe }}.layout, {responsive: true});{% endif %}
+</script>
+{% endif %}
+
+{% elif run_requested and form.errors %}
+<p class="text-red-400 text-sm">Fix the form errors above and try again.</p>
+{% else %}
+<div class="bg-slate-900 border border-slate-800 rounded-lg p-6 text-sm text-slate-400">
+  <p class="mb-2">Pick a date range and stock(s), then run the backtest.</p>
+  <ul class="list-disc list-inside space-y-1 text-xs">
+    <li><strong>Single stock</strong> — e.g. RELIANCE, TCS.NS</li>
+    <li><strong>Custom list</strong> — comma-separated symbols</li>
+    <li><strong>Nifty 200</strong> — full universe scan</li>
+  </ul>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "trading/base.html" %}
+{% block title %}Screener{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Stock Screener</h2>
+<p class="text-slate-400 text-sm mb-6">Filter Nifty 200 by technical confluence and optional fundamentals.</p>
+
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+  <label class="flex items-center gap-2"><input type="checkbox" name="nifty200_only" {% if form.nifty200_only.value %}checked{% endif %}> Nifty 200 only</label>
+  <label class="flex items-center gap-2"><input type="checkbox" name="enable_fundamentals" {% if form.enable_fundamentals.value %}checked{% endif %}> Fundamentals</label>
+  <label class="flex items-center gap-2"><input type="checkbox" name="above_200ema" {% if form.above_200ema.value %}checked{% endif %}> Above 200 EMA</label>
+  <label>Min ADX <input type="number" step="0.1" name="min_adx" value="{{ form.min_adx.value|default:20 }}" class="ml-2 bg-slate-800 border border-slate-700 rounded px-2 py-1 w-20"></label>
+  <label>Min Score <input type="number" name="min_confluence" value="{{ form.min_confluence.value|default:5 }}" class="ml-2 bg-slate-800 border border-slate-700 rounded px-2 py-1 w-16"></label>
+  <button type="submit" class="col-span-2 md:col-span-1 bg-emerald-600 hover:bg-emerald-500 rounded px-4 py-2 font-medium">Run Screener</button>
+</form>
+
+{% if results %}
+<p class="text-sm text-slate-400 mb-2">{{ results|length }} matches</p>
+<div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg">
+  <table class="w-full text-sm">
+    <thead class="text-slate-400 border-b border-slate-700">
+      <tr>
+        <th class="text-left p-3">Symbol</th><th>Score</th><th>Valid</th><th>Close</th><th>ADX</th><th>RSI</th><th>RR</th><th>Reasons</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+      <tr class="border-b border-slate-800">
+        <td class="p-3"><a href="{% url 'chart' %}?symbol={{ r.stock.symbol }}" class="text-emerald-400">{{ r.stock.symbol }}</a></td>
+        <td class="text-center">{{ r.eval.confluence_score }}</td>
+        <td class="text-center">{% if r.eval.is_valid %}<span class="text-emerald-400">✓</span>{% else %}—{% endif %}</td>
+        <td class="text-center">{{ r.eval.indicator_snapshot.close|floatformat:2 }}</td>
+        <td class="text-center">{{ r.eval.indicator_snapshot.adx_14|floatformat:1 }}</td>
+        <td class="text-center">{{ r.eval.indicator_snapshot.rsi_14|floatformat:1 }}</td>
+        <td class="text-center">{{ r.eval.risk_reward|default:"—" }}</td>
+        <td class="p-3 text-xs text-slate-400">{{ r.eval.reasons|join:", "|truncatechars:80 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% elif request.GET %}
+<p class="text-slate-500">No stocks matched criteria.</p>
+{% endif %}
+{% endblock %}

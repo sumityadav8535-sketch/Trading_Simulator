@@ -1,0 +1,246 @@
+{% extends "trading/base.html" %}
+{% block title %}Signal Scanner{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-1">EMA20 Elite Signal Scanner</h2>
+<p class="text-slate-400 text-sm mb-4">
+  {{ strategy_name|default:"EMA20 Elite (strong/engulf)" }} — strong close or bullish engulfing at 20 EMA,
+  ADX≥20, 3-bar higher lows, RSI 48–58, +DI &gt; −DI, 2R target.
+  Only when <strong class="text-slate-300">Nifty 50 &gt; 50 EMA &amp; 200 EMA</strong>.
+  History sim pauses new entries after 2 consecutive portfolio losses.
+</p>
+
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 flex flex-wrap gap-4 items-end text-sm"
+      hx-get="{% url 'scanner' %}" hx-target="#scan-results" hx-select="#scan-results" hx-push-url="true">
+  <label>Scope
+    <select name="scope" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+      {% for val, label in form.fields.scope.choices %}
+      <option value="{{ val }}" {% if form.scope.value == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Min Score <input type="number" name="min_score" value="{{ form.min_score.value|default:7 }}" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-24"></label>
+  <label>Capital <input type="number" name="capital" value="{{ form.capital.value|default:100000 }}" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-32"></label>
+  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2 font-medium">Scan Now</button>
+</form>
+
+<div id="scan-results">
+{% if scan_results %}
+<p class="text-sm text-slate-400 mb-4">{{ scan_results|length }} setups found (min score {{ form.min_score.value }})</p>
+<div class="space-y-4">
+  {% for r in scan_results %}
+  <div class="bg-slate-900 border {% if r.is_valid %}border-emerald-700{% else %}border-slate-800{% endif %} rounded-lg p-4">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="font-bold text-lg">
+        <a href="{% url 'chart' %}?symbol={{ r.symbol }}" class="text-emerald-400">{{ r.symbol }}</a>
+        <span class="text-sm font-normal text-slate-400 ml-2">{{ r.eval_date }}</span>
+      </h3>
+      <span class="px-2 py-1 rounded text-sm {% if r.is_valid %}bg-emerald-900 text-emerald-300{% else %}bg-slate-800{% endif %}">
+        Score {{ r.confluence_score }}/10
+        {% if r.entry_path %}· {{ r.entry_path }}{% endif %}
+        {% if r.is_valid %}· Valid{% endif %}
+      </span>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-sm mb-3">
+      <div>Entry: <strong>{{ r.entry_price }}</strong></div>
+      <div>SL: <strong class="text-red-400">{{ r.stop_loss }}</strong></div>
+      <div>2R: <strong class="text-blue-400">{{ r.target_2r }}</strong></div>
+      <div>RR: <strong>{{ r.risk_reward }}</strong></div>
+      <div>Qty: <strong>{{ r.position_size }}</strong> (₹{{ r.capital_used }})</div>
+    </div>
+    <p class="text-xs text-emerald-300/80">{{ r.reasons|join:" · " }}</p>
+    {% if r.rejection_reasons %}
+    <p class="text-xs text-red-300/70 mt-1">{{ r.rejection_reasons|join:" · " }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% elif request.GET %}
+<p class="text-slate-500">No setups found. Lower min score or check data coverage.</p>
+{% else %}
+<p class="text-slate-500">Configure filters and click Scan Now.</p>
+{% endif %}
+</div>
+
+<!-- Signal history chart -->
+<section class="mt-10 bg-slate-900 border border-slate-800 rounded-lg p-4 md:p-6">
+  <div class="flex flex-wrap items-end justify-between gap-4 mb-4">
+    <div>
+      <h3 class="text-lg font-semibold text-emerald-300">Signal History</h3>
+      <p class="text-xs text-slate-400 mt-1">Bars = signals per day (green = net profit, red = net loss). Uses Nifty regime + loss-streak pause. Click a bar for trade details.</p>
+    </div>
+    <div class="flex flex-wrap gap-2 text-sm" id="history-period-btns">
+      <button type="button" data-period="9m" class="history-period px-3 py-1.5 rounded bg-emerald-700 text-white">9 months</button>
+      <button type="button" data-period="1y" class="history-period px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700">1 year</button>
+      <button type="button" data-period="2y" class="history-period px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700">2 years</button>
+      <button type="button" data-period="3y" class="history-period px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700">3 years</button>
+      <button type="button" data-period="custom" class="history-period px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700">Custom</button>
+    </div>
+  </div>
+
+  <div id="history-custom-range" class="hidden flex flex-wrap gap-3 items-end text-sm mb-4">
+    <label>From <input type="date" id="history-start" value="{{ history_default_start }}" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+    <label>To <input type="date" id="history-end" value="{{ history_default_end }}" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2"></label>
+    <button type="button" id="history-apply-custom" class="bg-emerald-600 hover:bg-emerald-500 rounded px-4 py-2">Apply</button>
+  </div>
+
+  <div id="history-loading" class="text-slate-400 text-sm py-8 text-center">
+    Loading signal history…
+  </div>
+  <div id="history-summary" class="hidden grid grid-cols-2 md:grid-cols-5 gap-3 text-sm mb-4"></div>
+  <div id="scanner-history-chart" class="hidden w-full" style="min-height:380px"></div>
+
+  <div id="history-day-panel" class="hidden mt-6 border-t border-slate-700 pt-4">
+    <h4 class="font-semibold text-emerald-300 mb-1" id="history-day-title"></h4>
+    <p class="text-xs text-slate-400 mb-3" id="history-day-subtitle"></p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-slate-400 border-b border-slate-700">
+          <tr>
+            <th class="p-2 text-left">Symbol</th>
+            <th>Signal</th>
+            <th>Entry</th>
+            <th>Exit</th>
+            <th>SL</th>
+            <th>2R</th>
+            <th>Qty</th>
+            <th>P&L</th>
+            <th>RR</th>
+            <th>Days</th>
+            <th>Result</th>
+            <th class="text-left">Why win/loss</th>
+          </tr>
+        </thead>
+        <tbody id="history-day-rows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const apiUrl = "{% url 'scanner_history_api' %}";
+  const capital = {{ form.capital.value|default:"100000" }};
+  let currentPeriod = "9m";
+  let historyData = null;
+
+  const chartEl = document.getElementById("scanner-history-chart");
+  const loadingEl = document.getElementById("history-loading");
+  const summaryEl = document.getElementById("history-summary");
+  const dayPanel = document.getElementById("history-day-panel");
+  const customRange = document.getElementById("history-custom-range");
+
+  function setActivePeriod(period) {
+    currentPeriod = period;
+    document.querySelectorAll(".history-period").forEach(btn => {
+      const active = btn.dataset.period === period;
+      btn.className = "history-period px-3 py-1.5 rounded " +
+        (active ? "bg-emerald-700 text-white" : "bg-slate-800 hover:bg-slate-700");
+    });
+    customRange.classList.toggle("hidden", period !== "custom");
+  }
+
+  function renderSummary(summary) {
+    if (!summary || !summary.trades) {
+      summaryEl.classList.add("hidden");
+      return;
+    }
+    summaryEl.classList.remove("hidden");
+    summaryEl.innerHTML = `
+      <div class="bg-slate-800/50 rounded p-3"><span class="text-slate-400 block text-xs">Trades</span><strong>${summary.trades}</strong></div>
+      <div class="bg-slate-800/50 rounded p-3"><span class="text-slate-400 block text-xs">Win rate</span><strong>${summary.win_rate}%</strong></div>
+      <div class="bg-slate-800/50 rounded p-3"><span class="text-slate-400 block text-xs">Net P&L</span><strong class="${summary.total_pnl >= 0 ? 'text-emerald-400' : 'text-red-400'}">₹${Number(summary.total_pnl).toLocaleString('en-IN')}</strong></div>
+      <div class="bg-slate-800/50 rounded p-3"><span class="text-slate-400 block text-xs">Return on capital</span><strong>${summary.total_return_pct}%</strong></div>
+      <div class="bg-slate-800/50 rounded p-3"><span class="text-slate-400 block text-xs">W / L</span><strong>${summary.wins} / ${summary.losses}</strong></div>
+    `;
+  }
+
+  function renderDayDetail(dateStr) {
+    const rows = (historyData && historyData.by_date && historyData.by_date[dateStr]) || [];
+    const daily = (historyData && historyData.daily || []).find(d => d.date === dateStr);
+    document.getElementById("history-day-title").textContent = "Signals on " + dateStr;
+    const sub = daily
+      ? `${daily.count} signal(s) · Net P&L ₹${Number(daily.pnl).toLocaleString('en-IN')} · ${daily.wins}W / ${daily.losses}L`
+      : "";
+    document.getElementById("history-day-subtitle").textContent = sub;
+
+    const tbody = document.getElementById("history-day-rows");
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="12" class="p-4 text-slate-500 text-center">No trades for this date.</td></tr>';
+      dayPanel.classList.remove("hidden");
+      return;
+    }
+
+    tbody.innerHTML = rows.map(r => `
+      <tr class="border-b border-slate-800">
+        <td class="p-2"><a href="{% url 'chart' %}?symbol=${r.symbol}" class="text-emerald-400">${r.symbol}</a></td>
+        <td class="text-center text-xs">${r.signal_date}<br><span class="text-slate-500">₹${r.signal_close}</span></td>
+        <td class="text-center text-xs">${r.entry_date}<br><strong>₹${r.entry_price}</strong></td>
+        <td class="text-center text-xs">${r.exit_date}<br>₹${r.exit_price}</td>
+        <td class="text-center text-red-400">₹${r.stop_loss}</td>
+        <td class="text-center text-blue-400">₹${r.target_2r}</td>
+        <td class="text-center">${r.quantity}</td>
+        <td class="text-center ${r.pnl >= 0 ? 'text-emerald-400' : 'text-red-400'}">₹${Number(r.pnl).toLocaleString('en-IN')}</td>
+        <td class="text-center">${r.rr_achieved}</td>
+        <td class="text-center">${r.days_held}</td>
+        <td class="text-center text-xs">${r.outcome === 'win' ? '<span class="text-emerald-400">Win</span>' : '<span class="text-red-400">Loss</span>'}<br>${r.exit_reason}</td>
+        <td class="p-2 text-xs text-slate-300 max-w-md">${r.outcome_detail || '—'}</td>
+      </tr>
+    `).join("");
+    dayPanel.classList.remove("hidden");
+    dayPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function loadHistory() {
+    loadingEl.classList.remove("hidden");
+    loadingEl.textContent = "Computing signal history… this may take 1–2 minutes.";
+    chartEl.classList.add("hidden");
+    summaryEl.classList.add("hidden");
+    dayPanel.classList.add("hidden");
+
+    const params = new URLSearchParams({ period: currentPeriod, capital: capital });
+    if (currentPeriod === "custom") {
+      params.set("start_date", document.getElementById("history-start").value);
+      params.set("end_date", document.getElementById("history-end").value);
+    }
+
+    fetch(apiUrl + "?" + params.toString())
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) throw new Error(data.error);
+        historyData = data;
+        loadingEl.classList.add("hidden");
+        renderSummary(data.summary);
+
+        if (!data.chart || !data.chart.data || !data.chart.data.length) {
+          loadingEl.classList.remove("hidden");
+          loadingEl.textContent = "No signals in this period.";
+          return;
+        }
+
+        chartEl.classList.remove("hidden");
+        Plotly.newPlot(chartEl, data.chart.data, data.chart.layout, { responsive: true });
+        chartEl.on("plotly_click", function(evt) {
+          if (evt.points && evt.points[0]) {
+            renderDayDetail(String(evt.points[0].x).slice(0, 10));
+          }
+        });
+      })
+      .catch(err => {
+        loadingEl.classList.remove("hidden");
+        loadingEl.textContent = "Failed to load history: " + err.message;
+      });
+  }
+
+  document.querySelectorAll(".history-period").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setActivePeriod(btn.dataset.period);
+      if (btn.dataset.period !== "custom") loadHistory();
+    });
+  });
+  document.getElementById("history-apply-custom").addEventListener("click", loadHistory);
+
+  setActivePeriod("9m");
+  loadHistory();
+})();
+</script>
+{% endblock %}

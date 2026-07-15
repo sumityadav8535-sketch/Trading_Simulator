@@ -1,0 +1,268 @@
+{
+  "capital": 100000.0,
+  "symbols": 100,
+  "date_range": [
+    "2026-04-13",
+    "2026-07-06"
+  ],
+  "data_note": "yfinance 5m max ~60 calendar days",
+  "top_profitable": [],
+  "high_win_rate": [],
+  "best_overall": [
+    {
+      "name": "Combo Elite 2.0R r1.5% pos4",
+      "trades": 7,
+      "win_rate": 42.86,
+      "profit_factor": 2.24,
+      "total_return_pct": 0.81,
+      "net_pnl": 807.07,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 100807.07,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 4,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo Elite 1.5R r1.5% pos4",
+      "trades": 7,
+      "win_rate": 42.86,
+      "profit_factor": 2.21,
+      "total_return_pct": 0.78,
+      "net_pnl": 783.59,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 100783.59,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.5,
+        "max_positions": 4,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo Elite 2.0R r1.0% pos3",
+      "trades": 6,
+      "win_rate": 33.33,
+      "profit_factor": 1.47,
+      "total_return_pct": 0.3,
+      "net_pnl": 304.34,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 100304.34,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 3,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "Combo Elite 1.5R r1.0% pos3",
+      "trades": 6,
+      "win_rate": 33.33,
+      "profit_factor": 1.37,
+      "total_return_pct": 0.24,
+      "net_pnl": 238.38,
+      "max_drawdown_pct": 0.63,
+      "avg_r": 0.0,
+      "final_equity": 100238.38,
+      "params": {
+        "family": "combo",
+        "risk_pct": 1.0,
+        "max_positions": 3,
+        "market_filter": false
+      }
+    },
+    {
+      "name": "ORB30 vol1.2 rng0.002 r1.5% pos4 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "orb30",
+        "risk_pct": 1.5,
+        "max_positions": 4,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "ORB30 vol1.2 rng0.002 r2.0% pos5 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "orb30",
+        "risk_pct": 2.0,
+        "max_positions": 5,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "ORB30 vol1.2 rng0.003 r1.5% pos4 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "orb30",
+        "risk_pct": 1.5,
+        "max_positions": 4,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "ORB30 vol1.2 rng0.003 r2.0% pos5 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "orb30",
+        "risk_pct": 2.0,
+        "max_positions": 5,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "ORB30 vol1.5 rng0.002 r1.5% pos4 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "orb30",
+        "risk_pct": 1.5,
+        "max_positions": 4,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "ORB30 vol1.5 rng0.002 r2.0% pos5 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "orb30",
+        "risk_pct": 2.0,
+        "max_positions": 5,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "ORB30 vol1.5 rng0.003 r1.5% pos4 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "orb30",
+        "risk_pct": 1.5,
+        "max_positions": 4,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "ORB30 vol1.5 rng0.003 r2.0% pos5 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "orb30",
+        "risk_pct": 2.0,
+        "max_positions": 5,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "VWAP Pullback 1.0R r1.5% pos4 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "vwap",
+        "risk_pct": 1.5,
+        "max_positions": 4,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "VWAP Pullback 1.0R r2.0% pos5 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "vwap",
+        "risk_pct": 2.0,
+        "max_positions": 5,
+        "market_filter": true
+      }
+    },
+    {
+      "name": "VWAP Pullback 1.5R r1.5% pos4 +idx",
+      "trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_return_pct": 0.0,
+      "net_pnl": 0.0,
+      "max_drawdown_pct": 0.0,
+      "avg_r": 0.0,
+      "final_equity": 100000.0,
+      "params": {
+        "family": "vwap",
+        "risk_pct": 1.5,
+        "max_positions": 4,
+        "market_filter": true
+      }
+    }
+  ]
+}
