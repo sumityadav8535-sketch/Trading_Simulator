@@ -21,6 +21,7 @@ db.sqlite3
 db.sqlite3-journal
 media/
 staticfiles/
+staticfiles/**
 
 # Local / generated data caches (keep JSON results if needed)
 data/*.sqlite

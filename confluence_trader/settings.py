@@ -1,15 +1,43 @@
 """
 Django settings for Confluence Trend Pullback Swing Strategy app.
+
+Local defaults keep DEBUG on. On PythonAnywhere (or any host), set env vars:
+  DJANGO_SECRET_KEY, DJANGO_DEBUG=0, DJANGO_ALLOWED_HOSTS=youruser.pythonanywhere.com
 """
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-dev-only-change-in-production"
 
-DEBUG = True
+def _env_bool(name: str, default: bool) -> bool:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+def _env_list(name: str, default: str) -> list[str]:
+    raw = os.environ.get(name, default)
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
+# SECURITY
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-dev-only-change-in-production",
+)
+DEBUG = _env_bool("DJANGO_DEBUG", True)
+ALLOWED_HOSTS = _env_list("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost")
+
+# HTTPS origins for CSRF (set on PythonAnywhere), e.g.
+# https://yourusername.pythonanywhere.com
+CSRF_TRUSTED_ORIGINS = _env_list("DJANGO_CSRF_TRUSTED_ORIGINS", "")
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -25,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -73,7 +102,16 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "trading" / "static"]
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -81,8 +119,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 NSE_LEGACY_DB_PATH = BASE_DIR / "data" / "nse_data.sqlite"
 
 # Automatic daily NSE OHLCV sync via yfinance (.NS tickers) on app startup.
-NSE_AUTO_SYNC_ENABLED = True
-NSE_SYNC_BATCH_SIZE = 25
+# On PythonAnywhere prefer a scheduled task instead of web-worker auto-sync.
+NSE_AUTO_SYNC_ENABLED = _env_bool("NSE_AUTO_SYNC_ENABLED", DEBUG)
+NSE_SYNC_BATCH_SIZE = int(os.environ.get("NSE_SYNC_BATCH_SIZE", "25"))
 
 LOGGING = {
     "version": 1,
