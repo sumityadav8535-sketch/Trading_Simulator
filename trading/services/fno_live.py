@@ -121,8 +121,13 @@ def predict_win_prob(features: list[float]) -> tuple[Optional[float], str]:
     if bundle is None:
         return None, model_type
 
-    import numpy as np
-    from sklearn.pipeline import Pipeline
+    try:
+        import numpy as np
+        from sklearn.pipeline import Pipeline
+    except ImportError:
+        # Free-tier deploys may omit scikit-learn to save disk space.
+        logger.warning("scikit-learn not installed; ML win probability unavailable")
+        return None, model_type
 
     X = np.array([features], dtype=float)
 

@@ -38,14 +38,16 @@ cd ~/Trading_Simulator
 python3.10 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt
+# Free accounts: only 512MB disk — use the slim file + no pip cache
+pip install --no-cache-dir -r requirements-pythonanywhere.txt
 ```
 
-If `pandas` / `scikit-learn` fail on free tier, try:
+**Do not** install full `requirements.txt` on the free plan (scikit-learn + scipy are huge and usually cause **disk quota exceeded**).
+
+If you later upgrade disk space and want F&O ML probabilities:
 
 ```bash
-pip install "numpy<2" "pandas>=2.2.0" "scikit-learn>=1.5.0"
-pip install -r requirements.txt
+pip install --no-cache-dir scikit-learn
 ```
 
 ---
@@ -192,15 +194,57 @@ Then **Web → Reload**.
 
 ---
 
+## Disk quota full (free account = 512MB)
+
+Free accounts only have **512 MiB**. Full `pandas + plotly + scikit-learn + scipy` often exceeds that.
+
+### Free disk space (run in Bash)
+
+```bash
+# See what is using space
+du -h --max-depth=1 ~ | sort -h
+
+# Delete failed/partial installs and pip cache
+rm -rf ~/Trading_Simulator/venv
+rm -rf ~/.cache/pip
+pip cache purge 2>/dev/null
+
+# Optional: remove other junk
+rm -rf ~/tmp 2>/dev/null
+find ~ -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null
+```
+
+Then reinstall with the **slim** requirements (see step 3):
+
+```bash
+cd ~/Trading_Simulator
+python3.10 -m venv venv
+source venv/bin/activate
+pip install --no-cache-dir -r requirements-pythonanywhere.txt
+```
+
+### Still full?
+
+| Action | Why |
+|--------|-----|
+| Don’t upload a huge `db.sqlite3` yet | Load a smaller DB or sync only Nifty50 first |
+| Don’t upload `venv/` from your PC | Create venv only on the server |
+| Don’t clone with Git LFS / huge data folders | Use the GitHub repo only (pkls already ignored) |
+| Upgrade to a paid plan | Hacker / custom adds disk (easiest long-term fix) |
+
+Account → **Disk quota** page also shows usage:  
+https://help.pythonanywhere.com/pages/DiskQuota/
+
 ## Troubleshooting
 
 | Problem | Fix |
 |---------|-----|
+| **disk quota exceeded** | See section above; use `requirements-pythonanywhere.txt` + `--no-cache-dir` |
 | **DisallowedHost** | Set `DJANGO_ALLOWED_HOSTS` in WSGI to exact hostname |
 | **CSRF verification failed** | Set `DJANGO_CSRF_TRUSTED_ORIGINS` to `https://USERNAME.pythonanywhere.com` |
 | **Static CSS/JS missing** | Run `collectstatic`, confirm WhiteNoise in settings, Reload |
 | **Error log** | Web tab → **Error log** / **Server log** |
-| **ImportError / ModuleNotFound** | Virtualenv path wrong, or `pip install -r requirements.txt` inside venv |
+| **ImportError / ModuleNotFound** | Virtualenv path wrong, or reinstall slim requirements inside venv |
 | **Site works but no stocks/prices** | Upload DB or run load/update management commands |
 | **CPU seconds exhausted (free)** | Heavy backtests hit free limits — run less often or upgrade Hacker plan |
 | **yfinance blocked / timeouts** | Free tier outbound can be flaky; upload local data or upgrade |
