@@ -104,6 +104,29 @@
   </div>
 </div>
 
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Starting capital</p>
+    <p class="text-xl font-bold">₹{{ bt_result.capital|floatformat:0 }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Final cash</p>
+    <p class="text-xl font-bold">₹{{ bt_result.final_cash|floatformat:0 }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Peak parallel trades</p>
+    <p class="text-xl font-bold">{{ bt_result.peak_parallel }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Skipped (no cash)</p>
+    <p class="text-xl font-bold">{{ bt_result.signals_skipped_cash }}</p>
+  </div>
+</div>
+<p class="text-xs text-slate-500 -mt-4 mb-6">
+  Capital model: one shared cash account · position size uses free cash only (no leverage) ·
+  table columns show invested / free cash / open count at each entry.
+</p>
+
 {% if bt_result.exit_breakdown %}
 <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 text-sm">
   <p class="text-slate-400 text-xs mb-2">Exit breakdown</p>
@@ -148,6 +171,12 @@
 {% if bt_result.trades %}
 <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg mb-6">
   <h3 class="text-sm font-semibold text-emerald-300 p-4 pb-0">All trades ({{ bt_result.total_trades }})</h3>
+  <p class="text-[11px] text-slate-500 px-4 pt-1">
+    <strong class="text-slate-400">Invested</strong> = ₹ put into that trade ·
+    <strong class="text-slate-400">Cash free</strong> = money left for the next trade after entry ·
+    <strong class="text-slate-400">Total locked</strong> = all open trades’ capital ·
+    <strong class="text-slate-400">Parallel</strong> = how many trades open after this entry
+  </p>
   <table class="w-full text-xs mt-2">
     <thead class="text-slate-400 border-b border-slate-700">
       <tr>
@@ -160,6 +189,11 @@
         <th>Stop</th>
         <th>Target</th>
         <th>Qty</th>
+        <th class="text-sky-300" title="Capital put into this trade">Invested ₹</th>
+        <th class="text-sky-300" title="Free cash after entry (for next trade)">Cash free ₹</th>
+        <th class="text-sky-300" title="Sum of capital in all open trades after entry">Total locked ₹</th>
+        <th class="text-sky-300" title="Open trades after this entry">Parallel</th>
+        <th class="text-sky-300" title="Cash + locked at entry">Equity ₹</th>
         <th>P&amp;L ₹</th>
         <th>P&amp;L %</th>
         <th>R</th>
@@ -183,6 +217,11 @@
         <td class="text-center text-slate-400">{{ t.stop_loss }}</td>
         <td class="text-center text-slate-400">{{ t.target }}</td>
         <td class="text-center">{{ t.quantity }}</td>
+        <td class="text-center text-sky-300 font-medium">{{ t.capital_invested|floatformat:0 }}</td>
+        <td class="text-center text-sky-300">{{ t.cash_available|floatformat:0 }}</td>
+        <td class="text-center text-sky-300">{{ t.total_invested|floatformat:0 }}</td>
+        <td class="text-center text-amber-300 font-semibold">{{ t.parallel_open }}</td>
+        <td class="text-center text-slate-300">{{ t.equity_at_entry|floatformat:0 }}</td>
         <td class="text-center font-medium {% if t.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ t.pnl|floatformat:0 }}</td>
         <td class="text-center {% if t.pnl_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ t.pnl_pct }}%</td>
         <td class="text-center">{{ t.rr_achieved }}</td>

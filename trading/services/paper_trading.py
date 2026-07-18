@@ -77,6 +77,16 @@ def get_or_create_account(
     return PaperAccount.get_active()
 
 
+def ensure_auto_trade(account: Optional[PaperAccount] = None) -> PaperAccount:
+    """Turn auto-trade on so active F&O signals open paper positions."""
+    account = account or PaperAccount.get_active()
+    if not account.auto_trade:
+        account.auto_trade = True
+        account.save(update_fields=["auto_trade", "updated_at"])
+        log_event(account, "Auto-trade enabled (F&O signals → paper orders)")
+    return account
+
+
 def reset_account(account: PaperAccount, capital: Optional[float] = None) -> PaperAccount:
     """Close open positions without P&L credit, wipe trades, reset cash."""
     with transaction.atomic():
@@ -92,7 +102,8 @@ def reset_account(account: PaperAccount, capital: Optional[float] = None) -> Pap
         account.margin_blocked = _d(0)
         account.realized_pnl = _d(0)
         account.peak_equity = cap
-        account.auto_trade = False
+        # Keep auto-trade on so new signals still paper-fill after a reset
+        account.auto_trade = True
         account.save()
         log_event(account, f"Account reset to ₹{float(cap):,.0f}", PaperEvent.LEVEL_INFO)
     return account
@@ -212,7 +223,13 @@ def open_position_from_signal(
         return None
 
     inst = INSTRUMENTS[instrument]
-    ltp = float(signal.get("ltp") or 0)
+    # Prefer backtest-aligned entry: next-bar open (entry_ref) over live mid-bar LTP
+    ltp = float(
+        signal.get("entry_ref")
+        or signal.get("signal_close")
+        or signal.get("ltp")
+        or 0
+    )
     stop = float(signal.get("stop") or 0)
     target = float(signal.get("target") or 0)
     risk_pts = float(signal.get("risk_pts") or 0)
@@ -469,12 +486,22 @@ def try_entries(account: PaperAccount, force_refresh: bool = False) -> list[Pape
     return opened
 
 
-def run_tick(account: Optional[PaperAccount] = None, force_refresh: bool = False) -> dict[str, Any]:
+def run_tick(
+    account: Optional[PaperAccount] = None,
+    force_refresh: bool = False,
+    *,
+    ensure_auto: bool = False,
+) -> dict[str, Any]:
     """
     One engine cycle: manage exits, then try new entries.
     Call every 30–60s during market hours (browser poll or management command).
+
+    ensure_auto=True forces auto_trade on (used from F&O Live so signals always
+    land in the paper section without a manual toggle).
     """
     account = account or PaperAccount.get_active()
+    if ensure_auto:
+        account = ensure_auto_trade(account)
     market = get_market_status()
 
     closed = manage_open_positions(account)
@@ -489,6 +516,7 @@ def run_tick(account: Optional[PaperAccount] = None, force_refresh: bool = False
         "account_id": account.id,
         "closed": len(closed),
         "opened": len(opened),
+        "opened_ids": [p.id for p in opened],
         "auto_trade": account.auto_trade,
         "market": asdict(market),
         "cash": _f(account.cash),

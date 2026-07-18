@@ -4,12 +4,12 @@
 {% block content %}
 <div class="flex flex-wrap justify-between items-start gap-4 mb-4">
   <div>
-    <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm text-slate-400 hover:text-emerald-400">← Stage Analysis 2.0</a>
-    <h2 class="text-2xl font-bold mt-1">{% if result %}{{ result.ticker }}{% else %}{{ analysis.ticker }}{% endif %}</h2>
+    <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm font-semibold text-blue-600 hover:underline">← Stage Analysis 2.0</a>
+    <h2 class="page-title mt-1">{% if result %}{{ result.ticker }}{% else %}{{ analysis.ticker }}{% endif %}</h2>
   </div>
   {% if result and not on_watchlist %}
   <form method="post" action="{% url 'stage_analysis_v2:add_to_watchlist' ticker=result.ticker %}">{% csrf_token %}
-    <button type="submit" class="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500 text-sm">Save to Watchlist</button>
+    <button type="submit" class="btn btn-primary text-sm">Save to Watchlist</button>
   </form>
   {% endif %}
 </div>
@@ -20,8 +20,8 @@
   {% include "stage_analysis_v2/partials/conditions_checklist.html" with conditions=result.condition_checks %}
 
   {% if result.backtest and result.backtest.sample_size > 0 %}
-  <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 mt-4">
-    <h4 class="text-sm font-semibold text-slate-200 mb-2">Historical Similar Setups</h4>
+  <div class="card p-5 mt-4">
+    <h4 class="text-sm font-semibold text-slate-800 mb-2">Historical similar setups</h4>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
       <div><span class="text-slate-500 text-xs">Samples</span><p class="font-bold">{{ result.backtest.sample_size }}</p></div>
       <div><span class="text-slate-500 text-xs">Avg 13W Return</span><p class="font-bold {% if result.backtest.avg_return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ result.backtest.avg_return_pct }}%</p></div>
@@ -33,17 +33,17 @@
   {% endif %}
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
-    <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
-      <h4 class="text-sm font-semibold text-emerald-300 mb-2">Weekly Chart (30W MA)</h4>
+    <div class="card p-5">
+      <h4 class="text-sm font-semibold text-emerald-700 mb-2">Weekly chart (30W MA)</h4>
       <div class="h-64"><canvas id="v2-chart-weekly"></canvas></div>
     </div>
-    <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
-      <h4 class="text-sm font-semibold text-blue-300 mb-2">Daily Chart (150D MA)</h4>
+    <div class="card p-5">
+      <h4 class="text-sm font-semibold text-blue-700 mb-2">Daily chart (150D MA)</h4>
       <div class="h-64"><canvas id="v2-chart-daily"></canvas></div>
     </div>
   </div>
-  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mt-4">
-    <h4 class="text-sm font-semibold text-purple-300 mb-2">Relative Strength vs Nifty 50</h4>
+  <div class="card p-5 mt-4">
+    <h4 class="text-sm font-semibold text-violet-700 mb-2">Relative strength vs Nifty 50</h4>
     <div class="h-48"><canvas id="v2-chart-rs"></canvas></div>
   </div>
 {% elif cached_only %}

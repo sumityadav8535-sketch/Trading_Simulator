@@ -3,16 +3,16 @@
 {% block content %}
 <div class="mb-6">
   <div class="flex gap-3 items-center">
-    <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm text-slate-400 hover:text-emerald-400">← Stage Analysis 2.0</a>
-    <a href="{% url 'stage_analysis_v2:backtest' %}" class="text-sm text-emerald-400 hover:underline">Backtest</a>
+    <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm font-semibold text-blue-600 hover:underline">← Stage Analysis 2.0</a>
+    <a href="{% url 'stage_analysis_v2:backtest' %}" class="text-sm font-semibold text-slate-600 hover:underline">Backtest</a>
   </div>
-  <h2 class="text-2xl font-bold mt-1">High-Probability Stage 2 Screener</h2>
-  <p class="text-slate-400 text-sm">Default: Stage 2 · Quality &gt;75 · Strong RS · Clean Breakout</p>
+  <h2 class="page-title mt-1">High-Probability Stage 2 Screener</h2>
+  <p class="page-sub">Default: Stage 2 · Quality &gt;75 · Strong RS · Clean Breakout</p>
 </div>
 
 {% include "stage_analysis_v2/partials/market_banner.html" %}
 
-<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 flex flex-wrap gap-4 items-end text-sm">
+<form method="get" class="card p-5 mb-6 flex flex-wrap gap-4 items-end text-sm">
   <input type="hidden" name="run_scan" value="on">
   <label>Min Quality <input type="number" name="min_quality_score" value="{{ form.min_quality_score.value|default:75 }}" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-20"></label>
   <label>Min RS <input type="number" name="min_rs_rating" value="{{ form.min_rs_rating.value|default:60 }}" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-20"></label>
@@ -21,7 +21,7 @@
   <label>Daily {{ form.daily_stage }}</label>
   <label class="flex items-center gap-2"><input type="checkbox" name="strong_rs_only" {% if form.strong_rs_only.value %}checked{% endif %}> Strong RS</label>
   <label class="flex items-center gap-2"><input type="checkbox" name="market_favorable_only" {% if form.market_favorable_only.value %}checked{% endif %}> Market favorable</label>
-  <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2.5 font-medium">Scan Nifty 200</button>
+  <button type="submit" class="btn btn-primary">Scan Nifty 200</button>
 </form>
 
 {% if scan_result %}

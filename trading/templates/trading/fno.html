@@ -3,9 +3,9 @@
 {% block content %}
 <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
   <div>
-    <h2 class="text-2xl font-bold">F&O Live — {{ strategy_name }}</h2>
-    <p class="text-slate-400 text-sm mt-1">
-      Nifty / Bank Nifty ML short strategy. Index 5m proxy · refreshes every 30s.
+    <h2 class="page-title">F&amp;O Live — {{ strategy_name }}</h2>
+    <p class="page-sub">
+      Nifty / Bank Nifty ML short · soft checklist (score ≥ 6) · completed 5m bars · refreshes every 30s.
     </p>
   </div>
   <div class="flex items-center gap-3 text-sm">
@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<form method="get" id="fno-filters" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-4 flex flex-wrap gap-4 items-end text-sm">
+<form method="get" id="fno-filters" class="card p-5 mb-4 flex flex-wrap gap-4 items-end text-sm">
   <label>Instrument
     <select name="instrument" class="block mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
       {% for val, label in form.fields.instrument.choices %}
@@ -34,11 +34,11 @@
           title="Download missing 5m bars for Nifty 100 + F&amp;O indices through today">
     Fetch history to today
   </button>
-  <button type="button" id="btn-run-backtest"
-          class="px-4 py-2 bg-amber-700 hover:bg-amber-600 rounded text-sm font-medium"
-          title="Train ML + backtest Elite ML Short v2 on stored 5m data through today">
-    Run backtest to today
-  </button>
+  <a href="{% url 'paper_trading' %}"
+     class="px-4 py-2 bg-sky-800 hover:bg-sky-700 rounded text-sm font-medium"
+     title="Paper account — auto-filled from active F&amp;O signals">
+    Paper trading
+  </a>
   <div class="flex flex-col gap-0.5 self-center min-w-[12rem]">
     <span class="text-slate-500 text-xs" id="updated-at">Updated {{ updated_at|default:"—" }}</span>
     <span id="history-coverage" class="text-xs text-slate-500">
@@ -47,9 +47,25 @@
       {% if history_coverage.fno.instruments.BANKNIFTY.last_date %} · BN → {{ history_coverage.fno.instruments.BANKNIFTY.last_date }}{% endif %}
     </span>
     <span id="history-sync-status" class="text-xs text-slate-400"></span>
-    <span id="backtest-status" class="text-xs text-slate-400"></span>
+    <span id="paper-tick-status" class="text-xs text-sky-400/90">
+      {% if paper_tick and paper_tick.opened %}
+        Paper: opened {{ paper_tick.opened }} position(s)
+      {% elif paper_tick and paper_tick.auto_trade %}
+        Paper auto-trade ON
+      {% else %}
+        Paper auto-trade ready
+      {% endif %}
+    </span>
   </div>
 </form>
+{% if model_frozen %}
+<p class="text-xs text-amber-400/90 -mt-2 mb-4">
+  ML model is <strong>frozen</strong>
+  {% if model_meta.trained_at %}(trained {{ model_meta.trained_at|slice:":19" }}){% endif %}
+  — live signals will not change when you refresh history.
+  Active setups are auto-sent to <a href="{% url 'paper_trading' %}" class="underline text-sky-400">Paper trading</a>.
+</p>
+{% endif %}
 {% csrf_token %}
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -87,7 +103,9 @@
         {% if signal.side %}{{ signal.side }}{% else %}NO TRADE{% endif %}
       </h3>
       <p id="signal-message" class="text-sm text-slate-400 mt-1">{{ signal.message }}</p>
-      <p class="text-xs text-slate-500 mt-2">Bar: <span id="bar-time">{{ signal.bar_time }}</span></p>
+      <p class="text-xs text-slate-500 mt-2">Bar: <span id="bar-time">{{ signal.bar_time }}</span>
+        {% if signal.bar_forming_skipped %}<span class="text-slate-600"> · completed bar only</span>{% endif %}
+      </p>
     </div>
     <div class="text-right">
       <p class="text-xs text-slate-500">LTP</p>
@@ -99,8 +117,53 @@
         <span class="text-slate-500">/ {{ signal.ml_threshold }}</span>
       </p>
       {% endif %}
+      {% if signal.checklist %}
+      <p class="text-sm mt-2">
+        <span class="text-slate-400">Checklist</span>
+        <span id="checklist-score" class="font-semibold {% if signal.checklist_pass %}text-emerald-400{% else %}text-amber-400{% endif %}">
+          {{ signal.checklist.score }}/{{ signal.checklist.min_score }}
+        </span>
+        <span id="checklist-pass-label" class="text-xs ml-1 {% if signal.checklist_pass %}text-emerald-500{% else %}text-amber-500{% endif %}">
+          {% if signal.checklist_pass %}PASS{% else %}{% if signal.checklist.hard_no %}HARD NO{% else %}FAIL{% endif %}{% endif %}
+        </span>
+      </p>
+      {% endif %}
     </div>
   </div>
+  {% if signal.checklist %}
+  <div id="checklist-panel" class="mt-4 pt-4 border-t border-slate-700/50">
+    <p class="text-xs text-slate-500 mb-2">Soft checklist (score ≥ 6 required for ACTIVE / paper entry)</p>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs" id="checklist-answers">
+      <div class="rounded border border-slate-700/60 bg-slate-950/40 px-2 py-1.5">
+        <p class="text-slate-500">Q1 Day path</p>
+        <p class="font-semibold checklist-ans" data-q="Q1">{{ signal.checklist.answers.Q1|default:"—" }}
+          {% if signal.checklist.path_ret_pct != None %}<span class="text-slate-500 font-normal">({{ signal.checklist.path_ret_pct }}%)</span>{% endif %}
+        </p>
+      </div>
+      <div class="rounded border border-slate-700/60 bg-slate-950/40 px-2 py-1.5">
+        <p class="text-slate-500">Q2 Structure</p>
+        <p class="font-semibold checklist-ans" data-q="Q2">{{ signal.checklist.answers.Q2|default:"—" }}</p>
+      </div>
+      <div class="rounded border border-slate-700/60 bg-slate-950/40 px-2 py-1.5">
+        <p class="text-slate-500">Q3 Time</p>
+        <p class="font-semibold checklist-ans" data-q="Q3">{{ signal.checklist.answers.Q3|default:"—" }}</p>
+      </div>
+      <div class="rounded border border-slate-700/60 bg-slate-950/40 px-2 py-1.5">
+        <p class="text-slate-500">Q4 ML</p>
+        <p class="font-semibold checklist-ans" data-q="Q4">{{ signal.checklist.answers.Q4|default:"—" }}</p>
+      </div>
+      <div class="rounded border border-slate-700/60 bg-slate-950/40 px-2 py-1.5">
+        <p class="text-slate-500">Q5 Risk state</p>
+        <p class="font-semibold checklist-ans" data-q="Q5">{{ signal.checklist.answers.Q5|default:"—" }}
+          <span class="text-slate-500 font-normal">({{ signal.checklist.losses_today }}L today)</span>
+        </p>
+      </div>
+    </div>
+    <p id="checklist-reasons" class="text-[11px] text-slate-500 mt-2">
+      {% if signal.checklist.reasons %}{{ signal.checklist.reasons|join:" · " }}{% endif %}
+    </p>
+  </div>
+  {% endif %}
   {% if signal.stop %}
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 pt-4 border-t border-slate-700/50 text-sm">
     <div><p class="text-xs text-slate-500">Stop (EMA21)</p><p id="signal-stop" class="text-red-400 font-semibold">{{ signal.stop }}</p></div>
@@ -128,6 +191,162 @@
   </div>
 </div>
 
+{% if recent_days %}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  {% with y=recent_days.yesterday t=recent_days.today %}
+  {# Yesterday #}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <div class="flex items-center justify-between gap-2 mb-2">
+      <h3 class="text-sm font-semibold text-emerald-400">Yesterday — {{ y.label }}</h3>
+      <span class="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded
+        {% if y.status == 'traded' %}bg-emerald-900/50 text-emerald-300
+        {% elif y.status == 'flat' %}bg-slate-800 text-slate-400
+        {% else %}bg-amber-900/40 text-amber-300{% endif %}">bt: {{ y.status }}</span>
+    </div>
+    <p class="text-xs text-slate-500 mb-2">Backtest (completed bars)</p>
+    {% if y.count %}
+    <div class="grid grid-cols-3 gap-3 text-sm mb-2">
+      <div><p class="text-xs text-slate-500">Trades</p><p class="font-bold">{{ y.count }}</p></div>
+      <div><p class="text-xs text-slate-500">W / L</p><p class="font-bold">{{ y.wins }} / {{ y.losses }}</p></div>
+      <div><p class="text-xs text-slate-500">P&amp;L</p><p class="font-bold {% if y.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ y.pnl|floatformat:0 }}</p></div>
+    </div>
+    <div class="overflow-x-auto mb-3">
+      <table class="w-full text-xs text-left">
+        <thead class="text-slate-500 border-b border-slate-800">
+          <tr><th class="py-1 pr-2">Signal</th><th class="py-1 pr-2">Entry</th><th class="py-1 pr-2">P&amp;L</th><th class="py-1">Result</th></tr>
+        </thead>
+        <tbody class="font-mono text-slate-300">
+          {% for tr in y.trades %}
+          <tr class="border-b border-slate-800/40">
+            <td class="py-1 pr-2">{{ tr.signal_time|slice:"11:16" }}</td>
+            <td class="py-1 pr-2">{{ tr.entry_price }}</td>
+            <td class="py-1 pr-2 {% if tr.pnl_inr >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ tr.pnl_inr|floatformat:0 }}</td>
+            <td class="py-1">{{ tr.result }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-sm text-slate-400 mb-3">{{ y.note }}</p>
+    {% endif %}
+    <div class="pt-3 border-t border-slate-800">
+      <p class="text-xs text-slate-500 mb-1">Paper trading</p>
+      {% if y.paper_count %}
+      <div class="grid grid-cols-3 gap-3 text-sm mb-2">
+        <div><p class="text-xs text-slate-500">Trades</p><p class="font-bold text-sky-300">{{ y.paper_count }}</p></div>
+        <div><p class="text-xs text-slate-500">W / L</p><p class="font-bold">{{ y.paper_wins }} / {{ y.paper_losses }}</p></div>
+        <div><p class="text-xs text-slate-500">P&amp;L</p><p class="font-bold {% if y.paper_pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ y.paper_pnl|floatformat:0 }}</p></div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left">
+          <thead class="text-slate-500 border-b border-slate-800">
+            <tr><th class="py-1 pr-2">Bar</th><th class="py-1 pr-2">Entry</th><th class="py-1 pr-2">ML</th><th class="py-1 pr-2">P&amp;L</th><th class="py-1">Result</th></tr>
+          </thead>
+          <tbody class="font-mono text-slate-300">
+            {% for tr in y.paper_trades %}
+            <tr class="border-b border-slate-800/40">
+              <td class="py-1 pr-2">{{ tr.signal_time }}</td>
+              <td class="py-1 pr-2">{{ tr.entry_price }}</td>
+              <td class="py-1 pr-2">{{ tr.ml_prob|default:"—" }}</td>
+              <td class="py-1 pr-2 {% if tr.pnl_inr >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ tr.pnl_inr|floatformat:0 }}</td>
+              <td class="py-1">{{ tr.result }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if not y.count %}
+      <p class="text-[11px] text-amber-400/90 mt-2">Paper trade not in backtest — live used a forming bar or a different ML snapshot than the historical replay.</p>
+      {% endif %}
+      {% else %}
+      <p class="text-xs text-slate-500">No paper trades this day.</p>
+      {% endif %}
+    </div>
+  </div>
+  {# Today #}
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+    <div class="flex items-center justify-between gap-2 mb-2">
+      <h3 class="text-sm font-semibold text-emerald-400">Today — {{ t.label }}</h3>
+      <span class="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded
+        {% if t.status == 'traded' %}bg-emerald-900/50 text-emerald-300
+        {% elif t.status == 'flat' %}bg-slate-800 text-slate-400
+        {% else %}bg-amber-900/40 text-amber-300{% endif %}">bt: {{ t.status }}</span>
+    </div>
+    <p class="text-xs text-slate-500 mb-2">Backtest (completed bars)</p>
+    {% if t.count %}
+    <div class="grid grid-cols-3 gap-3 text-sm mb-2">
+      <div><p class="text-xs text-slate-500">Trades</p><p class="font-bold">{{ t.count }}</p></div>
+      <div><p class="text-xs text-slate-500">W / L</p><p class="font-bold">{{ t.wins }} / {{ t.losses }}</p></div>
+      <div><p class="text-xs text-slate-500">P&amp;L</p><p class="font-bold {% if t.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ t.pnl|floatformat:0 }}</p></div>
+    </div>
+    <div class="overflow-x-auto mb-3">
+      <table class="w-full text-xs text-left">
+        <thead class="text-slate-500 border-b border-slate-800">
+          <tr><th class="py-1 pr-2">Signal</th><th class="py-1 pr-2">Entry</th><th class="py-1 pr-2">P&amp;L</th><th class="py-1">Result</th></tr>
+        </thead>
+        <tbody class="font-mono text-slate-300">
+          {% for tr in t.trades %}
+          <tr class="border-b border-slate-800/40">
+            <td class="py-1 pr-2">{{ tr.signal_time|slice:"11:16" }}</td>
+            <td class="py-1 pr-2">{{ tr.entry_price }}</td>
+            <td class="py-1 pr-2 {% if tr.pnl_inr >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ tr.pnl_inr|floatformat:0 }}</td>
+            <td class="py-1">{{ tr.result }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-sm text-slate-400 mb-3">{{ t.note }}</p>
+    {% endif %}
+    <div class="pt-3 border-t border-slate-800">
+      <p class="text-xs text-slate-500 mb-1">Paper trading</p>
+      {% if t.paper_count %}
+      <div class="grid grid-cols-3 gap-3 text-sm mb-2">
+        <div><p class="text-xs text-slate-500">Trades</p><p class="font-bold text-sky-300">{{ t.paper_count }}</p></div>
+        <div><p class="text-xs text-slate-500">W / L</p><p class="font-bold">{{ t.paper_wins }} / {{ t.paper_losses }}</p></div>
+        <div><p class="text-xs text-slate-500">P&amp;L</p><p class="font-bold {% if t.paper_pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ t.paper_pnl|floatformat:0 }}</p></div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left">
+          <thead class="text-slate-500 border-b border-slate-800">
+            <tr><th class="py-1 pr-2">Bar</th><th class="py-1 pr-2">Entry</th><th class="py-1 pr-2">ML</th><th class="py-1 pr-2">P&amp;L</th><th class="py-1">Result</th></tr>
+          </thead>
+          <tbody class="font-mono text-slate-300">
+            {% for tr in t.paper_trades %}
+            <tr class="border-b border-slate-800/40">
+              <td class="py-1 pr-2">{{ tr.signal_time }}</td>
+              <td class="py-1 pr-2">{{ tr.entry_price }}</td>
+              <td class="py-1 pr-2">{{ tr.ml_prob|default:"—" }}</td>
+              <td class="py-1 pr-2 {% if tr.pnl_inr >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ tr.pnl_inr|floatformat:0 }}</td>
+              <td class="py-1">{{ tr.result }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if not t.count %}
+      <p class="text-[11px] text-amber-400/90 mt-2">Paper trade not in backtest — live used a forming bar or a different ML snapshot than the historical replay.</p>
+      {% endif %}
+      {% else %}
+      <p class="text-xs text-slate-500">No paper trades this day.</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endwith %}
+</div>
+<p class="text-xs text-slate-500 -mt-4 mb-6">
+  {% if recent_days.last_trade_date %}
+  Last backtest trade day: <span class="text-slate-300">{{ recent_days.last_trade_date }}</span>
+  {% endif %}
+  {% if results.data_range %}
+  · Data through {{ results.data_range.last_date }}
+  {% endif %}
+  · Signals now use <span class="text-slate-300">completed 5m bars only</span> (same as backtest)
+</p>
+{% endif %}
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
   <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
     <h3 class="text-sm font-semibold text-emerald-400 mb-3">Strategy rules</h3>
@@ -137,16 +356,14 @@
       <li><span class="text-slate-300">ML filter:</span> P(win) ≥ {{ strategy_filters.ml_threshold|default:"0.58" }}</li>
       <li><span class="text-slate-300">Max stop:</span> {{ strategy_filters.max_risk_pts|default:"22" }} index points</li>
       <li><span class="text-slate-300">Stop / Target:</span> EMA21 / 1.5R · Exit 15:15 IST</li>
+      <li><span class="text-slate-300">Soft checklist:</span> score ≥ 6 (path, structure, time, ML, losses) before ACTIVE</li>
       <li><span class="text-slate-300">Capital / Risk:</span> ₹5L @ {{ signal.risk_pct }}% per trade</li>
     </ul>
   </div>
   <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-      <h3 class="text-sm font-semibold text-emerald-400">Backtest summary</h3>
-      <button type="button" id="btn-run-backtest-2"
-              class="px-3 py-1 bg-amber-700 hover:bg-amber-600 rounded text-xs font-medium">
-        Run backtest to today
-      </button>
+      <h3 class="text-sm font-semibold text-emerald-400">Frozen backtest snapshot</h3>
+      <span class="px-2 py-0.5 rounded text-[10px] uppercase tracking-wide bg-amber-900/40 text-amber-300 border border-amber-800">Model frozen</span>
     </div>
     {% if results.full_period.summary %}
     <div class="grid grid-cols-2 gap-3 text-sm" id="backtest-summary-grid">
@@ -159,41 +376,30 @@
     </div>
     {% if results.data_range %}
     <p class="text-xs text-slate-500 mt-2" id="bt-range">
-      Data: {{ results.data_range.first_date }} → {{ results.data_range.last_date }}
-      ({{ results.data_range.bars }} bars)
+      Snapshot: {{ results.data_range.first_date }} → {{ results.data_range.last_date }}
+      ({{ results.data_range.bars }} bars) — not re-run on refresh
     </p>
-    {% else %}
-    <p class="text-xs text-slate-500 mt-2" id="bt-range"></p>
     {% endif %}
     {% if results.oos.summary %}
     <p class="text-xs text-slate-500 mt-1" id="bt-oos">OOS: {{ results.oos.summary.trades }} trades · ₹{{ results.oos.summary.avg_daily|floatformat:0 }}/day</p>
-    {% else %}
-    <p class="text-xs text-slate-500 mt-1" id="bt-oos"></p>
     {% endif %}
-    {% else %}
-    <p class="text-slate-500 text-sm" id="bt-empty">
-      No backtest yet. Click <strong class="text-amber-300">Run backtest to today</strong> (uses stored 5m NIFTY data).
+    <p class="text-xs text-slate-500 mt-2">
+      New results go to <a href="{% url 'paper_trading' %}" class="text-sky-400 underline">Paper trading</a> (forward test), not this snapshot.
     </p>
-    <div class="grid grid-cols-2 gap-3 text-sm hidden" id="backtest-summary-grid">
-      <div><p class="text-xs text-slate-500">Trades</p><p class="font-bold text-lg" id="bt-trades">—</p></div>
-      <div><p class="text-xs text-slate-500">Win rate</p><p class="font-bold text-lg text-emerald-400" id="bt-wr">—</p></div>
-      <div><p class="text-xs text-slate-500">W / L</p><p class="font-bold" id="bt-wl">—</p></div>
-      <div><p class="text-xs text-slate-500">₹/day</p><p class="font-bold text-emerald-400" id="bt-daily">—</p></div>
-      <div><p class="text-xs text-slate-500">Net P&L</p><p class="font-bold" id="bt-pnl">—</p></div>
-      <div><p class="text-xs text-slate-500">Max DD</p><p class="font-bold" id="bt-dd">—</p></div>
-    </div>
-    <p class="text-xs text-slate-500 mt-2" id="bt-range"></p>
-    <p class="text-xs text-slate-500 mt-1" id="bt-oos"></p>
+    {% else %}
+    <p class="text-slate-500 text-sm">
+      No frozen backtest snapshot on disk. Live signals still use the saved ML model if present.
+      Track real results under <a href="{% url 'paper_trading' %}" class="text-sky-400 underline">Paper trading</a>.
+    </p>
     {% endif %}
-    <p class="text-xs mt-2" id="backtest-status-2"></p>
   </div>
 </div>
 
 <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6">
   <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
     <div>
-      <h3 class="text-sm font-semibold text-emerald-400">Executed trades — {{ strategy_name }}</h3>
-      <p class="text-xs text-slate-500 mt-1">Full backtest entry log (lot 75, 1.5% risk).</p>
+      <h3 class="text-sm font-semibold text-emerald-400">Historical backtest trades — {{ strategy_name }}</h3>
+      <p class="text-xs text-slate-500 mt-1">Frozen snapshot only (lot 75, 1.5% risk). Live fills → Paper trading.</p>
     </div>
     <div class="flex gap-2 text-xs">
       <a href="?instrument={{ instrument }}&trades=full"
@@ -238,7 +444,7 @@
     </table>
   </div>
   {% else %}
-  <p class="text-slate-500 text-sm py-8 text-center">No trades yet. Run <code class="text-emerald-400">venv\Scripts\python.exe manage.py optimize_fno_ml</code></p>
+  <p class="text-slate-500 text-sm py-8 text-center">No frozen historical trades on disk. Watch live fills on <a href="{% url 'paper_trading' %}" class="text-sky-400 underline">Paper trading</a>.</p>
   {% endif %}
 </div>
 
@@ -256,6 +462,14 @@
   const chartEl = document.getElementById("chart-data");
   if (chartEl) try { renderChart(JSON.parse(chartEl.textContent)); } catch (e) {}
 
+  function ansColor(ans) {
+    if (!ans) return "text-slate-300";
+    if (ans === "YES" || ans === "YES+") return "text-emerald-400";
+    if (ans === "NO") return "text-red-400";
+    if (ans === "YELLOW" || ans === "WEAK") return "text-amber-400";
+    return "text-slate-300";
+  }
+
   function updateSignal(s) {
     if (!s) return;
     document.getElementById("signal-title").textContent = s.side || "NO TRADE";
@@ -271,6 +485,46 @@
       const el = document.getElementById("ind-" + (k === "range" ? "range" : k));
       if (el) el.textContent = s[k === "range" ? "range_pos" : k] ?? "—";
     });
+
+    const cl = s.checklist;
+    if (cl) {
+      const sc = document.getElementById("checklist-score");
+      if (sc) {
+        sc.textContent = (cl.score ?? "—") + "/" + (cl.min_score ?? 6);
+        sc.className = "font-semibold " + (s.checklist_pass ? "text-emerald-400" : "text-amber-400");
+      }
+      const pl = document.getElementById("checklist-pass-label");
+      if (pl) {
+        pl.textContent = s.checklist_pass ? "PASS" : (cl.hard_no ? "HARD NO" : "FAIL");
+        pl.className = "text-xs ml-1 " + (s.checklist_pass ? "text-emerald-500" : "text-amber-500");
+      }
+      document.querySelectorAll(".checklist-ans").forEach(el => {
+        const q = el.getAttribute("data-q");
+        const ans = (cl.answers && cl.answers[q]) || "—";
+        let extra = "";
+        if (q === "Q1" && cl.path_ret_pct != null) extra = ` (${cl.path_ret_pct}%)`;
+        if (q === "Q5") extra = ` (${cl.losses_today ?? 0}L today)`;
+        el.textContent = ans + extra;
+        el.className = "font-semibold checklist-ans " + ansColor(ans);
+      });
+      const reasons = document.getElementById("checklist-reasons");
+      if (reasons) reasons.textContent = (cl.reasons || []).join(" · ");
+    }
+  }
+
+  function updatePaperTick(tick) {
+    const el = document.getElementById("paper-tick-status");
+    if (!el || !tick) return;
+    if (tick.opened > 0) {
+      el.textContent = "Paper: opened " + tick.opened + " position(s)";
+      el.className = "text-xs text-emerald-400";
+    } else if (tick.closed > 0) {
+      el.textContent = "Paper: closed " + tick.closed + " position(s)";
+      el.className = "text-xs text-sky-400";
+    } else if (tick.auto_trade) {
+      el.textContent = "Paper auto-trade ON";
+      el.className = "text-xs text-sky-400/90";
+    }
   }
 
   async function poll(refresh) {
@@ -278,6 +532,7 @@
       const res = await fetch(signalApi + "?instrument=" + instrument + (refresh ? "&refresh=1" : ""));
       const data = await res.json();
       updateSignal(data.signal);
+      updatePaperTick(data.paper_tick);
       document.getElementById("updated-at").textContent = "Updated " + (data.updated_at || "—");
       if (refresh) {
         const cr = await fetch(chartApiBase + instrument + "/?refresh=1");
@@ -387,155 +642,6 @@
   });
 
   pollHistoryStatus();
-
-  // ---- One-click F&O backtest through today ----
-  const backtestStatusApi = "{% url 'fno_backtest_status_api' %}";
-  const backtestRunApi = "{% url 'fno_backtest_run_api' %}";
-  let backtestPollTimer = null;
-  // Only reload once after a backtest started from THIS page session
-  // (avoids infinite reload: finished status persists in the server process)
-  let backtestWatching = false;
-  let backtestReloadScheduled = false;
-
-  function setBacktestStatus(text, kind) {
-    ["backtest-status", "backtest-status-2"].forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.textContent = text || "";
-      el.className = "text-xs " + (
-        kind === "ok" ? "text-emerald-400" :
-        kind === "err" ? "text-red-400" :
-        kind === "run" ? "text-amber-300" :
-        "text-slate-400"
-      );
-    });
-  }
-
-  function setBacktestButtonsDisabled(disabled) {
-    ["btn-run-backtest", "btn-run-backtest-2"].forEach(id => {
-      const btn = document.getElementById(id);
-      if (btn) btn.disabled = disabled;
-    });
-  }
-
-  function stopBacktestPoll() {
-    if (backtestPollTimer) {
-      clearInterval(backtestPollTimer);
-      backtestPollTimer = null;
-    }
-  }
-
-  function applyBacktestSummary(s) {
-    if (!s) return;
-    const empty = document.getElementById("bt-empty");
-    if (empty) empty.classList.add("hidden");
-    const grid = document.getElementById("backtest-summary-grid");
-    if (grid) grid.classList.remove("hidden");
-    const fmt = n => Number(n).toLocaleString("en-IN", { maximumFractionDigits: 0 });
-    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    set("bt-trades", s.trades);
-    set("bt-wr", s.win_rate + "%");
-    set("bt-wl", (s.wins ?? "—") + " / " + (s.losses ?? "—"));
-    set("bt-daily", "₹" + fmt(s.avg_daily));
-    set("bt-pnl", "₹" + fmt(s.net_pnl));
-    set("bt-dd", s.max_dd_pct + "%");
-    if (s.data_range) {
-      set("bt-range", "Data: " + s.data_range.first_date + " → " + s.data_range.last_date
-        + " (" + s.data_range.bars + " bars)");
-    }
-    if (s.oos_trades != null) {
-      const oosDaily = s.oos_avg_daily != null ? " · ₹" + fmt(s.oos_avg_daily) + "/day" : "";
-      set("bt-oos", "OOS: " + s.oos_trades + " trades" + oosDaily);
-    }
-  }
-
-  function pollBacktestStatus() {
-    fetch(backtestStatusApi)
-      .then(r => r.json())
-      .then(s => {
-        if (s.running) {
-          const p = s.progress || {};
-          const frac = p.total ? ` (${p.step}/${p.total})` : "";
-          setBacktestStatus((s.message || "Running…") + frac, "run");
-          setBacktestButtonsDisabled(true);
-          // Resume watching if a job is mid-flight after navigation
-          if (!backtestPollTimer) {
-            backtestWatching = true;
-            backtestPollTimer = setInterval(pollBacktestStatus, 1500);
-          }
-          return;
-        }
-
-        setBacktestButtonsDisabled(false);
-        stopBacktestPoll();
-
-        if (s.error) {
-          setBacktestStatus(s.message || s.error, "err");
-          backtestWatching = false;
-          return;
-        }
-
-        if (s.finished_at && s.result_summary) {
-          // Only act on completion if we were watching a run from this session
-          // or the user just started one (backtestWatching). On cold page load,
-          // finished_at is stale — do NOT reload.
-          if (backtestWatching) {
-            setBacktestStatus(s.message || "Backtest complete — refreshing…", "ok");
-            applyBacktestSummary(s.result_summary);
-            if (!backtestReloadScheduled) {
-              backtestReloadScheduled = true;
-              backtestWatching = false;
-              setTimeout(() => { window.location.reload(); }, 800);
-            }
-          } else {
-            // Stale last-run message; leave server-rendered stats alone
-            setBacktestStatus(s.message || "", "ok");
-          }
-          return;
-        }
-
-        if (s.finished_at && backtestWatching) {
-          setBacktestStatus(s.message || "Done", "ok");
-          backtestWatching = false;
-        }
-      })
-      .catch(err => setBacktestStatus("Status check failed: " + err.message, "err"));
-  }
-
-  function startBacktest() {
-    backtestWatching = true;
-    backtestReloadScheduled = false;
-    setBacktestButtonsDisabled(true);
-    setBacktestStatus("Starting backtest through today…", "run");
-    fetch(backtestRunApi, {
-      method: "POST",
-      headers: {
-        "X-CSRFToken": getCsrfToken(),
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-    })
-      .then(async r => {
-        const data = await r.json().catch(() => ({}));
-        if (!r.ok && !data.started) {
-          throw new Error(data.error || data.message || ("HTTP " + r.status));
-        }
-        setBacktestStatus(data.message || "Backtest running…", "run");
-        stopBacktestPoll();
-        backtestPollTimer = setInterval(pollBacktestStatus, 1500);
-        pollBacktestStatus();
-      })
-      .catch(err => {
-        setBacktestStatus("Backtest failed: " + err.message, "err");
-        setBacktestButtonsDisabled(false);
-        backtestWatching = false;
-      });
-  }
-
-  document.getElementById("btn-run-backtest")?.addEventListener("click", startBacktest);
-  document.getElementById("btn-run-backtest-2")?.addEventListener("click", startBacktest);
-  // Check once on load (resume UI if a job is still running) — never auto-reload on stale finish
-  pollBacktestStatus();
 })();
 </script>
 {% endblock %}

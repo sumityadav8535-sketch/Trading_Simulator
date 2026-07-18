@@ -1,71 +1,71 @@
-<div class="bg-slate-900 border rounded-lg p-5
-  {% if result.quality_tier == 'high' %}border-emerald-500 ring-1 ring-emerald-700
-  {% elif result.quality_tier == 'average' %}border-emerald-800
-  {% elif result.quality_tier == 'base' %}border-blue-800
-  {% elif result.quality_tier == 'top' %}border-amber-800
-  {% else %}border-red-800{% endif %}">
+<div class="card p-6
+  {% if result.quality_tier == 'high' %}border-emerald-300 ring-1 ring-emerald-100
+  {% elif result.quality_tier == 'average' %}border-emerald-200
+  {% elif result.quality_tier == 'base' %}border-blue-200
+  {% elif result.quality_tier == 'top' %}border-amber-200
+  {% else %}border-red-200{% endif %}">
   <div class="flex flex-wrap justify-between items-start gap-4 mb-4">
     <div>
       <h3 class="text-xl font-bold">
-        <a href="{% url 'stage_analysis_v2:stock_detail' ticker=result.ticker %}" class="text-emerald-400 hover:underline">{{ result.ticker }}</a>
+        <a href="{% url 'stage_analysis_v2:stock_detail' ticker=result.ticker %}" class="text-blue-700 hover:underline">{{ result.ticker }}</a>
       </h3>
-      <p class="text-sm text-slate-400">{{ result.company_name }}{% if result.sector %} · {{ result.sector }}{% endif %}</p>
-      <p class="text-2xl font-bold mt-1">{{ result.current_price|floatformat:2 }}</p>
+      <p class="text-sm text-slate-500">{{ result.company_name }}{% if result.sector %} · {{ result.sector }}{% endif %}</p>
+      <p class="text-2xl font-bold mt-1 text-slate-900">{{ result.current_price|floatformat:2 }}</p>
     </div>
     {% include "stage_analysis_v2/partials/quality_score.html" with score=result.quality_score %}
   </div>
 
-  <div class="flex flex-wrap gap-2 mb-4">
-    <span class="text-xs text-slate-500">Weekly</span>{% include "stage_analysis_v2/partials/stage_badge.html" with stage=result.weekly_stage %}
-    <span class="text-xs text-slate-500 ml-2">Daily</span>{% include "stage_analysis_v2/partials/stage_badge.html" with stage=result.daily_stage %}
+  <div class="flex flex-wrap gap-2 mb-4 items-center">
+    <span class="text-xs text-slate-500 font-semibold">Weekly</span>{% include "stage_analysis_v2/partials/stage_badge.html" with stage=result.weekly_stage %}
+    <span class="text-xs text-slate-500 font-semibold ml-2">Daily</span>{% include "stage_analysis_v2/partials/stage_badge.html" with stage=result.daily_stage %}
     {% if result.breakout_type == "clean" %}
-    <span class="px-2 py-0.5 rounded text-xs bg-blue-900 text-blue-300">Clean Breakout</span>
+    <span class="badge badge-blue">Clean Breakout</span>
     {% elif result.breakout_type == "weak" %}
-    <span class="px-2 py-0.5 rounded text-xs bg-slate-700 text-slate-300">Weak Breakout</span>
+    <span class="badge badge-slate">Weak Breakout</span>
     {% endif %}
     {% if result.quality_tier == "high" %}
-    <span class="px-2 py-0.5 rounded text-xs bg-emerald-600 text-white font-medium">High Quality S2</span>
+    <span class="badge badge-green">High Quality S2</span>
     {% endif %}
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-4">
-    <div class="bg-slate-800/50 rounded p-2">
-      <p class="text-slate-500 text-xs">RS Rating</p>
-      <p class="font-semibold {% if result.rs_rating >= 60 %}text-emerald-400{% else %}text-slate-300{% endif %}">{{ result.rs_rating|floatformat:0 }} ({{ result.rs_trend }})</p>
+    <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+      <p class="text-slate-500 text-xs font-semibold uppercase">RS Rating</p>
+      <p class="font-semibold {% if result.rs_rating >= 60 %}text-emerald-700{% else %}text-slate-700{% endif %}">{{ result.rs_rating|floatformat:0 }} ({{ result.rs_trend }})</p>
     </div>
-    <div class="bg-slate-800/50 rounded p-2">
-      <p class="text-slate-500 text-xs">vs Nifty 50</p>
-      <p class="font-semibold {% if result.rs_vs_benchmark_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ result.rs_vs_benchmark_pct|floatformat:1 }}%</p>
+    <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+      <p class="text-slate-500 text-xs font-semibold uppercase">vs Nifty 50</p>
+      <p class="font-semibold {% if result.rs_vs_benchmark_pct >= 0 %}text-emerald-700{% else %}text-red-600{% endif %}">{{ result.rs_vs_benchmark_pct|floatformat:1 }}%</p>
     </div>
-    <div class="bg-slate-800/50 rounded p-2">
-      <p class="text-slate-500 text-xs">30W MA</p>
-      <p class="font-semibold text-blue-400">{{ result.ma_30w|floatformat:2 }}</p>
+    <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+      <p class="text-slate-500 text-xs font-semibold uppercase">30W MA</p>
+      <p class="font-semibold text-blue-700">{{ result.ma_30w|floatformat:2 }}</p>
     </div>
-    <div class="bg-slate-800/50 rounded p-2">
-      <p class="text-slate-500 text-xs">R:R</p>
-      <p class="font-semibold">{{ result.risk_reward }}:1</p>
+    <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+      <p class="text-slate-500 text-xs font-semibold uppercase">R:R</p>
+      <p class="font-semibold text-slate-800">{{ result.risk_reward }}:1</p>
     </div>
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-4">
-    <div class="border border-slate-700 rounded p-2">
-      <p class="text-emerald-400 text-xs">Breakout Entry</p>
-      <p class="font-bold">{{ result.primary_entry|floatformat:2 }}</p>
+    <div class="rounded-xl border border-emerald-100 bg-emerald-50/50 p-3">
+      <p class="text-emerald-700 text-xs font-semibold">Breakout entry</p>
+      <p class="font-bold text-slate-900">{{ result.primary_entry|floatformat:2 }}</p>
     </div>
-    <div class="border border-slate-700 rounded p-2">
-      <p class="text-blue-400 text-xs">Pullback Entry</p>
-      <p class="font-bold">{{ result.pullback_entry|floatformat:2 }}</p>
+    <div class="rounded-xl border border-blue-100 bg-blue-50/50 p-3">
+      <p class="text-blue-700 text-xs font-semibold">Pullback entry</p>
+      <p class="font-bold text-slate-900">{{ result.pullback_entry|floatformat:2 }}</p>
     </div>
-    <div class="border border-red-900/50 rounded p-2">
-      <p class="text-red-400 text-xs">Stop</p>
-      <p class="font-bold text-red-400">{{ result.stop_loss|floatformat:2 }}</p>
+    <div class="rounded-xl border border-red-100 bg-red-50/50 p-3">
+      <p class="text-red-700 text-xs font-semibold">Stop</p>
+      <p class="font-bold text-red-600">{{ result.stop_loss|floatformat:2 }}</p>
     </div>
-    <div class="border border-slate-700 rounded p-2">
-      <p class="text-slate-400 text-xs">Target</p>
-      <p class="font-bold">{{ result.target_price|floatformat:2 }}</p>
+    <div class="rounded-xl border border-slate-200 bg-white p-3">
+      <p class="text-slate-500 text-xs font-semibold">Target</p>
+      <p class="font-bold text-slate-900">{{ result.target_price|floatformat:2 }}</p>
     </div>
   </div>
 
-  <p class="text-sm text-emerald-300 mb-3">{{ result.suggested_action }}</p>
+  <p class="text-sm font-medium text-emerald-700 mb-3">{{ result.suggested_action }}</p>
   {% include "stage_analysis_v2/partials/why_scored_high.html" with why_high=result.why_high %}
 </div>

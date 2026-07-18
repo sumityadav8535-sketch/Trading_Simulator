@@ -411,7 +411,7 @@ def build_intraday_chart_json(symbol: str, interval: str = DEFAULT_INTERVAL) -> 
     fig.update_layout(
         title=f"{symbol} — {interval} intraday (NSE)",
         height=420,
-        template="plotly_dark",
+        template="plotly_white",
         paper_bgcolor="#0f172a",
         plot_bgcolor="#0f172a",
         xaxis_rangeslider_visible=False,

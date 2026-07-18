@@ -17,15 +17,15 @@
             label: title,
             data: candleData,
             yAxisID: "y",
-            color: { up: "#34d399", down: "#f87171", unchanged: "#94a3b8" },
-            borderColor: { up: "#34d399", down: "#f87171", unchanged: "#94a3b8" },
+            color: { up: "#059669", down: "#dc2626", unchanged: "#94a3b8" },
+            borderColor: { up: "#059669", down: "#dc2626", unchanged: "#94a3b8" },
           },
           {
             type: "line",
             label: maLabel,
             data: maData,
             yAxisID: "y",
-            borderColor: "#60a5fa",
+            borderColor: "#2563eb",
             pointRadius: 0,
             borderWidth: 2,
           },
@@ -34,10 +34,10 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: "#cbd5e1", boxWidth: 12 } } },
+        plugins: { legend: { labels: { color: "#475569", boxWidth: 12 } } },
         scales: {
-          x: { type: "time", ticks: { color: "#94a3b8", maxTicksLimit: 6 }, grid: { color: "#334155" } },
-          y: { position: "right", ticks: { color: "#94a3b8" }, grid: { color: "#334155" } },
+          x: { type: "time", ticks: { color: "#64748b", maxTicksLimit: 6 }, grid: { color: "#e2e8f0" } },
+          y: { position: "right", ticks: { color: "#64748b" }, grid: { color: "#e2e8f0" } },
         },
       },
     });
@@ -61,8 +61,8 @@
         datasets: [{
           label: "RS vs Nifty 50",
           data: p.rs_line.map((d) => ({ x: d.x, y: d.y })),
-          borderColor: "#a78bfa",
-          backgroundColor: "rgba(167,139,250,0.1)",
+          borderColor: "#7c3aed",
+          backgroundColor: "rgba(124,58,237,0.08)",
           fill: true,
           pointRadius: 0,
           borderWidth: 2,
@@ -71,10 +71,10 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: "#cbd5e1" } } },
+        plugins: { legend: { labels: { color: "#475569" } } },
         scales: {
-          x: { type: "time", ticks: { color: "#94a3b8", maxTicksLimit: 6 }, grid: { color: "#334155" } },
-          y: { ticks: { color: "#a78bfa" }, grid: { color: "#334155" } },
+          x: { type: "time", ticks: { color: "#64748b", maxTicksLimit: 6 }, grid: { color: "#e2e8f0" } },
+          y: { ticks: { color: "#7c3aed" }, grid: { color: "#e2e8f0" } },
         },
       },
     });

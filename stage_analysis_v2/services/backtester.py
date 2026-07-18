@@ -3,11 +3,17 @@ Walk-forward backtest for Stage Analysis 2.0 — buy on weekly Stage 2 entry.
 
 Entry: weekly stage transitions into Stage 2 (Weinstein advancing phase).
 Exit: stop below 30-week MA, 2.5R target, stage 3/4, or max hold.
+
+Capital model (single account, cash only — no extra leverage):
+  - Shared starting capital across all stocks
+  - Calendar-order simulation so parallel positions share the same cash pool
+  - Position size = risk % of equity, capped so notional ≤ free cash
+  - Each trade records: invested ₹, free cash left, parallel open count
 """
 from __future__ import annotations
 
 import logging
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from typing import Optional
@@ -53,6 +59,12 @@ class StageV2Trade:
     rs_rating: float
     weekly_stage: int
     days_held: int
+    # Capital account snapshot (₹) — single shared capital pool
+    capital_invested: float = 0.0  # notional put into this trade
+    cash_available: float = 0.0  # free cash after this entry (for next trade)
+    total_invested: float = 0.0  # sum of all open notionals after this entry
+    parallel_open: int = 0  # open positions after this entry (incl. this one)
+    equity_at_entry: float = 0.0  # cash + invested (cost basis) at entry
 
 
 @dataclass
@@ -79,6 +91,32 @@ class StageV2BacktestResult:
     expectancy_r: float = 0.0
     stocks_scanned: int = 0
     stage2_entries: int = 0
+    peak_parallel: int = 0
+    signals_skipped_cash: int = 0
+    final_cash: float = 0.0
+
+
+@dataclass
+class _OpenPos:
+    symbol: str
+    entry_date: pd.Timestamp
+    signal_date: pd.Timestamp
+    entry_price: float
+    stop: float
+    target: float
+    qty: int
+    notional: float
+    quality_score: int
+    rs_rating: float
+    weekly_stage: int
+    hold_days: int = 0
+    last_week_check: Optional[pd.Timestamp] = None
+    # Snapshots frozen at entry for the trade log
+    capital_invested: float = 0.0
+    cash_available: float = 0.0
+    total_invested: float = 0.0
+    parallel_open: int = 0
+    equity_at_entry: float = 0.0
 
 
 def _weekly_stage_at(weekly: pd.DataFrame, end_idx: int) -> tuple[int, dict]:
@@ -246,6 +284,52 @@ def _compute_monthly_returns(trades: list[StageV2Trade], capital: float) -> list
     return out
 
 
+def _invested_total(opens: dict[str, _OpenPos]) -> float:
+    return sum(p.notional for p in opens.values())
+
+
+def _equity(cash: float, opens: dict[str, _OpenPos]) -> float:
+    """Account equity at cost (cash + capital locked in open trades)."""
+    return cash + _invested_total(opens)
+
+
+def _close_trade(
+    pos: _OpenPos,
+    *,
+    exit_price: float,
+    exit_ts: pd.Timestamp,
+    exit_reason: str,
+    days_held: int,
+) -> StageV2Trade:
+    risk = pos.entry_price - pos.stop
+    rr = (exit_price - pos.entry_price) / risk if risk > 0 else 0.0
+    pnl = (exit_price - pos.entry_price) * pos.qty
+    return StageV2Trade(
+        symbol=pos.symbol,
+        signal_date=str(pos.signal_date.date()),
+        entry_date=str(pos.entry_date.date()),
+        exit_date=str(exit_ts.date()),
+        entry_price=round(pos.entry_price, 2),
+        exit_price=round(exit_price, 2),
+        stop_loss=round(pos.stop, 2),
+        target=round(pos.target, 2),
+        quantity=int(pos.qty),
+        pnl=round(pnl, 2),
+        pnl_pct=round(pnl / pos.notional * 100, 2) if pos.notional else 0.0,
+        rr_achieved=round(rr, 2),
+        exit_reason=exit_reason,
+        quality_score=pos.quality_score,
+        rs_rating=pos.rs_rating,
+        weekly_stage=pos.weekly_stage,
+        days_held=days_held,
+        capital_invested=round(pos.capital_invested, 2),
+        cash_available=round(pos.cash_available, 2),
+        total_invested=round(pos.total_invested, 2),
+        parallel_open=pos.parallel_open,
+        equity_at_entry=round(pos.equity_at_entry, 2),
+    )
+
+
 def run_stage_v2_backtest(
     symbols: list[str] | None = None,
     start_date: date | None = None,
@@ -258,10 +342,11 @@ def run_stage_v2_backtest(
     """
     Backtest Stage Analysis 2.0 on Nifty 200 (or custom universe).
 
-    Buys when weekly stage transitions into Stage 2; exits on stop, target,
-    stage deterioration, or time limit.
+    Single shared capital account: free cash + open notionals only.
+    Parallel positions compete for the same capital pool.
     """
     config = config or StrategyConfig.get_active()
+    risk_pct = float(getattr(config, "risk_pct", 2.0) or 2.0)
     end_date = end_date or date.today()
     start_date = start_date or (end_date - timedelta(days=365))
     symbols = symbols or get_universe_symbols(nifty200_only=True)
@@ -278,23 +363,26 @@ def run_stage_v2_backtest(
     )
 
     frames = _preload_frames(symbols)
+    result.stocks_scanned = len(frames)
     nifty_daily = load_price_dataframe(NIFTY50_SYMBOL)
-    nifty_weekly = add_weekly_indicators(daily_to_weekly(nifty_daily)) if not nifty_daily.empty else pd.DataFrame()
-
-    equity = capital
-    equity_curve = [{"date": str(start_date), "equity": equity}]
-    trades: list[StageV2Trade] = []
-    signals = 0
+    nifty_weekly = (
+        add_weekly_indicators(daily_to_weekly(nifty_daily))
+        if not nifty_daily.empty
+        else pd.DataFrame()
+    )
 
     start_ts = pd.Timestamp(start_date)
     end_ts = pd.Timestamp(end_date)
 
+    weekly_by_sym: dict[str, pd.DataFrame] = {}
+    signals_by_day: dict[pd.Timestamp, list[dict]] = defaultdict(list)
+    all_signals = 0
+
     for symbol, daily in frames.items():
-        result.stocks_scanned += 1
         weekly = add_weekly_indicators(daily_to_weekly(daily))
         if len(weekly) < MIN_WEEKLY_BARS + 2:
             continue
-
+        weekly_by_sym[symbol] = weekly
         bench_weekly = nifty_weekly if not nifty_weekly.empty else weekly
         symbol_signals = _collect_stage2_signals(
             symbol,
@@ -307,168 +395,234 @@ def run_stage_v2_backtest(
             min_quality_score=min_quality_score,
             market_filter=market_filter,
         )
-        result.stage2_entries += len(symbol_signals)
-        signals += len(symbol_signals)
-        signal_by_entry = {s["entry_day"]: s for s in symbol_signals}
+        all_signals += len(symbol_signals)
+        for sig in symbol_signals:
+            signals_by_day[sig["entry_day"]].append(sig)
 
-        in_position = False
-        entry_price = stop = target = qty = 0.0
-        entry_dt = signal_dt = None
-        entry_quality = 0
-        entry_rs = 0.0
-        entry_stage = 2
-        hold_days = 0
-        last_exit: Optional[pd.Timestamp] = None
-        last_week_check: Optional[pd.Timestamp] = None
+    result.stage2_entries = all_signals
+    result.total_signals = all_signals
 
-        eval_dates = daily.index[(daily.index >= start_ts) & (daily.index <= end_ts)]
+    calendar_set: set[pd.Timestamp] = set()
+    for df in frames.values():
+        calendar_set.update(df.index[(df.index >= start_ts) & (df.index <= end_ts)].tolist())
+    calendar = sorted(calendar_set)
+    if not calendar:
+        result.final_cash = capital
+        result.equity_curve = [{"date": str(start_date), "equity": capital}]
+        return result
 
-        for ts in eval_dates:
-            row = daily.loc[ts]
+    cash = float(capital)
+    opens: dict[str, _OpenPos] = {}
+    last_exit: dict[str, pd.Timestamp] = {}
+    trades: list[StageV2Trade] = []
+    equity_curve: list[dict] = [{"date": str(start_date), "equity": capital}]
+    peak_parallel = 0
+    skipped_cash = 0
+    last_curve_date: Optional[date] = None
+
+    def _record_curve(ts: pd.Timestamp, force: bool = False) -> None:
+        nonlocal last_curve_date
+        d = ts.date() if hasattr(ts, "date") else pd.Timestamp(ts).date()
+        if not force and last_curve_date is not None and (d - last_curve_date).days < 5:
+            if d.weekday() != 4:
+                return
+        eq = _equity(cash, opens)
+        equity_curve.append({"date": str(d), "equity": round(eq, 2)})
+        last_curve_date = d
+
+    for ts in calendar:
+        # ── Exits first (free capital for same-day entries) ──
+        closed_today: list[str] = []
+        for sym, pos in list(opens.items()):
+            df = frames.get(sym)
+            if df is None or ts not in df.index:
+                continue
+            row = df.loc[ts]
             close = float(row["close"])
             low = float(row["low"])
             high = float(row["high"])
-            open_price = float(row["open"])
+            pos.hold_days += 1
 
-            if in_position:
-                hold_days += 1
-                exit_price = None
-                exit_reason = ""
+            exit_price = None
+            exit_reason = ""
+            if low <= pos.stop:
+                exit_price = pos.stop
+                exit_reason = "stop_loss"
+            elif high >= pos.target:
+                exit_price = pos.target
+                exit_reason = "target_2.5r"
+            elif pos.hold_days >= MAX_HOLD_DAYS:
+                exit_price = close
+                exit_reason = "time_exit"
+            else:
+                weekly = weekly_by_sym.get(sym)
+                if weekly is not None and not weekly.empty:
+                    week_mask = weekly.index[
+                        (weekly.index > (pos.last_week_check or pos.entry_date))
+                        & (weekly.index <= ts)
+                    ]
+                    if len(week_mask):
+                        pos.last_week_check = week_mask[-1]
+                        w_idx = weekly.index.get_loc(pos.last_week_check)
+                        if isinstance(w_idx, slice):
+                            w_idx = w_idx.stop - 1
+                        stage_now, _ = _weekly_stage_at(weekly, int(w_idx))
+                        if stage_now in (3, 4):
+                            exit_price = close
+                            exit_reason = "stage_exit"
 
-                if low <= stop:
-                    exit_price = stop
-                    exit_reason = "stop_loss"
-                elif high >= target:
-                    exit_price = target
-                    exit_reason = "target_2.5r"
-                elif hold_days >= MAX_HOLD_DAYS:
-                    exit_price = close
-                    exit_reason = "time_exit"
-
-                week_mask = weekly.index[(weekly.index > (last_week_check or entry_dt)) & (weekly.index <= ts)]
-                if exit_price is None and len(week_mask):
-                    last_week_check = week_mask[-1]
-                    w_idx = weekly.index.get_loc(last_week_check)
-                    stage_now, _ = _weekly_stage_at(weekly, w_idx)
-                    if stage_now in (3, 4):
-                        exit_price = close
-                        exit_reason = "stage_exit"
-
-                if exit_price is not None:
-                    pnl = (exit_price - entry_price) * qty
-                    risk = entry_price - stop
-                    rr = (exit_price - entry_price) / risk if risk > 0 else 0
-                    trades.append(StageV2Trade(
-                        symbol=symbol,
-                        signal_date=str(signal_dt.date()),
-                        entry_date=str(entry_dt.date()),
-                        exit_date=str(ts.date()),
-                        entry_price=round(entry_price, 2),
-                        exit_price=round(exit_price, 2),
-                        stop_loss=round(stop, 2),
-                        target=round(target, 2),
-                        quantity=int(qty),
-                        pnl=round(pnl, 2),
-                        pnl_pct=round(pnl / (entry_price * qty) * 100, 2) if qty else 0,
-                        rr_achieved=round(rr, 2),
-                        exit_reason=exit_reason,
-                        quality_score=entry_quality,
-                        rs_rating=entry_rs,
-                        weekly_stage=entry_stage,
-                        days_held=hold_days,
-                    ))
-                    equity += pnl
-                    equity_curve.append({"date": str(ts.date()), "equity": round(equity, 2)})
-                    in_position = False
-                    last_exit = ts
-                    hold_days = 0
-                    last_week_check = None
+            if exit_price is None:
                 continue
 
-            if last_exit and (ts - last_exit).days < COOLDOWN_DAYS:
-                continue
+            trade = _close_trade(
+                pos,
+                exit_price=exit_price,
+                exit_ts=ts,
+                exit_reason=exit_reason,
+                days_held=pos.hold_days,
+            )
+            # Return invested capital + P&L to free cash
+            cash += pos.notional + trade.pnl
+            trades.append(trade)
+            last_exit[sym] = ts
+            closed_today.append(sym)
 
-            sig = signal_by_entry.get(ts)
-            if sig is None:
-                continue
+        for sym in closed_today:
+            opens.pop(sym, None)
+        if closed_today:
+            _record_curve(ts, force=True)
 
-            entry_price = open_price
-            stop = sig["stop"]
-            target = sig["target"]
-            risk = entry_price - stop
-            if risk <= 0:
-                continue
-            pos = calculate_position_size(equity, config.risk_pct, entry_price, stop)
-            if pos.quantity <= 0:
-                continue
-            qty = pos.quantity
-            entry_dt = ts
-            signal_dt = sig["signal_date"]
-            entry_quality = sig["quality_score"]
-            entry_rs = sig["rs_rating"]
-            entry_stage = sig["weekly_stage"]
-            in_position = True
-            hold_days = 0
-            last_week_check = None
+        # ── Entries (only with free cash from capital pool) ──
+        day_sigs = signals_by_day.get(ts, [])
+        if day_sigs:
+            day_sigs = sorted(
+                day_sigs,
+                key=lambda s: (int(s.get("quality_score") or 0), float(s.get("rs_rating") or 0)),
+                reverse=True,
+            )
+            for sig in day_sigs:
+                sym = sig["symbol"]
+                if sym in opens:
+                    continue
+                if sym not in frames or ts not in frames[sym].index:
+                    continue
+                prev_x = last_exit.get(sym)
+                if prev_x is not None and (ts - prev_x).days < COOLDOWN_DAYS:
+                    continue
 
-            if low <= stop:
-                pnl = (stop - entry_price) * qty
-                trades.append(StageV2Trade(
-                    symbol=symbol,
-                    signal_date=str(signal_dt.date()),
-                    entry_date=str(entry_dt.date()),
-                    exit_date=str(ts.date()),
-                    entry_price=round(entry_price, 2),
-                    exit_price=round(stop, 2),
-                    stop_loss=round(stop, 2),
-                    target=round(target, 2),
-                    quantity=int(qty),
-                    pnl=round(pnl, 2),
-                    pnl_pct=round(pnl / (entry_price * qty) * 100, 2) if qty else 0,
-                    rr_achieved=-1.0,
-                    exit_reason="stop_loss",
-                    quality_score=entry_quality,
-                    rs_rating=entry_rs,
-                    weekly_stage=entry_stage,
-                    days_held=0,
-                ))
-                equity += pnl
-                equity_curve.append({"date": str(ts.date()), "equity": round(equity, 2)})
-                in_position = False
-                last_exit = ts
-            elif high >= target:
-                pnl = (target - entry_price) * qty
+                row = frames[sym].loc[ts]
+                open_price = float(row["open"])
+                high = float(row["high"])
+                low = float(row["low"])
+                stop = float(sig["stop"])
+                target = float(sig["target"])
+                entry_price = open_price
                 risk = entry_price - stop
-                rr = (target - entry_price) / risk if risk > 0 else 0
-                trades.append(StageV2Trade(
-                    symbol=symbol,
-                    signal_date=str(signal_dt.date()),
-                    entry_date=str(entry_dt.date()),
-                    exit_date=str(ts.date()),
-                    entry_price=round(entry_price, 2),
-                    exit_price=round(target, 2),
-                    stop_loss=round(stop, 2),
-                    target=round(target, 2),
-                    quantity=int(qty),
-                    pnl=round(pnl, 2),
-                    pnl_pct=round(pnl / (entry_price * qty) * 100, 2) if qty else 0,
-                    rr_achieved=round(rr, 2),
-                    exit_reason="target_2.5r",
-                    quality_score=entry_quality,
-                    rs_rating=entry_rs,
-                    weekly_stage=entry_stage,
-                    days_held=0,
-                ))
-                equity += pnl
-                equity_curve.append({"date": str(ts.date()), "equity": round(equity, 2)})
-                in_position = False
-                last_exit = ts
+                if risk <= 0:
+                    continue
 
-    trades.sort(key=lambda t: t.entry_date)
+                equity_now = _equity(cash, opens)
+                if cash <= 0 or equity_now <= 0:
+                    skipped_cash += 1
+                    continue
+
+                pos_size = calculate_position_size(equity_now, risk_pct, entry_price, stop)
+                qty = int(pos_size.quantity)
+                # Cap by free cash only (no leverage beyond account capital)
+                max_qty_cash = int(cash // entry_price) if entry_price > 0 else 0
+                qty = min(qty, max_qty_cash)
+                if qty <= 0:
+                    skipped_cash += 1
+                    continue
+
+                notional = qty * entry_price
+                if notional > cash + 1e-6:
+                    skipped_cash += 1
+                    continue
+
+                cash -= notional
+                invested_after = _invested_total(opens) + notional
+                parallel = len(opens) + 1
+                peak_parallel = max(peak_parallel, parallel)
+                equity_at_entry = cash + invested_after
+
+                pos = _OpenPos(
+                    symbol=sym,
+                    entry_date=ts,
+                    signal_date=sig["signal_date"],
+                    entry_price=entry_price,
+                    stop=stop,
+                    target=target,
+                    qty=qty,
+                    notional=notional,
+                    quality_score=int(sig.get("quality_score") or 0),
+                    rs_rating=float(sig.get("rs_rating") or 0),
+                    weekly_stage=int(sig.get("weekly_stage") or 2),
+                    hold_days=0,
+                    capital_invested=notional,
+                    cash_available=cash,
+                    total_invested=invested_after,
+                    parallel_open=parallel,
+                    equity_at_entry=equity_at_entry,
+                )
+                opens[sym] = pos
+
+                # Same-bar exit
+                if low <= stop:
+                    trade = _close_trade(
+                        pos, exit_price=stop, exit_ts=ts, exit_reason="stop_loss", days_held=0
+                    )
+                    cash += pos.notional + trade.pnl
+                    trades.append(trade)
+                    last_exit[sym] = ts
+                    opens.pop(sym, None)
+                elif high >= target:
+                    trade = _close_trade(
+                        pos, exit_price=target, exit_ts=ts, exit_reason="target_2.5r", days_held=0
+                    )
+                    cash += pos.notional + trade.pnl
+                    trades.append(trade)
+                    last_exit[sym] = ts
+                    opens.pop(sym, None)
+
+                _record_curve(ts, force=True)
+
+        if ts == calendar[-1] or ts.weekday() == 4:
+            _record_curve(ts, force=(ts == calendar[-1]))
+
+    # Force-close leftovers at last close (return capital)
+    if opens:
+        last_ts = calendar[-1]
+        for sym, pos in list(opens.items()):
+            df = frames.get(sym)
+            if df is None:
+                continue
+            hist = df.loc[df.index <= last_ts]
+            if hist.empty:
+                continue
+            close = float(hist.iloc[-1]["close"])
+            exit_ts = hist.index[-1]
+            trade = _close_trade(
+                pos,
+                exit_price=close,
+                exit_ts=exit_ts,
+                exit_reason="eod_force",
+                days_held=pos.hold_days,
+            )
+            cash += pos.notional + trade.pnl
+            trades.append(trade)
+        opens.clear()
+        _record_curve(last_ts, force=True)
+
+    trades.sort(key=lambda t: (t.entry_date, t.symbol))
+    final_equity = cash
+
     result.trades = trades
     result.total_trades = len(trades)
-    result.total_signals = signals
     result.equity_curve = equity_curve
+    result.peak_parallel = peak_parallel
+    result.signals_skipped_cash = skipped_cash
+    result.final_cash = round(final_equity, 2)
 
     if trades:
         wins = [t for t in trades if t.pnl > 0]
@@ -478,9 +632,10 @@ def run_stage_v2_backtest(
         result.win_rate = round(len(wins) / len(trades) * 100, 2)
         result.profit_factor = round(gross_profit / gross_loss, 2)
         result.avg_rr = round(sum(t.rr_achieved for t in trades) / len(trades), 2)
-        result.total_return_pct = round((equity - capital) / capital * 100, 2)
         result.avg_hold_days = round(sum(t.days_held for t in trades) / len(trades), 1)
         result.expectancy_r = result.avg_rr
+
+    result.total_return_pct = round((final_equity - capital) / capital * 100, 2)
 
     peak = capital
     max_dd = 0.0

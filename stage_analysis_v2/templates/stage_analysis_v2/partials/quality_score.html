@@ -1,16 +1,16 @@
 <div class="flex items-center gap-3">
   <div class="relative w-16 h-16">
     <svg class="w-16 h-16 -rotate-90" viewBox="0 0 36 36">
-      <circle cx="18" cy="18" r="15.5" fill="none" stroke="#334155" stroke-width="3"/>
+      <circle cx="18" cy="18" r="15.5" fill="none" stroke="#e2e8f0" stroke-width="3"/>
       <circle cx="18" cy="18" r="15.5" fill="none"
-        stroke="{% if score >= 75 %}#22c55e{% elif score >= 50 %}#4ade80{% elif score >= 25 %}#60a5fa{% else %}#f87171{% endif %}"
+        stroke="{% if score >= 75 %}#059669{% elif score >= 50 %}#10b981{% elif score >= 25 %}#2563eb{% else %}#dc2626{% endif %}"
         stroke-width="3" stroke-dasharray="{{ score }} 100" stroke-linecap="round"/>
     </svg>
-    <span class="absolute inset-0 flex items-center justify-center text-sm font-bold">{{ score }}</span>
+    <span class="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-800">{{ score }}</span>
   </div>
   <div>
-    <p class="text-xs text-slate-400">Quality Score</p>
-    <p class="text-sm font-medium {% if score >= 75 %}text-emerald-300{% elif score >= 50 %}text-emerald-400/80{% elif score >= 25 %}text-blue-400{% else %}text-red-400{% endif %}">
+    <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide">Quality score</p>
+    <p class="text-sm font-semibold {% if score >= 75 %}text-emerald-700{% elif score >= 50 %}text-emerald-600{% elif score >= 25 %}text-blue-600{% else %}text-red-600{% endif %}">
       {% if score >= 75 %}High Quality S2{% elif score >= 50 %}Average S2{% elif score >= 25 %}Base/Watch{% else %}Low{% endif %}
     </p>
   </div>

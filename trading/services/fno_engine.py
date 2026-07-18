@@ -16,6 +16,7 @@ SLIPPAGE_PTS = 0.5
 TRADES_PER_DAY = 4
 
 # Elite ML Short v2 — sole F&O strategy
+# Soft checklist (score ≥ 6) is applied in fno_live / fno_checklist before ACTIVE.
 STRATEGY = {
     "name": "Elite ML Short v2",
     "ml_threshold": 0.58,
@@ -28,6 +29,8 @@ STRATEGY = {
     "require_ema_stack": False,
     "rsi_min": 40.0,
     "rsi_max": 65.0,
+    "soft_checklist": True,
+    "soft_checklist_min_score": 6,
 }
 
 MARKET_OPEN = dt_time(9, 15)

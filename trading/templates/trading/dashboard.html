@@ -1,69 +1,99 @@
 {% extends "trading/base.html" %}
-{% block title %}Dashboard — Confluence Swing{% endblock %}
+{% block title %}Dashboard — Trading Simulator{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-6">Dashboard</h2>
+<div class="mb-8">
+  <h2 class="page-title">Dashboard</h2>
+  <p class="page-sub">Overview of your workspace and strategy settings.</p>
+</div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
-    <p class="text-slate-400 text-sm">Nifty 200 Universe</p>
-    <p class="text-2xl font-bold text-emerald-400">{{ nifty_count }}</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+  <div class="stat-card">
+    <p class="label">Nifty 200 universe</p>
+    <p class="value text-brand-700">{{ nifty_count }}</p>
+    <p class="text-xs text-slate-500 mt-2">Active symbols loaded</p>
   </div>
-  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
-    <p class="text-slate-400 text-sm">Market Bias</p>
-    <p class="text-2xl font-bold">{{ market_bias.trend }}</p>
-    <p class="text-xs text-slate-500">{{ market_bias.above_200ema }} above / {{ market_bias.below_200ema }} below 200 EMA</p>
+  <div class="stat-card">
+    <p class="label">Market bias</p>
+    <p class="value {% if market_bias.trend == 'Bullish' %}text-emerald-600{% elif market_bias.trend == 'Bearish' %}text-red-600{% else %}text-slate-800{% endif %}">{{ market_bias.trend }}</p>
+    <p class="text-xs text-slate-500 mt-2">{{ market_bias.above_200ema }} above / {{ market_bias.below_200ema }} below 200 EMA</p>
   </div>
-  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
-    <p class="text-slate-400 text-sm">Open Trades</p>
-    <p class="text-2xl font-bold">{{ journal_open }}</p>
-  </div>
-  <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
-    <p class="text-slate-400 text-sm">Journal P&amp;L</p>
-    <p class="text-2xl font-bold {% if journal_pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ journal_pnl|floatformat:0 }}</p>
+  <div class="stat-card">
+    <p class="label">Price bars loaded</p>
+    <p class="value">{{ price_bars|floatformat:0 }}</p>
+    <p class="text-xs text-slate-500 mt-2">Daily OHLCV history</p>
   </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-  <section class="bg-slate-900 rounded-lg border border-slate-800 p-4">
-    <h3 class="font-semibold mb-4 text-emerald-300">Recent A+ Signals</h3>
-    {% if recent_signals %}
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="text-slate-400 border-b border-slate-700">
-          <tr><th class="text-left py-2">Symbol</th><th>Score</th><th>Entry</th><th>SL</th><th>2R</th><th>RR</th></tr>
-        </thead>
-        <tbody>
-          {% for s in recent_signals %}
-          <tr class="border-b border-slate-800">
-            <td class="py-2"><a href="{% url 'chart' %}?symbol={{ s.stock.symbol }}" class="text-emerald-400 hover:underline">{{ s.stock.symbol }}</a></td>
-            <td class="text-center">{{ s.confluence_score }}/10</td>
-            <td class="text-center">{{ s.entry_price }}</td>
-            <td class="text-center text-red-400">{{ s.stop_loss }}</td>
-            <td class="text-center text-blue-400">{{ s.target_2r }}</td>
-            <td class="text-center">{{ s.risk_reward }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <section class="card p-6">
+    <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500 mb-4">Quick access</h3>
+    <div class="space-y-3">
+      <a href="{% url 'stage_analysis_v2:dashboard' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
+        <div>
+          <p class="font-semibold text-slate-900">Stage Analysis 2.0</p>
+          <p class="text-sm text-slate-500">Quality scores, RS, breakouts</p>
+        </div>
+        <span class="text-blue-600 font-semibold text-sm">Open →</span>
+      </a>
+      <a href="{% url 'stage_analysis_v2:backtest' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
+        <div>
+          <p class="font-semibold text-slate-900">Stage 2.0 Backtest</p>
+          <p class="text-sm text-slate-500">Historical stage strategy results</p>
+        </div>
+        <span class="text-blue-600 font-semibold text-sm">Open →</span>
+      </a>
+      <a href="{% url 'fno_live' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
+        <div>
+          <p class="font-semibold text-slate-900">F&amp;O Live</p>
+          <p class="text-sm text-slate-500">Index futures signals &amp; charts</p>
+        </div>
+        <span class="text-blue-600 font-semibold text-sm">Open →</span>
+      </a>
+      <a href="{% url 'paper_trading' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
+        <div>
+          <p class="font-semibold text-slate-900">Paper Trading</p>
+          <p class="text-sm text-slate-500">Simulated positions and P&amp;L</p>
+        </div>
+        <span class="text-blue-600 font-semibold text-sm">Open →</span>
+      </a>
     </div>
-    {% else %}
-    <p class="text-slate-500 text-sm">No valid signals yet. Run <code class="text-emerald-400">python manage.py scan_signals</code> or open the <a href="{% url 'scanner' %}" class="text-emerald-400">Scanner</a>.</p>
-    {% endif %}
   </section>
 
-  <section class="bg-slate-900 rounded-lg border border-slate-800 p-4">
-    <h3 class="font-semibold mb-4 text-emerald-300">Strategy Config</h3>
-    <ul class="text-sm space-y-2 text-slate-300">
-      <li>Capital default: ₹{{ config.capital_default }}</li>
-      <li>Risk per trade: {{ config.risk_pct }}%</li>
-      <li>ADX minimum: {{ config.adx_min }} (preferred {{ config.adx_preferred }})</li>
-      <li>RSI zone: {{ config.rsi_low }}–{{ config.rsi_high }}</li>
-      <li>Volume multiplier: {{ config.volume_multiplier }}× 20d avg</li>
-      <li>Min risk-reward: {{ config.min_risk_reward }}:1</li>
-      <li>Fundamental filters: {% if config.enable_fundamental_filters %}ON{% else %}OFF (optional){% endif %}</li>
-      <li>Price bars loaded: {{ price_bars|floatformat:0 }}</li>
-    </ul>
-    <p class="mt-4 text-xs text-slate-500">Edit thresholds in <a href="/admin/trading/strategyconfig/" class="text-emerald-400">Admin → Strategy Config</a></p>
+  <section class="card p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500">Strategy config</h3>
+      <a href="/admin/trading/strategyconfig/" class="text-xs font-semibold text-blue-600 hover:underline">Edit in admin</a>
+    </div>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+      <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <dt class="text-slate-500 text-xs font-semibold uppercase">Capital default</dt>
+        <dd class="font-semibold mt-1">₹{{ config.capital_default }}</dd>
+      </div>
+      <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <dt class="text-slate-500 text-xs font-semibold uppercase">Risk per trade</dt>
+        <dd class="font-semibold mt-1">{{ config.risk_pct }}%</dd>
+      </div>
+      <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <dt class="text-slate-500 text-xs font-semibold uppercase">ADX min / preferred</dt>
+        <dd class="font-semibold mt-1">{{ config.adx_min }} / {{ config.adx_preferred }}</dd>
+      </div>
+      <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <dt class="text-slate-500 text-xs font-semibold uppercase">RSI zone</dt>
+        <dd class="font-semibold mt-1">{{ config.rsi_low }}–{{ config.rsi_high }}</dd>
+      </div>
+      <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <dt class="text-slate-500 text-xs font-semibold uppercase">Volume multiplier</dt>
+        <dd class="font-semibold mt-1">{{ config.volume_multiplier }}× 20d avg</dd>
+      </div>
+      <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <dt class="text-slate-500 text-xs font-semibold uppercase">Min risk-reward</dt>
+        <dd class="font-semibold mt-1">{{ config.min_risk_reward }}:1</dd>
+      </div>
+    </dl>
+    <p class="mt-4 text-xs text-slate-500">
+      Fundamental filters:
+      <span class="font-semibold text-slate-700">{% if config.enable_fundamental_filters %}ON{% else %}OFF{% endif %}</span>
+    </p>
   </section>
 </div>
 {% endblock %}

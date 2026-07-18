@@ -1,11 +1,11 @@
 {% if stage == 1 %}
-<span class="px-2 py-0.5 rounded text-xs bg-slate-700 text-slate-200">S1 Base</span>
+<span class="badge badge-slate">S1 Base</span>
 {% elif stage == 2 %}
-<span class="px-2 py-0.5 rounded text-xs bg-emerald-900 text-emerald-300">S2 Advancing</span>
+<span class="badge badge-green">S2 Advancing</span>
 {% elif stage == 3 %}
-<span class="px-2 py-0.5 rounded text-xs bg-amber-900 text-amber-300">S3 Top</span>
+<span class="badge badge-amber">S3 Top</span>
 {% elif stage == 4 %}
-<span class="px-2 py-0.5 rounded text-xs bg-red-900 text-red-300">S4 Decline</span>
+<span class="badge badge-red">S4 Decline</span>
 {% else %}
-<span class="px-2 py-0.5 rounded text-xs bg-slate-800 text-slate-400">—</span>
+<span class="badge badge-slate">—</span>
 {% endif %}

@@ -7,7 +7,7 @@ import json
 import logging
 import pickle
 from dataclasses import asdict
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
@@ -18,6 +18,7 @@ import yfinance as yf
 from django.core.cache import cache
 from django.utils import timezone
 
+from trading.services.fno_checklist import evaluate_soft_checklist, paper_losses_today
 from trading.services.fno_engine import (
     CAPITAL,
     FEATURE_COLS,
@@ -36,6 +37,7 @@ from trading.services.fno_engine import (
     sig_ema_short,
 )
 from trading.services.fno_results import (
+    get_recent_day_results,
     get_trades,
     load_model_meta,
     load_strategy_results,
@@ -155,6 +157,41 @@ def _session_bars_today(df: pd.DataFrame) -> pd.DataFrame:
     return sess if not sess.empty else df.tail(80)
 
 
+def _to_ist(ts) -> datetime:
+    """Normalize a bar timestamp to timezone-aware IST."""
+    if hasattr(ts, "to_pydatetime"):
+        ts = ts.to_pydatetime()
+    if isinstance(ts, datetime):
+        if ts.tzinfo is None:
+            return ts.replace(tzinfo=IST)
+        return ts.astimezone(IST)
+    return _now_ist()
+
+
+def last_completed_bar_iloc(df: pd.DataFrame, now: Optional[datetime] = None, bar_minutes: int = 5) -> int:
+    """
+    Index of the last *fully closed* 5m bar.
+
+    Yahoo/live feeds expose the currently forming bar as the last row. Paper and
+    backtest must not trade on that incomplete candle (OHLC/RSI/ML change until close).
+    A bar labeled T covers [T, T+bar_minutes); it is complete once now >= T+bar_minutes.
+    """
+    if df is None or df.empty:
+        return -1
+    now = now or _now_ist()
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=IST)
+    else:
+        now = now.astimezone(IST)
+
+    last_i = len(df) - 1
+    ts = _to_ist(df.index[last_i])
+    bar_end = ts + timedelta(minutes=bar_minutes)
+    if now < bar_end and last_i > 0:
+        return last_i - 1
+    return last_i
+
+
 def evaluate_signal(key: str, force: bool = False) -> dict:
     key = key.upper()
     inst = INSTRUMENTS.get(key, INSTRUMENTS["NIFTY"])
@@ -172,15 +209,32 @@ def evaluate_signal(key: str, force: bool = False) -> dict:
             "market": asdict(market),
         }
 
-    row = df.iloc[-1]
-    ts = df.index[-1]
+    # Live LTP from newest bar; strategy decision from last completed bar only
+    live_row = df.iloc[-1]
+    live_ts = df.index[-1]
+    sig_i = last_completed_bar_iloc(df)
+    if sig_i < 0:
+        return {
+            "instrument": key,
+            "name": inst["name"],
+            "status": "no_data",
+            "message": "No completed 5m bar yet",
+            "market": asdict(market),
+        }
+    row = df.iloc[sig_i]
+    ts = df.index[sig_i]
     bar_time = ts.strftime("%H:%M IST") if hasattr(ts, "strftime") else str(ts)
+    bar_forming = sig_i < (len(df) - 1)
 
     ema_aligned = bool(row["ema_9"] < row["ema_21"] < row["ema_50"])
     below_vwap = bool(pd.notna(row.get("vwap")) and row["close"] < row["vwap"])
     base_sig = sig_ema_short(row, TARGET_R)
     is_loose = loose_short_signal(row)
-    in_entry_window = MARKET_OPEN <= ts.time() <= NO_ENTRY_AFTER
+    now_t = _now_ist().time()
+    # Entry window uses wall-clock time (not the signal bar's clock alone)
+    in_entry_window = MARKET_OPEN <= now_t <= NO_ENTRY_AFTER
+    # Also require the signal bar itself to fall inside the strategy session
+    bar_in_window = MARKET_OPEN <= ts.time() <= NO_ENTRY_AFTER
 
     features = [float(row.get(c, float("nan"))) for c in FEATURE_COLS]
     has_nan = any(pd.isna(v) for v in features)
@@ -205,17 +259,33 @@ def evaluate_signal(key: str, force: bool = False) -> dict:
     opt_pass = (
         prob is not None
         and risk_pts > 0
+        and bar_in_window
         and passes_strategy_filters(row, ts, prob, risk_pts, strategy)
     )
     ml_pass = prob is not None and prob >= threshold
     base_pass = base_sig is not None
 
+    # Soft checklist (score ≥ 6) — gates ACTIVE for live + paper
+    losses_today = paper_losses_today()
+    checklist = evaluate_soft_checklist(row, ts, prob, losses_today=losses_today)
+    checklist_pass = bool(checklist.take)
+
     if not in_entry_window:
         status, message = "closed_window", "Outside entry window (9:15–14:45 IST)"
-    elif is_loose and opt_pass:
+    elif not bar_in_window:
+        status, message = "closed_window", f"Signal bar {bar_time} outside entry window"
+    elif is_loose and opt_pass and checklist_pass:
         status, message = (
             "active",
-            f"{strategy['name']} — P(win) {prob:.0%}, risk {risk_pts:.1f}pts ≤ {strategy['max_risk_pts']}",
+            f"{strategy['name']} — checklist {checklist.score}/6 PASS · "
+            f"P(win) {prob:.0%}, risk {risk_pts:.1f}pts"
+            + (" · completed bar" if bar_forming else ""),
+        )
+    elif is_loose and opt_pass and not checklist_pass:
+        status, message = (
+            "watch",
+            f"Base setup OK but soft checklist fail ({checklist.score}/6)"
+            + (f" — {checklist.reasons[0]}" if checklist.reasons else ""),
         )
     elif is_loose and ml_pass and risk_pts > strategy.get("max_risk_pts", 22):
         status, message = "watch", f"ML OK but stop too wide ({risk_pts:.1f}pts > {strategy['max_risk_pts']})"
@@ -228,10 +298,14 @@ def evaluate_signal(key: str, force: bool = False) -> dict:
     elif ema_aligned and below_vwap:
         status, message = "setup", "Bearish structure forming — awaiting ML confirmation"
     else:
-        status, message = "neutral", "No short setup on latest bar"
+        status, message = "neutral", "No short setup on last completed bar"
 
     est_risk_inr = round(risk_pts * inst["lot_size"] * lots, 0) if lots else 0
     est_target_inr = round(risk_pts * TARGET_R * inst["lot_size"] * lots, 0) if lots else 0
+    ltp = round(float(live_row["close"]), 2)
+    live_open = round(float(live_row["open"]), 2)
+    # Entry reference matches backtest: next bar open after the signal bar when available
+    entry_ref = live_open if bar_forming else round(float(row["close"]), 2)
 
     return {
         "instrument": key,
@@ -243,7 +317,13 @@ def evaluate_signal(key: str, force: bool = False) -> dict:
         "message": message,
         "side": "SHORT" if status == "active" else None,
         "bar_time": bar_time,
-        "ltp": round(float(row["close"]), 2),
+        "bar_complete": True,
+        "bar_forming_skipped": bar_forming,
+        "live_bar_time": live_ts.strftime("%H:%M IST") if hasattr(live_ts, "strftime") else str(live_ts),
+        "ltp": ltp,
+        "live_open": live_open,
+        "entry_ref": entry_ref,
+        "signal_close": round(float(row["close"]), 2),
         "open": round(float(row["open"]), 2),
         "high": round(float(row["high"]), 2),
         "low": round(float(row["low"]), 2),
@@ -264,6 +344,8 @@ def evaluate_signal(key: str, force: bool = False) -> dict:
         "ml_threshold": threshold,
         "strategy": strategy,
         "strategy_pass": opt_pass,
+        "checklist_pass": checklist_pass,
+        "checklist": checklist.as_dict(),
         "ml_model": model_type,
         "ml_available": prob is not None,
         "stop": round(stop, 2) if stop else None,
@@ -330,7 +412,7 @@ def build_fno_chart_json(key: str, force: bool = False) -> str:
     fig.update_layout(
         title=f"{inst['name']} — 5m intraday (index proxy)",
         height=420,
-        template="plotly_dark",
+        template="plotly_white",
         paper_bgcolor="#0f172a",
         plot_bgcolor="#0f172a",
         xaxis_rangeslider_visible=False,
@@ -349,7 +431,18 @@ def get_fno_dashboard(key: str = "NIFTY", force: bool = False, trade_period: str
     results = load_strategy_results()
     trades_data = load_strategy_trades_data()
     strategy_trades = get_trades(trade_period)
+    # Newest first so yesterday/today are at the top of the live trade log
+    strategy_trades = sorted(
+        strategy_trades,
+        key=lambda t: (
+            str(t.get("session_date") or ""),
+            str(t.get("signal_time") or ""),
+            int(t.get("trade_no") or 0),
+        ),
+        reverse=True,
+    )
     signal = evaluate_signal(key, force=force)
+    recent_days = get_recent_day_results(trade_period, instrument=key)
 
     instruments = []
     for k in INSTRUMENTS:
@@ -377,6 +470,7 @@ def get_fno_dashboard(key: str = "NIFTY", force: bool = False, trade_period: str
         "trades_data": trades_data,
         "strategy_trades": strategy_trades,
         "trade_period": trade_period,
+        "recent_days": recent_days,
         "trade_summary": {
             "count": len(strategy_trades),
             "wins": wins,

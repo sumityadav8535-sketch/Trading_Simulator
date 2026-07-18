@@ -44,11 +44,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         interval = max(15, int(options["interval"]))
-        account = PaperAccount.get_active()
-        if options["auto_on"]:
-            account.auto_trade = True
-            account.save(update_fields=["auto_trade", "updated_at"])
-            self.stdout.write(self.style.SUCCESS("Auto-trade ENABLED"))
+        from trading.services.paper_trading import ensure_auto_trade
+
+        # Always enable auto-trade so F&O signals open paper orders.
+        account = ensure_auto_trade(PaperAccount.get_active())
+        self.stdout.write(self.style.SUCCESS("Auto-trade ENABLED"))
 
         self.stdout.write(
             f"Paper account #{account.id} | cash=₹{float(account.cash):,.0f} | "
@@ -56,7 +56,7 @@ class Command(BaseCommand):
         )
 
         if options["once"]:
-            result = run_tick(account, force_refresh=True)
+            result = run_tick(account, force_refresh=True, ensure_auto=True)
             self.stdout.write(str(result))
             dash = get_dashboard(account)
             self.stdout.write(
@@ -83,7 +83,7 @@ class Command(BaseCommand):
                     should = True
 
                 if should:
-                    result = run_tick(account, force_refresh=True)
+                    result = run_tick(account, force_refresh=True, ensure_auto=True)
                     self.stdout.write(
                         f"[{market.now_ist}] opened={result['opened']} closed={result['closed']} "
                         f"cash=₹{result['cash']:,.0f} realized=₹{result['realized_pnl']:,.0f} "

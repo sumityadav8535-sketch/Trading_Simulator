@@ -226,8 +226,8 @@ class PaperAccount(models.Model):
     name = models.CharField(max_length=100, default="Paper Account")
     is_active = models.BooleanField(default=True, db_index=True)
     auto_trade = models.BooleanField(
-        default=False,
-        help_text="When on, engine auto-places orders on active F&O signals",
+        default=True,
+        help_text="When on, engine auto-places paper orders on active F&O signals",
     )
     starting_capital = models.DecimalField(max_digits=14, decimal_places=2, default=500_000)
     cash = models.DecimalField(
@@ -276,6 +276,7 @@ class PaperAccount(models.Model):
                 cash=500_000,
                 peak_equity=500_000,
                 instruments=["NIFTY", "BANKNIFTY"],
+                auto_trade=True,
             )
         return obj
 

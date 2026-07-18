@@ -4,6 +4,7 @@ Views for Confluence Trend Pullback Swing Strategy dashboard.
 from __future__ import annotations
 
 import json
+import logging
 from datetime import date, timedelta
 from decimal import Decimal
 
@@ -59,6 +60,7 @@ from trading.services.walk_forward_results import (
 )
 from trading.services.indicators import compute_indicators, get_indicator_frame
 from trading.services.fno_live import build_fno_chart_json, get_fno_dashboard
+from trading.services.fno_results import load_model_meta
 from trading.services.intraday_data import (
     build_intraday_chart_json,
     fetch_index_snapshot,
@@ -72,6 +74,8 @@ from trading.services.fno_backtest_runner import (
     get_backtest_status,
     start_fno_backtest_async,
 )
+
+logger = logging.getLogger(__name__)
 from trading.services.market_data import load_price_dataframe
 from trading.services.position_sizing import calculate_position_size
 from trading.services.strategy import evaluate_stock
@@ -88,46 +92,11 @@ def _stock_choices():
 def dashboard(request: HttpRequest) -> HttpResponse:
     config = StrategyConfig.get_active()
     nifty_count = Stock.objects.filter(is_nifty200=True, is_active=True).count()
-    recent_signals = Signal.objects.filter(is_valid=True).select_related("stock")[:10]
-
-    if not recent_signals.exists():
-        symbols = get_universe_symbols(nifty200_only=True)[:30]
-        live = scan_swing_universe(symbols, min_score=7, config=config, elite_only=True)
-        for r in live[:10]:
-            Signal.objects.update_or_create(
-                stock_id=r.symbol,
-                date=r.eval_date,
-                defaults={
-                    "confluence_score": r.confluence_score,
-                    "is_valid": r.is_valid,
-                    "entry_price": r.entry_price,
-                    "stop_loss": r.stop_loss,
-                    "target_1r": r.target_1r,
-                    "target_2r": r.target_2r,
-                    "target_3r": r.target_3r,
-                    "risk_reward": r.risk_reward,
-                    "position_size": r.position_size,
-                    "capital_used": r.capital_used,
-                    "reasons": r.reasons,
-                    "rejection_reasons": r.rejection_reasons,
-                    "indicator_snapshot": r.indicator_snapshot,
-                },
-            )
-        recent_signals = Signal.objects.filter(is_valid=True).select_related("stock")[:10]
-
-    journal_open = TradeJournalEntry.objects.filter(status=TradeJournalEntry.STATUS_OPEN).count()
-    journal_pnl = sum(
-        e.pnl or 0 for e in TradeJournalEntry.objects.filter(status=TradeJournalEntry.STATUS_CLOSED)
-    )
-
     market_bias = _estimate_market_bias()
 
     return render(request, "trading/dashboard.html", {
         "config": config,
         "nifty_count": nifty_count,
-        "recent_signals": recent_signals,
-        "journal_open": journal_open,
-        "journal_pnl": journal_pnl,
         "market_bias": market_bias,
         "price_bars": _total_price_bars(),
     })
@@ -697,19 +666,29 @@ def intraday_history_sync_api(request: HttpRequest) -> JsonResponse:
 
 @require_GET
 def fno_backtest_status_api(request: HttpRequest) -> JsonResponse:
-    """Status of the one-click F&O backtest job."""
+    """Frozen-model status (retrain disabled)."""
     return JsonResponse(get_backtest_status())
 
 
 @require_POST
 def fno_backtest_run_api(request: HttpRequest) -> JsonResponse:
     """
-    Run Elite ML Short v2 backtest on stored 5m data through today (IST).
-    Background job; poll GET /api/fno/backtest/ for progress.
+    Retrain is disabled — model is frozen so live signals stay stable.
+    Returns 403 with explanation.
     """
     result = start_fno_backtest_async()
-    status = 200 if result.get("ok") or result.get("started") else 409
-    return JsonResponse(result, status=status)
+    return JsonResponse(result, status=403)
+
+
+def _paper_tick_from_fno(force: bool = False) -> dict | None:
+    """Open/manage paper positions whenever F&O Live evaluates signals."""
+    try:
+        from trading.services.paper_trading import run_tick
+
+        return run_tick(force_refresh=force, ensure_auto=True)
+    except Exception:
+        logger.exception("Paper tick from F&O Live failed")
+        return None
 
 
 def fno_live(request: HttpRequest) -> HttpResponse:
@@ -723,8 +702,12 @@ def fno_live(request: HttpRequest) -> HttpResponse:
     if form.is_valid():
         instrument = form.cleaned_data["instrument"]
 
+    # Auto paper-fill on page load (same path as 30s poll)
+    paper_tick = _paper_tick_from_fno(force=False)
+
     dashboard = get_fno_dashboard(instrument, trade_period=trade_period)
     chart_json = build_fno_chart_json(instrument)
+    model_meta = load_model_meta()
 
     return render(request, "trading/fno.html", {
         "form": form,
@@ -736,12 +719,16 @@ def fno_live(request: HttpRequest) -> HttpResponse:
         "trades_data": dashboard["trades_data"],
         "strategy_trades": dashboard["strategy_trades"],
         "trade_summary": dashboard["trade_summary"],
+        "recent_days": dashboard.get("recent_days"),
         "strategy_name": dashboard["strategy_name"],
         "strategy_filters": dashboard["strategy_filters"],
         "top_features": dashboard["top_features"],
         "chart_json": chart_json,
         "updated_at": dashboard["updated_at"],
         "history_coverage": get_history_coverage(),
+        "model_meta": model_meta,
+        "model_frozen": True,
+        "paper_tick": paper_tick,
     })
 
 
@@ -752,7 +739,11 @@ def fno_signal_api(request: HttpRequest) -> JsonResponse:
     trade_period = request.GET.get("trades", "full")
     if trade_period not in ("full", "oos"):
         trade_period = "full"
-    return JsonResponse(get_fno_dashboard(instrument, force=force, trade_period=trade_period))
+    paper_tick = _paper_tick_from_fno(force=force)
+    payload = get_fno_dashboard(instrument, force=force, trade_period=trade_period)
+    payload["paper_tick"] = paper_tick
+    payload["model_frozen"] = True
+    return JsonResponse(payload)
 
 
 @require_GET

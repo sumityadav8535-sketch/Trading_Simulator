@@ -79,7 +79,7 @@ def build_stock_chart(symbol: str, signal_date: Optional[str] = None) -> str:
     fig.update_layout(
         height=700,
         xaxis_rangeslider_visible=False,
-        template="plotly_dark",
+        template="plotly_white",
         margin=dict(l=40, r=40, t=60, b=40),
         legend=dict(orientation="h", yanchor="bottom", y=1.02),
     )
@@ -103,7 +103,7 @@ def build_equity_curve(curve: list[dict]) -> str:
     ))
     fig.update_layout(
         title="Equity Curve",
-        template="plotly_dark",
+        template="plotly_white",
         height=400,
         margin=dict(l=40, r=40, t=50, b=40),
     )
@@ -120,7 +120,7 @@ def build_win_loss_pie(wins: int, losses: int) -> str:
     )])
     fig.update_layout(
         title="Win / Loss Distribution",
-        template="plotly_dark",
+        template="plotly_white",
         height=320,
         margin=dict(l=20, r=20, t=50, b=20),
         showlegend=False,
@@ -148,7 +148,7 @@ def build_exit_breakdown_chart(breakdown: dict) -> str:
     )])
     fig.update_layout(
         title="Exit Reasons",
-        template="plotly_dark",
+        template="plotly_white",
         height=320,
         margin=dict(l=40, r=20, t=50, b=40),
     )
@@ -167,7 +167,7 @@ def build_monthly_returns_chart(monthly: list[dict]) -> str:
     )])
     fig.update_layout(
         title="Monthly P&L (₹)",
-        template="plotly_dark",
+        template="plotly_white",
         height=320,
         margin=dict(l=40, r=20, t=50, b=40),
     )
@@ -181,7 +181,7 @@ def build_scanner_signal_bars(daily: list[dict]) -> str:
             "data": [],
             "layout": {
                 "title": "No signals in selected period",
-                "template": "plotly_dark",
+                "template": "plotly_white",
                 "height": 360,
             },
         })
@@ -206,7 +206,7 @@ def build_scanner_signal_bars(daily: list[dict]) -> str:
     )])
     fig.update_layout(
         title="EMA20 Elite signals by date (click a bar for trade details)",
-        template="plotly_dark",
+        template="plotly_white",
         height=380,
         margin=dict(l=50, r=20, t=50, b=80),
         xaxis_title="Signal date",
@@ -234,7 +234,7 @@ def build_drawdown_chart(equity_curve: list[dict]) -> str:
     ))
     fig.update_layout(
         title="Drawdown",
-        template="plotly_dark",
+        template="plotly_white",
         height=280,
         margin=dict(l=40, r=20, t=50, b=40),
         yaxis_title="Drawdown %",
