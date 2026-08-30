@@ -1,0 +1,71 @@
+{
+  "capital": 100000.0,
+  "timeframe": "15m",
+  "universe": "nifty200",
+  "note": "Same VWAP fade as the 5% pack. 100% comes from size: 5x leverage * 2.5 deploy \u2248 12.5x notional per name. Cash MIS is typically 5x, so this is oversized vs a normal equity intraday account. Win rate 55%, max DD ~30%, July-heavy.",
+  "notional_per_trade_vs_equity": 12.5,
+  "winner": {
+    "name": "VWAP fade 1.8% ATR | 100pct pack",
+    "trades": 49,
+    "win_rate": 55.1,
+    "profit_factor": 1.64,
+    "net_pnl": 108822.25,
+    "total_return_pct": 108.82,
+    "max_dd_pct": 29.68,
+    "avg_daily_pnl": 3400.7,
+    "median_daily_pnl": 4420.72,
+    "days_ge_2k": 19,
+    "days_ge_5k": 16,
+    "trading_days": 32,
+    "pct_days_ge_2k": 59.4,
+    "worst_day": -39227.86,
+    "best_day": 35259.45,
+    "oos_avg_daily": 3717.93,
+    "oos_pnl": 37179.3,
+    "oos_wr": 57.14,
+    "oos_days_ge_2k": 5,
+    "oos_days": 10,
+    "avg_hold_bars": 0.0,
+    "params": {
+      "mode": "risk",
+      "risk_pct": 25.0,
+      "alloc_pct": 0.0,
+      "leverage": 5.0,
+      "max_pos": 6,
+      "top_k": 2,
+      "max_deploy": 2.5,
+      "lock": 0.0,
+      "halt": 0.0,
+      "trail": 0.0,
+      "ext_min": 0.018,
+      "adx_max": 26,
+      "target_mode": "atr",
+      "idx_abs_max": 0.008
+    },
+    "months": [
+      {
+        "month": "2026-06",
+        "trades": 16,
+        "pnl": 6612.87,
+        "wr": 50.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 20,
+        "pnl": 74972.55,
+        "wr": 60.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 13,
+        "pnl": 27236.84,
+        "wr": 53.8
+      }
+    ]
+  },
+  "mis5x_compare": {
+    "deploy": 1.0,
+    "return_pct": 38.4,
+    "dd_pct": 12.8
+  }
+}

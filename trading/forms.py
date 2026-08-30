@@ -14,6 +14,7 @@ class ScreenerForm(forms.Form):
 class ScannerForm(forms.Form):
     SCOPE_CHOICES = [
         ("nifty200", "Nifty 200"),
+        ("nifty_smallcap250", "Nifty Smallcap 250"),
         ("watchlist", "Watchlist only"),
     ]
     scope = forms.ChoiceField(choices=SCOPE_CHOICES, initial="nifty200")

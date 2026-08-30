@@ -11,5 +11,8 @@ urlpatterns = [
     path("watchlist/<int:pk>/remove/", views.watchlist_remove, name="watchlist_remove"),
     path("watchlist/add/<str:ticker>/", views.add_to_watchlist, name="add_to_watchlist"),
     path("screener/", views.screener, name="screener"),
+    path("signals/", views.signals, name="signals"),
+    path("api/signals/", views.signals_api, name="signals_api"),
+    path("api/signal-chart/", views.signal_chart_api, name="signal_chart_api"),
     path("backtest/", views.backtest, name="backtest"),
 ]

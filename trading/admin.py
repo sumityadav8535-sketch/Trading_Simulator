@@ -22,8 +22,8 @@ class StrategyConfigAdmin(admin.ModelAdmin):
 
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
-    list_display = ("symbol", "name", "is_nifty200", "sector", "last_price")
-    list_filter = ("is_nifty200", "is_active", "sector")
+    list_display = ("symbol", "name", "is_nifty200", "is_nifty_smallcap250", "sector", "last_price")
+    list_filter = ("is_nifty200", "is_nifty100", "is_nifty_smallcap250", "is_active", "sector")
     search_fields = ("symbol", "name")
 
 

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "trading",
     "stage_analysis",
     "stage_analysis_v2",
+    "strategy_builder",
 ]
 
 MIDDLEWARE = [

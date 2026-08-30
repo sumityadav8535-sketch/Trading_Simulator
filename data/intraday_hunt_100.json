@@ -1,0 +1,1269 @@
+{
+  "capital": 100000.0,
+  "timeframe": "15m",
+  "hit_100": false,
+  "n_configs": 228,
+  "winner": {
+    "name": "VWAP fade 1.8% VWAP | r10 p6 k2",
+    "trades": 49,
+    "win_rate": 36.73,
+    "profit_factor": 1.59,
+    "net_pnl": 37421.85,
+    "total_return_pct": 37.42,
+    "max_dd_pct": 14.57,
+    "avg_daily_pnl": 1207.16,
+    "median_daily_pnl": -1347.49,
+    "days_ge_2k": 11,
+    "days_ge_5k": 10,
+    "trading_days": 31,
+    "pct_days_ge_2k": 35.5,
+    "worst_day": -9422.34,
+    "best_day": 13151.18,
+    "oos_avg_daily": 2462.26,
+    "oos_pnl": 24622.6,
+    "oos_wr": 43.75,
+    "oos_days_ge_2k": 4,
+    "oos_days": 10,
+    "avg_hold_bars": 0.0,
+    "params": {
+      "mode": "risk",
+      "risk_pct": 10.0,
+      "alloc_pct": 0.0,
+      "leverage": 5.0,
+      "max_pos": 6,
+      "top_k": 2,
+      "max_deploy": 0.8,
+      "lock": 0.0,
+      "halt": 0.0,
+      "trail": 0.0,
+      "ext_min": 0.018,
+      "adx_max": 26,
+      "target_mode": "vwap",
+      "idx_abs_max": 0.008,
+      "family": "VWAP fade 1.8% VWAP"
+    },
+    "months": [
+      {
+        "month": "2026-06",
+        "trades": 16,
+        "pnl": 6116.0,
+        "wr": 37.5
+      },
+      {
+        "month": "2026-07",
+        "trades": 20,
+        "pnl": 25062.04,
+        "wr": 40.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 13,
+        "pnl": 6243.78,
+        "wr": 30.8
+      }
+    ]
+  },
+  "hits": [],
+  "top": [
+    {
+      "name": "VWAP fade 1.8% VWAP | r10 p6 k2",
+      "trades": 49,
+      "win_rate": 36.73,
+      "profit_factor": 1.59,
+      "net_pnl": 37421.85,
+      "total_return_pct": 37.42,
+      "max_dd_pct": 14.57,
+      "avg_daily_pnl": 1207.16,
+      "median_daily_pnl": -1347.49,
+      "days_ge_2k": 11,
+      "days_ge_5k": 10,
+      "trading_days": 31,
+      "pct_days_ge_2k": 35.5,
+      "worst_day": -9422.34,
+      "best_day": 13151.18,
+      "oos_avg_daily": 2462.26,
+      "oos_pnl": 24622.6,
+      "oos_wr": 43.75,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 10.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 0.8,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "vwap",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% VWAP"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6116.0,
+          "wr": 37.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 25062.04,
+          "wr": 40.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 6243.78,
+          "wr": 30.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% VWAP | r15 p6 k2",
+      "trades": 49,
+      "win_rate": 36.73,
+      "profit_factor": 1.59,
+      "net_pnl": 37421.85,
+      "total_return_pct": 37.42,
+      "max_dd_pct": 14.57,
+      "avg_daily_pnl": 1207.16,
+      "median_daily_pnl": -1347.49,
+      "days_ge_2k": 11,
+      "days_ge_5k": 10,
+      "trading_days": 31,
+      "pct_days_ge_2k": 35.5,
+      "worst_day": -9422.34,
+      "best_day": 13151.18,
+      "oos_avg_daily": 2462.26,
+      "oos_pnl": 24622.6,
+      "oos_wr": 43.75,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 15.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 0.8,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "vwap",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% VWAP"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6116.0,
+          "wr": 37.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 25062.04,
+          "wr": 40.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 6243.78,
+          "wr": 30.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% VWAP | r20 p6 k2",
+      "trades": 49,
+      "win_rate": 36.73,
+      "profit_factor": 1.59,
+      "net_pnl": 37421.85,
+      "total_return_pct": 37.42,
+      "max_dd_pct": 14.57,
+      "avg_daily_pnl": 1207.16,
+      "median_daily_pnl": -1347.49,
+      "days_ge_2k": 11,
+      "days_ge_5k": 10,
+      "trading_days": 31,
+      "pct_days_ge_2k": 35.5,
+      "worst_day": -9422.34,
+      "best_day": 13151.18,
+      "oos_avg_daily": 2462.26,
+      "oos_pnl": 24622.6,
+      "oos_wr": 43.75,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 20.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 0.8,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "vwap",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% VWAP"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6116.0,
+          "wr": 37.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 25062.04,
+          "wr": 40.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 6243.78,
+          "wr": 30.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% VWAP | r25 p6 k2",
+      "trades": 49,
+      "win_rate": 36.73,
+      "profit_factor": 1.59,
+      "net_pnl": 37421.85,
+      "total_return_pct": 37.42,
+      "max_dd_pct": 14.57,
+      "avg_daily_pnl": 1207.16,
+      "median_daily_pnl": -1347.49,
+      "days_ge_2k": 11,
+      "days_ge_5k": 10,
+      "trading_days": 31,
+      "pct_days_ge_2k": 35.5,
+      "worst_day": -9422.34,
+      "best_day": 13151.18,
+      "oos_avg_daily": 2462.26,
+      "oos_pnl": 24622.6,
+      "oos_wr": 43.75,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 0.8,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "vwap",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% VWAP"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6116.0,
+          "wr": 37.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 25062.04,
+          "wr": 40.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 6243.78,
+          "wr": 30.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r10 p6 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.71,
+      "net_pnl": 30066.3,
+      "total_return_pct": 30.07,
+      "max_dd_pct": 10.37,
+      "avg_daily_pnl": 939.57,
+      "median_daily_pnl": 1373.61,
+      "days_ge_2k": 13,
+      "days_ge_5k": 4,
+      "trading_days": 32,
+      "pct_days_ge_2k": 40.6,
+      "worst_day": -9043.31,
+      "best_day": 8975.51,
+      "oos_avg_daily": 884.7,
+      "oos_pnl": 8847.03,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 10.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 0.8,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 2591.25,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 20869.74,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 6605.29,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r15 p6 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.71,
+      "net_pnl": 30066.3,
+      "total_return_pct": 30.07,
+      "max_dd_pct": 10.37,
+      "avg_daily_pnl": 939.57,
+      "median_daily_pnl": 1373.61,
+      "days_ge_2k": 13,
+      "days_ge_5k": 4,
+      "trading_days": 32,
+      "pct_days_ge_2k": 40.6,
+      "worst_day": -9043.31,
+      "best_day": 8975.51,
+      "oos_avg_daily": 884.7,
+      "oos_pnl": 8847.03,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 15.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 0.8,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 2591.25,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 20869.74,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 6605.29,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r20 p6 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.71,
+      "net_pnl": 30066.3,
+      "total_return_pct": 30.07,
+      "max_dd_pct": 10.37,
+      "avg_daily_pnl": 939.57,
+      "median_daily_pnl": 1373.61,
+      "days_ge_2k": 13,
+      "days_ge_5k": 4,
+      "trading_days": 32,
+      "pct_days_ge_2k": 40.6,
+      "worst_day": -9043.31,
+      "best_day": 8975.51,
+      "oos_avg_daily": 884.7,
+      "oos_pnl": 8847.03,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 20.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 0.8,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 2591.25,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 20869.74,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 6605.29,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r25 p6 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.71,
+      "net_pnl": 30066.3,
+      "total_return_pct": 30.07,
+      "max_dd_pct": 10.37,
+      "avg_daily_pnl": 939.57,
+      "median_daily_pnl": 1373.61,
+      "days_ge_2k": 13,
+      "days_ge_5k": 4,
+      "trading_days": 32,
+      "pct_days_ge_2k": 40.6,
+      "worst_day": -9043.31,
+      "best_day": 8975.51,
+      "oos_avg_daily": 884.7,
+      "oos_pnl": 8847.03,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 0.8,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 2591.25,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 20869.74,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 6605.29,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% VWAP | r10 p5 k2",
+      "trades": 49,
+      "win_rate": 36.73,
+      "profit_factor": 1.61,
+      "net_pnl": 27648.2,
+      "total_return_pct": 27.65,
+      "max_dd_pct": 11.09,
+      "avg_daily_pnl": 891.88,
+      "median_daily_pnl": -1017.6,
+      "days_ge_2k": 11,
+      "days_ge_5k": 3,
+      "trading_days": 31,
+      "pct_days_ge_2k": 35.5,
+      "worst_day": -6702.87,
+      "best_day": 9597.68,
+      "oos_avg_daily": 1788.15,
+      "oos_pnl": 17881.49,
+      "oos_wr": 43.75,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 10.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 5,
+        "top_k": 2,
+        "max_deploy": 0.6,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "vwap",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% VWAP"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 4626.92,
+          "wr": 37.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 18444.62,
+          "wr": 40.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 4576.68,
+          "wr": 30.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% VWAP | r15 p5 k2",
+      "trades": 49,
+      "win_rate": 36.73,
+      "profit_factor": 1.61,
+      "net_pnl": 27648.2,
+      "total_return_pct": 27.65,
+      "max_dd_pct": 11.09,
+      "avg_daily_pnl": 891.88,
+      "median_daily_pnl": -1017.6,
+      "days_ge_2k": 11,
+      "days_ge_5k": 3,
+      "trading_days": 31,
+      "pct_days_ge_2k": 35.5,
+      "worst_day": -6702.87,
+      "best_day": 9597.68,
+      "oos_avg_daily": 1788.15,
+      "oos_pnl": 17881.49,
+      "oos_wr": 43.75,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 15.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 5,
+        "top_k": 2,
+        "max_deploy": 0.6,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "vwap",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% VWAP"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 4626.92,
+          "wr": 37.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 18444.62,
+          "wr": 40.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 4576.68,
+          "wr": 30.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% VWAP | r20 p5 k2",
+      "trades": 49,
+      "win_rate": 36.73,
+      "profit_factor": 1.61,
+      "net_pnl": 27648.2,
+      "total_return_pct": 27.65,
+      "max_dd_pct": 11.09,
+      "avg_daily_pnl": 891.88,
+      "median_daily_pnl": -1017.6,
+      "days_ge_2k": 11,
+      "days_ge_5k": 3,
+      "trading_days": 31,
+      "pct_days_ge_2k": 35.5,
+      "worst_day": -6702.87,
+      "best_day": 9597.68,
+      "oos_avg_daily": 1788.15,
+      "oos_pnl": 17881.49,
+      "oos_wr": 43.75,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 20.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 5,
+        "top_k": 2,
+        "max_deploy": 0.6,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "vwap",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% VWAP"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 4626.92,
+          "wr": 37.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 18444.62,
+          "wr": 40.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 4576.68,
+          "wr": 30.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% VWAP | r25 p5 k2",
+      "trades": 49,
+      "win_rate": 36.73,
+      "profit_factor": 1.61,
+      "net_pnl": 27648.2,
+      "total_return_pct": 27.65,
+      "max_dd_pct": 11.09,
+      "avg_daily_pnl": 891.88,
+      "median_daily_pnl": -1017.6,
+      "days_ge_2k": 11,
+      "days_ge_5k": 3,
+      "trading_days": 31,
+      "pct_days_ge_2k": 35.5,
+      "worst_day": -6702.87,
+      "best_day": 9597.68,
+      "oos_avg_daily": 1788.15,
+      "oos_pnl": 17881.49,
+      "oos_wr": 43.75,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 5,
+        "top_k": 2,
+        "max_deploy": 0.6,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "vwap",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% VWAP"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 4626.92,
+          "wr": 37.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 18444.62,
+          "wr": 40.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 4576.68,
+          "wr": 30.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r10 p5 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.72,
+      "net_pnl": 22116.41,
+      "total_return_pct": 22.12,
+      "max_dd_pct": 7.86,
+      "avg_daily_pnl": 691.14,
+      "median_daily_pnl": 1023.11,
+      "days_ge_2k": 10,
+      "days_ge_5k": 1,
+      "trading_days": 32,
+      "pct_days_ge_2k": 31.2,
+      "worst_day": -6508.81,
+      "best_day": 6529.37,
+      "oos_avg_daily": 638.08,
+      "oos_pnl": 6380.75,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 10.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 5,
+        "top_k": 2,
+        "max_deploy": 0.6,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 2003.16,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 15341.12,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 4772.13,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r15 p5 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.72,
+      "net_pnl": 22116.41,
+      "total_return_pct": 22.12,
+      "max_dd_pct": 7.86,
+      "avg_daily_pnl": 691.14,
+      "median_daily_pnl": 1023.11,
+      "days_ge_2k": 10,
+      "days_ge_5k": 1,
+      "trading_days": 32,
+      "pct_days_ge_2k": 31.2,
+      "worst_day": -6508.81,
+      "best_day": 6529.37,
+      "oos_avg_daily": 638.08,
+      "oos_pnl": 6380.75,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 15.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 5,
+        "top_k": 2,
+        "max_deploy": 0.6,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 2003.16,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 15341.12,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 4772.13,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r20 p5 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.72,
+      "net_pnl": 22116.41,
+      "total_return_pct": 22.12,
+      "max_dd_pct": 7.86,
+      "avg_daily_pnl": 691.14,
+      "median_daily_pnl": 1023.11,
+      "days_ge_2k": 10,
+      "days_ge_5k": 1,
+      "trading_days": 32,
+      "pct_days_ge_2k": 31.2,
+      "worst_day": -6508.81,
+      "best_day": 6529.37,
+      "oos_avg_daily": 638.08,
+      "oos_pnl": 6380.75,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 20.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 5,
+        "top_k": 2,
+        "max_deploy": 0.6,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 2003.16,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 15341.12,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 4772.13,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r25 p5 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.72,
+      "net_pnl": 22116.41,
+      "total_return_pct": 22.12,
+      "max_dd_pct": 7.86,
+      "avg_daily_pnl": 691.14,
+      "median_daily_pnl": 1023.11,
+      "days_ge_2k": 10,
+      "days_ge_5k": 1,
+      "trading_days": 32,
+      "pct_days_ge_2k": 31.2,
+      "worst_day": -6508.81,
+      "best_day": 6529.37,
+      "oos_avg_daily": 638.08,
+      "oos_pnl": 6380.75,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 4,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 5,
+        "top_k": 2,
+        "max_deploy": 0.6,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 2003.16,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 15341.12,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 4772.13,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r10 p4 k1",
+      "trades": 47,
+      "win_rate": 57.45,
+      "profit_factor": 1.92,
+      "net_pnl": 19204.4,
+      "total_return_pct": 19.2,
+      "max_dd_pct": 4.25,
+      "avg_daily_pnl": 600.14,
+      "median_daily_pnl": 772.7,
+      "days_ge_2k": 3,
+      "days_ge_5k": 0,
+      "trading_days": 32,
+      "pct_days_ge_2k": 9.4,
+      "worst_day": -2824.89,
+      "best_day": 4893.91,
+      "oos_avg_daily": 472.54,
+      "oos_pnl": 4725.41,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 1,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 10.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 4,
+        "top_k": 1,
+        "max_deploy": 0.45,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 15,
+          "pnl": 3762.57,
+          "wr": 53.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 19,
+          "pnl": 11905.14,
+          "wr": 63.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 3536.71,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r15 p4 k1",
+      "trades": 47,
+      "win_rate": 57.45,
+      "profit_factor": 1.92,
+      "net_pnl": 19204.4,
+      "total_return_pct": 19.2,
+      "max_dd_pct": 4.25,
+      "avg_daily_pnl": 600.14,
+      "median_daily_pnl": 772.7,
+      "days_ge_2k": 3,
+      "days_ge_5k": 0,
+      "trading_days": 32,
+      "pct_days_ge_2k": 9.4,
+      "worst_day": -2824.89,
+      "best_day": 4893.91,
+      "oos_avg_daily": 472.54,
+      "oos_pnl": 4725.41,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 1,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 15.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 4,
+        "top_k": 1,
+        "max_deploy": 0.45,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 15,
+          "pnl": 3762.57,
+          "wr": 53.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 19,
+          "pnl": 11905.14,
+          "wr": 63.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 3536.71,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r20 p4 k1",
+      "trades": 47,
+      "win_rate": 57.45,
+      "profit_factor": 1.92,
+      "net_pnl": 19204.4,
+      "total_return_pct": 19.2,
+      "max_dd_pct": 4.25,
+      "avg_daily_pnl": 600.14,
+      "median_daily_pnl": 772.7,
+      "days_ge_2k": 3,
+      "days_ge_5k": 0,
+      "trading_days": 32,
+      "pct_days_ge_2k": 9.4,
+      "worst_day": -2824.89,
+      "best_day": 4893.91,
+      "oos_avg_daily": 472.54,
+      "oos_pnl": 4725.41,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 1,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 20.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 4,
+        "top_k": 1,
+        "max_deploy": 0.45,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 15,
+          "pnl": 3762.57,
+          "wr": 53.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 19,
+          "pnl": 11905.14,
+          "wr": 63.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 3536.71,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "VWAP fade 1.8% ATR | r25 p4 k1",
+      "trades": 47,
+      "win_rate": 57.45,
+      "profit_factor": 1.92,
+      "net_pnl": 19204.4,
+      "total_return_pct": 19.2,
+      "max_dd_pct": 4.25,
+      "avg_daily_pnl": 600.14,
+      "median_daily_pnl": 772.7,
+      "days_ge_2k": 3,
+      "days_ge_5k": 0,
+      "trading_days": 32,
+      "pct_days_ge_2k": 9.4,
+      "worst_day": -2824.89,
+      "best_day": 4893.91,
+      "oos_avg_daily": 472.54,
+      "oos_pnl": 4725.41,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 1,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 5.0,
+        "max_pos": 4,
+        "top_k": 1,
+        "max_deploy": 0.45,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "VWAP fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 15,
+          "pnl": 3762.57,
+          "wr": 53.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 19,
+          "pnl": 11905.14,
+          "wr": 63.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 3536.71,
+          "wr": 53.8
+        }
+      ]
+    }
+  ]
+}

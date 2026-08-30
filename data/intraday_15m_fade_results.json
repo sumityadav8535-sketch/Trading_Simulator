@@ -1,0 +1,98 @@
+{
+  "strategy": {
+    "name": "VWAP Extension Fade",
+    "slug": "vwap_extension_fade_15m",
+    "timeframe": "15m",
+    "universe": "nifty200",
+    "capital": 100000,
+    "spec": {
+      "ext_min": 0.018,
+      "ext_max": 0.04,
+      "adx_max": 26,
+      "idx_abs_max": 0.008,
+      "target_mode": "atr",
+      "rsi_hi": 68,
+      "rsi_lo": 32
+    },
+    "risk": {
+      "risk_pct": 2.5,
+      "max_pos": 5,
+      "top_k": 1,
+      "daily_lock": 4000,
+      "daily_halt": 2500,
+      "max_deploy": 0.3,
+      "leverage": 5,
+      "entry": "next_open"
+    }
+  },
+  "result": {
+    "name": "VWAP Extension Fade ATR 1.8%",
+    "trades": 50,
+    "win_rate": 56.0,
+    "profit_factor": 1.82,
+    "net_pnl": 12009.58,
+    "total_return_pct": 12.01,
+    "max_dd_pct": 2.83,
+    "avg_daily_pnl": 353.22,
+    "median_daily_pnl": 496.81,
+    "days_ge_2k": 3,
+    "days_ge_5k": 0,
+    "trading_days": 34,
+    "pct_days_ge_2k": 8.8,
+    "worst_day": -1777.97,
+    "best_day": 3115.73,
+    "oos_avg_daily": 728.63,
+    "oos_pnl": 8014.96,
+    "oos_wr": 68.75,
+    "oos_days_ge_2k": 2,
+    "oos_days": 11,
+    "avg_hold_bars": 0.0,
+    "params": {
+      "risk": 2.5,
+      "max_pos": 5,
+      "top_k": 1,
+      "lock": 4000,
+      "halt": 2500,
+      "max_deploy": 0.3,
+      "leverage": 5
+    }
+  },
+  "months": [
+    {
+      "month": "2026-05",
+      "trades": 1,
+      "pnl": -816.04,
+      "wr": 0.0,
+      "avg_day": -816.04,
+      "days": 1,
+      "days_2k": 0
+    },
+    {
+      "month": "2026-06",
+      "trades": 18,
+      "pnl": 2169.05,
+      "wr": 50.0,
+      "avg_day": 197.19,
+      "days": 11,
+      "days_2k": 1
+    },
+    {
+      "month": "2026-07",
+      "trades": 19,
+      "pnl": 7660.96,
+      "wr": 63.2,
+      "avg_day": 547.21,
+      "days": 14,
+      "days_2k": 1
+    },
+    {
+      "month": "2026-08",
+      "trades": 12,
+      "pnl": 2995.59,
+      "wr": 58.3,
+      "avg_day": 374.45,
+      "days": 8,
+      "days_2k": 1
+    }
+  ]
+}

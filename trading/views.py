@@ -61,6 +61,11 @@ from trading.services.walk_forward_results import (
 from trading.services.indicators import compute_indicators, get_indicator_frame
 from trading.services.fno_live import build_fno_chart_json, get_fno_dashboard
 from trading.services.fno_results import load_model_meta
+from trading.services.fno_long_live import (
+    build_fno_long_chart_json,
+    get_fno_long_dashboard,
+)
+from trading.services.fno_long_results import load_model_meta as load_long_model_meta
 from trading.services.intraday_data import (
     build_intraday_chart_json,
     fetch_index_snapshot,
@@ -73,6 +78,10 @@ from trading.services.intraday_history_sync import (
 from trading.services.fno_backtest_runner import (
     get_backtest_status,
     start_fno_backtest_async,
+)
+from trading.services.fno_long_backtest_runner import (
+    get_long_backtest_status,
+    start_fno_long_backtest_async,
 )
 
 logger = logging.getLogger(__name__)
@@ -167,8 +176,12 @@ def scanner(request: HttpRequest) -> HttpResponse:
     scan_results = []
 
     if form.is_valid():
-        watchlist = form.cleaned_data["scope"] == "watchlist"
-        symbols = get_universe_symbols(nifty200_only=not watchlist, watchlist_only=watchlist)
+        scope = form.cleaned_data["scope"]
+        watchlist = scope == "watchlist"
+        if scope == "nifty_smallcap250":
+            symbols = get_universe_symbols(nifty_smallcap250_only=True)
+        else:
+            symbols = get_universe_symbols(nifty200_only=not watchlist, watchlist_only=watchlist)
         capital = float(form.cleaned_data["capital"])
         scan_results = scan_swing_universe(
             symbols,
@@ -666,18 +679,46 @@ def intraday_history_sync_api(request: HttpRequest) -> JsonResponse:
 
 @require_GET
 def fno_backtest_status_api(request: HttpRequest) -> JsonResponse:
-    """Frozen-model status (retrain disabled)."""
+    """Status of the one-click F&O backtest job."""
     return JsonResponse(get_backtest_status())
 
 
 @require_POST
 def fno_backtest_run_api(request: HttpRequest) -> JsonResponse:
     """
-    Retrain is disabled — model is frozen so live signals stay stable.
-    Returns 403 with explanation.
+    Run Elite ML Short v2 backtest on stored 5m data through today (IST).
+    Background job; poll GET /api/fno/backtest/ for progress.
     """
     result = start_fno_backtest_async()
-    return JsonResponse(result, status=403)
+    status = 200 if result.get("ok") or result.get("started") else 409
+    return JsonResponse(result, status=status)
+
+
+@require_GET
+def fno_today_check_api(request: HttpRequest) -> JsonResponse:
+    """
+    After-hours (or anytime) one-click: fetch latest 5m bars and replay today's
+    session with the live Elite ML Short rules. Returns any trades + win/loss.
+    """
+    from datetime import date as date_cls
+
+    from trading.services.fno_day_check import check_today_trades
+
+    instrument = request.GET.get("instrument", "NIFTY").upper()
+    force = request.GET.get("refresh", "1") != "0"
+    session_raw = request.GET.get("date")  # optional YYYY-MM-DD
+    session = None
+    if session_raw:
+        try:
+            session = date_cls.fromisoformat(session_raw)
+        except ValueError:
+            return JsonResponse(
+                {"ok": False, "error": f"Invalid date: {session_raw}"},
+                status=400,
+            )
+    result = check_today_trades(instrument=instrument, session=session, force_fetch=force)
+    status = 200 if result.get("ok") else 400
+    return JsonResponse(result, status=status)
 
 
 def _paper_tick_from_fno(force: bool = False) -> dict | None:
@@ -727,7 +768,7 @@ def fno_live(request: HttpRequest) -> HttpResponse:
         "updated_at": dashboard["updated_at"],
         "history_coverage": get_history_coverage(),
         "model_meta": model_meta,
-        "model_frozen": True,
+        "model_frozen": False,
         "paper_tick": paper_tick,
     })
 
@@ -742,7 +783,7 @@ def fno_signal_api(request: HttpRequest) -> JsonResponse:
     paper_tick = _paper_tick_from_fno(force=force)
     payload = get_fno_dashboard(instrument, force=force, trade_period=trade_period)
     payload["paper_tick"] = paper_tick
-    payload["model_frozen"] = True
+    payload["model_frozen"] = False
     return JsonResponse(payload)
 
 
@@ -751,6 +792,104 @@ def fno_chart_api(request: HttpRequest, instrument: str) -> JsonResponse:
     force = request.GET.get("refresh") == "1"
     chart = json.loads(build_fno_chart_json(instrument.upper(), force=force))
     return JsonResponse({"instrument": instrument.upper(), "chart": chart})
+
+
+# ── F&O Long (Elite ML Long v1) ──────────────────────────────────────────────
+
+def fno_long_live(request: HttpRequest) -> HttpResponse:
+    """Live F&O ML long strategy dashboard."""
+    form = FnoForm(request.GET or None)
+    instrument = "NIFTY"
+    trade_period = request.GET.get("trades", "full")
+    if trade_period not in ("full", "oos"):
+        trade_period = "full"
+    if form.is_valid():
+        instrument = form.cleaned_data["instrument"]
+
+    dashboard = get_fno_long_dashboard(instrument, trade_period=trade_period)
+    chart_json = build_fno_long_chart_json(instrument)
+    model_meta = load_long_model_meta()
+
+    return render(request, "trading/fno_long.html", {
+        "form": form,
+        "instrument": instrument,
+        "trade_period": trade_period,
+        "signal": dashboard["signal"],
+        "instruments": dashboard["instruments"],
+        "results": dashboard["results"],
+        "trades_data": dashboard["trades_data"],
+        "strategy_trades": dashboard["strategy_trades"],
+        "trade_summary": dashboard["trade_summary"],
+        "recent_days": dashboard.get("recent_days"),
+        "strategy_name": dashboard["strategy_name"],
+        "strategy_filters": dashboard["strategy_filters"],
+        "top_features": dashboard["top_features"],
+        "chart_json": chart_json,
+        "updated_at": dashboard["updated_at"],
+        "history_coverage": get_history_coverage(),
+        "model_meta": model_meta,
+        "model_frozen": False,
+        "full_summary": dashboard.get("full_summary") or {},
+        "oos_summary": dashboard.get("oos_summary") or {},
+    })
+
+
+@require_GET
+def fno_long_signal_api(request: HttpRequest) -> JsonResponse:
+    instrument = request.GET.get("instrument", "NIFTY").upper()
+    force = request.GET.get("refresh") == "1"
+    trade_period = request.GET.get("trades", "full")
+    if trade_period not in ("full", "oos"):
+        trade_period = "full"
+    payload = get_fno_long_dashboard(instrument, force=force, trade_period=trade_period)
+    payload["model_frozen"] = False
+    return JsonResponse(payload)
+
+
+@require_GET
+def fno_long_chart_api(request: HttpRequest, instrument: str) -> JsonResponse:
+    force = request.GET.get("refresh") == "1"
+    chart = json.loads(build_fno_long_chart_json(instrument.upper(), force=force))
+    return JsonResponse({"instrument": instrument.upper(), "chart": chart})
+
+
+@require_GET
+def fno_long_backtest_status_api(request: HttpRequest) -> JsonResponse:
+    return JsonResponse(get_long_backtest_status())
+
+
+@require_POST
+def fno_long_backtest_run_api(request: HttpRequest) -> JsonResponse:
+    """Train + backtest Elite ML Long v1 on stored 5m data through today."""
+    result = start_fno_long_backtest_async()
+    status = 200 if result.get("ok") or result.get("started") else 409
+    return JsonResponse(result, status=status)
+
+
+@require_GET
+def fno_long_today_check_api(request: HttpRequest) -> JsonResponse:
+    """Replay today's bars with Elite ML Long rules."""
+    from datetime import date as date_cls
+
+    from trading.services.fno_long_day_check import check_today_long_trades
+
+    instrument = request.GET.get("instrument", "NIFTY").upper()
+    force = request.GET.get("refresh", "1") != "0"
+    session_raw = request.GET.get("date")
+    session = None
+    if session_raw:
+        try:
+            session = date_cls.fromisoformat(session_raw)
+        except ValueError:
+            return JsonResponse(
+                {"ok": False, "error": f"Invalid date: {session_raw}"},
+                status=400,
+            )
+    result = check_today_long_trades(
+        instrument=instrument, session=session, force_fetch=force
+    )
+    status = 200 if result.get("ok") else 400
+    return JsonResponse(result, status=status)
 
 
 def paper_trading(request: HttpRequest) -> HttpResponse:
@@ -869,4 +1008,85 @@ def api_signal(request: HttpRequest, symbol: str) -> JsonResponse:
         "target_2r": result.target_2r,
         "reasons": result.reasons,
         "rejections": result.rejection_reasons,
+    })
+
+
+@require_GET
+def intraday_gap(request: HttpRequest) -> HttpResponse:
+    from trading.services.intraday_gap import load_gap_page
+
+    page = load_gap_page()
+    live = page.get("live") or {}
+    return render(request, "trading/intraday_gap.html", {
+        "story": page.get("story") or {},
+        "months": page.get("months") or [],
+        "fill_stats": page.get("fill_stats") or [],
+        "window": page.get("window") or {},
+        "trades": page.get("trades") or [],
+        "live": live,
+        "taken": live.get("taken") or [],
+        "watch": live.get("watch") or [],
+        "recent_days": page.get("recent_days") or {},
+        "compare": page.get("compare") or [],
+        "strategy": page.get("strategy") or {},
+    })
+
+
+@require_GET
+def intraday_gap_live_api(request: HttpRequest) -> JsonResponse:
+    from trading.services.intraday_gap import scan_gap_setups
+
+    live = scan_gap_setups()
+    return JsonResponse(live)
+
+
+@require_GET
+def intraday_5m_hunt(request: HttpRequest) -> HttpResponse:
+    from trading.services.intraday_5m import load_5m_hunt
+    from trading.services.intraday_15m_fade import load_hunt_results
+
+    hunt = load_5m_hunt()
+    m15 = load_hunt_results()
+    winner = hunt.get("winner") or {}
+    return render(request, "trading/intraday_5m.html", {
+        "result": winner,
+        "months": winner.get("months") or [],
+        "trades": hunt.get("trades") or [],
+        "window": hunt.get("window") or {},
+        "hit_100": hunt.get("hit_100", False),
+        "top": hunt.get("top") or [],
+        "m15": (m15.get("winner") or {}),
+    })
+
+
+@require_GET
+def intraday_15m_fade(request: HttpRequest) -> HttpResponse:
+    """Nifty 200 15-minute VWAP Extension Fade backtest page."""
+    from trading.services.intraday_15m_fade import (
+        STRATEGY,
+        load_100pct_pack,
+        load_fade_results,
+        load_hunt_results,
+    )
+
+    payload = load_fade_results()
+    hunt = load_hunt_results()
+    pack100 = load_100pct_pack()
+    strategy = {**STRATEGY, **(payload.get("strategy") or {})}
+    strategy.setdefault("entry", STRATEGY["entry"])
+    strategy.setdefault("exit", STRATEGY["exit"])
+    hunt_winner = hunt.get("winner") or {}
+    p100 = pack100.get("winner") or {}
+    return render(request, "trading/intraday_15m.html", {
+        "strategy": strategy,
+        "result": p100 or hunt_winner or payload.get("result") or {},
+        "months": p100.get("months") or hunt_winner.get("months") or payload.get("months") or [],
+        "trades": pack100.get("trades") or hunt.get("trades") or payload.get("trades") or [],
+        "hunt": hunt,
+        "consistent": hunt.get("consistent") or {},
+        "alloc": hunt.get("alloc") or {},
+        "window": hunt.get("window") or {},
+        "hit_100": bool(p100),
+        "pack100": pack100,
+        "mis5x": (pack100.get("mis5x_compare") or {}),
     })

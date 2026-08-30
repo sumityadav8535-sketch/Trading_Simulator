@@ -18,7 +18,6 @@ import yfinance as yf
 from django.core.cache import cache
 from django.utils import timezone
 
-from trading.services.fno_checklist import evaluate_soft_checklist, paper_losses_today
 from trading.services.fno_engine import (
     CAPITAL,
     FEATURE_COLS,
@@ -265,27 +264,15 @@ def evaluate_signal(key: str, force: bool = False) -> dict:
     ml_pass = prob is not None and prob >= threshold
     base_pass = base_sig is not None
 
-    # Soft checklist (score ≥ 6) — gates ACTIVE for live + paper
-    losses_today = paper_losses_today()
-    checklist = evaluate_soft_checklist(row, ts, prob, losses_today=losses_today)
-    checklist_pass = bool(checklist.take)
-
     if not in_entry_window:
         status, message = "closed_window", "Outside entry window (9:15–14:45 IST)"
     elif not bar_in_window:
         status, message = "closed_window", f"Signal bar {bar_time} outside entry window"
-    elif is_loose and opt_pass and checklist_pass:
+    elif is_loose and opt_pass:
         status, message = (
             "active",
-            f"{strategy['name']} — checklist {checklist.score}/6 PASS · "
-            f"P(win) {prob:.0%}, risk {risk_pts:.1f}pts"
+            f"{strategy['name']} — P(win) {prob:.0%}, risk {risk_pts:.1f}pts"
             + (" · completed bar" if bar_forming else ""),
-        )
-    elif is_loose and opt_pass and not checklist_pass:
-        status, message = (
-            "watch",
-            f"Base setup OK but soft checklist fail ({checklist.score}/6)"
-            + (f" — {checklist.reasons[0]}" if checklist.reasons else ""),
         )
     elif is_loose and ml_pass and risk_pts > strategy.get("max_risk_pts", 22):
         status, message = "watch", f"ML OK but stop too wide ({risk_pts:.1f}pts > {strategy['max_risk_pts']})"
@@ -344,8 +331,6 @@ def evaluate_signal(key: str, force: bool = False) -> dict:
         "ml_threshold": threshold,
         "strategy": strategy,
         "strategy_pass": opt_pass,
-        "checklist_pass": checklist_pass,
-        "checklist": checklist.as_dict(),
         "ml_model": model_type,
         "ml_available": prob is not None,
         "stop": round(stop, 2) if stop else None,

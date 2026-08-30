@@ -1,4 +1,6 @@
 """Download latest NSE OHLCV from yfinance and upsert into DailyPrice."""
+from datetime import date, datetime
+
 from django.core.management.base import BaseCommand
 
 from trading.services.nse_price_sync import active_equity_symbols, sync_universe
@@ -12,12 +14,25 @@ class Command(BaseCommand):
             "--symbols",
             type=str,
             default="",
-            help="Comma-separated symbols (default: all active Nifty 200)",
+            help="Comma-separated symbols (default: Nifty 200 + Smallcap 250)",
+        )
+        parser.add_argument(
+            "--universe",
+            type=str,
+            default="tracked",
+            choices=["tracked", "nifty200", "nifty_smallcap250", "all"],
+            help="Which stocks to update when --symbols is omitted (default: nifty200 + smallcap250)",
         )
         parser.add_argument(
             "--force",
             action="store_true",
             help="Re-fetch even if data already looks current",
+        )
+        parser.add_argument(
+            "--from-date",
+            type=str,
+            default="",
+            help="Backfill history from this date (YYYY-MM-DD). Use 2015-01-01 to extend past the 5y store.",
         )
         parser.add_argument(
             "--no-index",
@@ -32,24 +47,54 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        if options["symbols"]:
-            symbols = [s.strip().upper() for s in options["symbols"].split(",") if s.strip()]
+        backfill_from = None
+        raw_from = (options.get("from_date") or "").strip()
+        if raw_from:
+            backfill_from = datetime.strptime(raw_from, "%Y-%m-%d").date()
+
+        universe = options.get("universe") or "tracked"
+        if options["symbols"] or universe != "tracked":
+            if options["symbols"]:
+                symbols = [s.strip().upper() for s in options["symbols"].split(",") if s.strip()]
+            elif universe == "nifty200":
+                from trading.services.market_data import get_universe_symbols
+
+                symbols = [s for s in get_universe_symbols(nifty200_only=True) if s != "NIFTY50"]
+            elif universe == "nifty_smallcap250":
+                from trading.services.market_data import get_universe_symbols
+
+                symbols = get_universe_symbols(nifty_smallcap250_only=True)
+            else:
+                from trading.services.market_data import get_universe_symbols
+
+                symbols = [s for s in get_universe_symbols(nifty200_only=False) if s != "NIFTY50"]
+
             from trading.services.nse_price_sync import sync_symbols
 
             stats = sync_symbols(
                 symbols,
                 batch_size=options["batch_size"],
                 force=options["force"],
+                backfill_from=backfill_from,
+                pause_seconds=1.0 if backfill_from else 0.4,
             )
             if not options["no_index"]:
                 from trading.services.nifty50_index import sync_nifty50_from_yfinance
 
-                stats["nifty50_bars"] = sync_nifty50_from_yfinance(years=1)
+                years = 1
+                if backfill_from is not None:
+                    years = max(1, (date.today() - backfill_from).days // 365 + 1)
+                stats["nifty50_bars"] = sync_nifty50_from_yfinance(years=years)
         else:
+            extra = {}
+            if backfill_from is not None:
+                extra["pause_seconds"] = 1.0
             stats = sync_universe(
                 include_index=not options["no_index"],
                 force=options["force"],
                 batch_size=options["batch_size"],
+                backfill_from=backfill_from,
+                **extra,
             )
 
         self.stdout.write(

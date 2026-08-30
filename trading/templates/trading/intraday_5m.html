@@ -1,0 +1,131 @@
+{% extends "trading/base.html" %}
+{% block title %}Intraday 5m — Hunt{% endblock %}
+{% block content %}
+<div class="flex flex-wrap justify-between items-start gap-3 mb-5">
+  <div>
+    <h2 class="page-title">Intraday 5m <span class="text-blue-600">Hunt</span></h2>
+    <p class="page-sub">
+      Nifty 200 · ₹1,00,000 · 10% risk/trade ·
+      {{ window.start|default:"2026-06-03"|slice:":10" }} → {{ window.end|default:"2026-08-25"|slice:":10" }}
+      · {{ window.stocks|default:203 }} names · {{ window.bars|default:6916 }} bars
+    </p>
+  </div>
+</div>
+
+<div class="mb-4 p-3 rounded-xl border border-amber-200 bg-amber-50 text-sm text-amber-900">
+  <strong>100% was not hit on 5-minute bars either.</strong>
+  24 families × 4 size packs (96 configs) at 10% risk.
+  Supertrend, ORB, PDH, HOD and EMA momentum lost 30–100%.
+  The only clean out-of-sample edge is still VWAP extension fade — and it is
+  <strong>weaker on 5m than on 15m</strong> (stops get tagged more often; win rate drops to 21%).
+</div>
+
+<div class="grid md:grid-cols-2 gap-3 mb-5">
+  <div class="card p-4">
+    <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">5m winner · 10% risk</p>
+    <p class="text-2xl font-bold text-emerald-600 mt-1">+{{ result.total_return_pct|floatformat:1 }}%</p>
+    <p class="text-sm text-slate-600">₹{{ result.net_pnl|floatformat:0 }} · WR {{ result.win_rate|floatformat:1 }}% · PF {{ result.profit_factor|floatformat:2 }} · DD {{ result.max_dd_pct|floatformat:1 }}%</p>
+    <p class="text-xs text-slate-500 mt-2">VWAP fade 1.8%, target = session VWAP, 5 names. All three months green, but 21% win rate and a negative median day.</p>
+  </div>
+  <div class="card p-4">
+    <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">15m winner · 5% risk (better)</p>
+    <p class="text-2xl font-bold text-emerald-600 mt-1">+{{ m15.total_return_pct|default:27.6|floatformat:1 }}%</p>
+    <p class="text-sm text-slate-600">₹{{ m15.net_pnl|default:27648|floatformat:0 }} · WR {{ m15.win_rate|default:36.7|floatformat:1 }}% · DD {{ m15.max_dd_pct|default:11.1|floatformat:1 }}%</p>
+    <p class="text-xs text-slate-500 mt-2">Same fade on 15-minute closes. Doubling risk and switching to 5m did not help — 15m remains the pack to trade.</p>
+  </div>
+</div>
+
+<div class="grid lg:grid-cols-12 gap-4">
+  <div class="lg:col-span-4 space-y-4">
+    <section class="card p-4">
+      <h3 class="font-bold mb-2">Entry</h3>
+      <ul class="text-sm text-slate-600 space-y-1 list-disc pl-5">
+        <li>5-minute close 1.8–4.0% from session VWAP</li>
+        <li>RSI ≥ 68 short / ≤ 32 long</li>
+        <li>ADX ≤ 26 · |Nifty 200 day| ≤ 0.8%</li>
+        <li>Enter next 5m open</li>
+      </ul>
+    </section>
+    <section class="card p-4">
+      <h3 class="font-bold mb-2">Exit &amp; risk</h3>
+      <ul class="text-sm text-slate-600 space-y-1 list-disc pl-5">
+        <li>Target session VWAP</li>
+        <li>Stop 0.45 × 5m ATR</li>
+        <li>10% of equity at risk, 5× MIS cap</li>
+        <li>Max 5 names · flatten 15:15 IST</li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="lg:col-span-8 space-y-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div class="stat-card"><p class="label">Net P&amp;L</p><p class="value {% if result.net_pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">₹{{ result.net_pnl|floatformat:0 }}</p></div>
+      <div class="stat-card"><p class="label">Return / 2 mo</p><p class="value">{{ result.total_return_pct|floatformat:1 }}%</p></div>
+      <div class="stat-card"><p class="label">OOS P&amp;L</p><p class="value">₹{{ result.oos_pnl|floatformat:0 }}</p></div>
+      <div class="stat-card"><p class="label">Max DD</p><p class="value text-red-600">{{ result.max_dd_pct|floatformat:1 }}%</p></div>
+      <div class="stat-card"><p class="label">Win rate</p><p class="value">{{ result.win_rate|floatformat:1 }}%</p></div>
+      <div class="stat-card"><p class="label">Profit factor</p><p class="value">{{ result.profit_factor|floatformat:2 }}</p></div>
+      <div class="stat-card"><p class="label">Trades</p><p class="value">{{ result.trades }}</p></div>
+      <div class="stat-card"><p class="label">Worst day</p><p class="value text-red-600">₹{{ result.worst_day|floatformat:0 }}</p></div>
+    </div>
+
+    <section class="card p-4">
+      <h3 class="font-bold mb-2">Monthly</h3>
+      <table class="w-full text-sm">
+        <thead class="text-xs uppercase text-slate-500">
+          <tr><th class="text-left py-1">Month</th><th class="text-right">Trades</th><th class="text-right">P&amp;L</th><th class="text-right">WR</th></tr>
+        </thead>
+        <tbody>
+          {% for m in months %}
+          <tr class="border-t border-slate-100">
+            <td class="py-1.5">{{ m.month }}</td>
+            <td class="text-right">{{ m.trades }}</td>
+            <td class="text-right {% if m.pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">₹{{ m.pnl|floatformat:0 }}</td>
+            <td class="text-right">{{ m.wr }}%</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-slate-400 py-3">No monthly breakdown.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card p-4">
+      <div class="flex justify-between mb-2">
+        <h3 class="font-bold">Trades</h3>
+        <span class="text-xs text-slate-500">{{ trades|length }} shown</span>
+      </div>
+      <div class="overflow-x-auto max-h-96 overflow-y-auto">
+        <table class="w-full text-xs">
+          <thead class="text-slate-500 sticky top-0 bg-white">
+            <tr>
+              <th class="text-left py-1">Symbol</th>
+              <th>Side</th>
+              <th>Entry</th>
+              <th>Exit</th>
+              <th class="text-right">Qty</th>
+              <th class="text-right">P&amp;L</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in trades %}
+            <tr class="border-t border-slate-100">
+              <td class="py-1 font-semibold">{{ t.symbol }}</td>
+              <td>{{ t.side }}</td>
+              <td>{{ t.entry }} <span class="text-slate-400">{{ t.entry_ts|slice:":16" }}</span></td>
+              <td>{{ t.exit }} <span class="text-slate-400">{{ t.exit_ts|slice:":16" }}</span></td>
+              <td class="text-right">{{ t.qty }}</td>
+              <td class="text-right {% if t.pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">{{ t.pnl|floatformat:0 }}</td>
+              <td>{{ t.reason }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-slate-400 py-3">No trades file.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

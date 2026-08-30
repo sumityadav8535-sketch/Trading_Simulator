@@ -1,0 +1,376 @@
+{% extends "trading/base.html" %}
+{% block title %}Gap Open — RSI 45–70{% endblock %}
+{% block content %}
+<div class="flex flex-wrap justify-between items-start gap-3 mb-5">
+  <div>
+    <h2 class="page-title">Gap Open <span class="text-blue-600">Bounce</span></h2>
+    <p class="page-sub">
+      Nifty 200 · 9:15 gap-down 2–6% · RSI 45–70 · buy 9:30 only if it holds
+      the 9:15 close · take 4 names · target +1.0% · 8% risk
+    </p>
+  </div>
+  <div class="flex items-center gap-2 text-sm">
+    <span class="px-3 py-1.5 rounded-full text-xs font-semibold
+      {% if live.market.status == 'open' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+      {% elif live.market.status == 'pre_open' %}bg-amber-50 text-amber-800 border border-amber-200
+      {% else %}bg-slate-100 text-slate-600 border border-slate-200{% endif %}">
+      {{ live.market.message|default:"—" }}
+    </span>
+    <span class="text-slate-500 text-xs">{{ live.market.now_ist }}</span>
+  </div>
+</div>
+
+{% if recent_days.cards %}
+<section class="grid md:grid-cols-2 gap-4 mb-5">
+  {% for day in recent_days.cards %}
+  <article class="card p-5
+    {% if day.outcome == 'win' %}ring-2 ring-emerald-400 bg-emerald-50/40
+    {% elif day.outcome == 'loss' %}ring-2 ring-red-300 bg-red-50/40
+    {% elif day.outcome == 'open' %}ring-2 ring-amber-300 bg-amber-50/30
+    {% else %}border-slate-200{% endif %}">
+    <div class="flex items-start justify-between gap-3 mb-2">
+      <div>
+        <p class="text-xs uppercase tracking-wide font-semibold text-slate-500">{{ day.title }} · {{ day.label }}</p>
+        <h3 class="text-2xl font-bold mt-0.5
+          {% if day.outcome == 'win' %}text-emerald-700
+          {% elif day.outcome == 'loss' %}text-red-700
+          {% elif day.outcome == 'open' %}text-amber-700
+          {% else %}text-slate-800{% endif %}">{{ day.headline }}</h3>
+      </div>
+      <span class="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full font-semibold
+        {% if day.status == 'traded' and day.outcome == 'win' %}bg-emerald-100 text-emerald-800
+        {% elif day.status == 'traded' and day.outcome == 'loss' %}bg-red-100 text-red-800
+        {% elif day.status == 'open' %}bg-amber-100 text-amber-800
+        {% elif day.status == 'no_data' %}bg-amber-50 text-amber-800 border border-amber-200
+        {% else %}bg-slate-100 text-slate-500{% endif %}">{{ day.status }}</span>
+    </div>
+    {% if day.count %}
+    <div class="grid grid-cols-3 gap-3 text-sm mb-3">
+      <div><p class="text-xs text-slate-500">Trades</p><p class="font-bold">{{ day.count }}</p></div>
+      <div><p class="text-xs text-slate-500">W / L</p><p class="font-bold">{{ day.wins }} / {{ day.losses }}{% if day.open_count %} · {{ day.open_count }} open{% endif %}</p></div>
+      <div>
+        <p class="text-xs text-slate-500">{% if day.open_count and not day.wins and not day.losses %}Unrealized{% else %}P&amp;L{% endif %}</p>
+        <p class="font-bold {% if day.open_count and not day.wins and not day.losses %}{% if day.open_pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}{% elif day.pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">
+          ₹{% if day.open_count and not day.wins and not day.losses %}{{ day.open_pnl|floatformat:0 }}{% else %}{{ day.pnl|floatformat:0 }}{% endif %}
+        </p>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs">
+        <thead class="text-slate-500">
+          <tr>
+            <th class="text-left py-1">Symbol</th>
+            <th class="text-right">Gap</th>
+            <th class="text-right">Entry</th>
+            <th class="text-right">Exit</th>
+            <th class="text-right">P&amp;L</th>
+            <th class="text-right">Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tr in day.trades %}
+          <tr class="border-t border-slate-100">
+            <td class="py-1.5 font-semibold">{{ tr.symbol }}</td>
+            <td class="text-right">{{ tr.gap_pct }}%</td>
+            <td class="text-right font-mono">{{ tr.entry }}</td>
+            <td class="text-right font-mono">{% if tr.exit %}{{ tr.exit }}{% elif tr.last %}{{ tr.last }}{% else %}—{% endif %}</td>
+            <td class="text-right font-semibold {% if tr.pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">{% if tr.result == 'no_data' %}—{% else %}₹{{ tr.pnl|floatformat:0 }}{% endif %}</td>
+            <td class="text-right">
+              <span class="px-1.5 py-0.5 rounded font-semibold
+                {% if tr.result == 'win' %}bg-emerald-100 text-emerald-800
+                {% elif tr.result == 'loss' %}bg-red-100 text-red-800
+                {% elif tr.result == 'open' %}bg-amber-100 text-amber-800
+                {% else %}bg-slate-100 text-slate-600{% endif %}">{{ tr.result|upper }}</span>
+              <span class="text-slate-400 ml-1">{{ tr.reason_label }}</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-sm text-slate-600">{{ day.note }}</p>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section class="card p-5 mb-5
+  {% if taken %}ring-2 ring-emerald-400 bg-emerald-50/40{% else %}border-slate-200{% endif %}">
+  <div class="flex flex-wrap justify-between items-start gap-3 mb-3">
+    <div>
+      <p class="text-xs uppercase tracking-wide font-semibold
+        {% if taken %}text-emerald-700{% else %}text-slate-500{% endif %}">
+        {% if live.is_today %}Today’s trades{% else %}Last session{% endif %}
+        · {{ live.session|default:"—" }}
+      </p>
+      <h3 class="text-xl font-bold mt-0.5">
+        {% if taken %}
+          {{ taken|length }} trade{{ taken|length|pluralize }} at the {{ strategy.entry_hhmm|default:"9:30" }} open
+        {% else %}
+          No trade
+        {% endif %}
+      </h3>
+      <p class="text-sm text-slate-600 mt-1">
+        {% if taken %}
+          Long the {{ strategy.entry_hhmm|default:"9:30" }} open only if it is ≥ the 9:15 close. Target +1.0%. Qty is 8% risk on ₹1,00,000, 5× MIS cap.
+        {% elif live.market.status == 'pre_open' %}
+          Gap is known at 9:15. This page lists names once today’s open is in the 5-minute cache.
+        {% else %}
+          No Nifty 200 name gapped down 2–6% with daily RSI 45–70
+          {% if live.is_today %}today{% else %}on {{ live.session }}{% endif %}.
+        {% endif %}
+      </p>
+      {% if not live.is_today and live.session %}
+      <p class="text-xs text-amber-800 mt-2">
+        5-minute cache last session is {{ live.session }} (not {{ live.market.session_date }}).
+        Numbers below are that session’s 9:15 setups. Fetch 5m history to include today.
+      </p>
+      {% endif %}
+    </div>
+    <div class="text-right text-xs text-slate-500">
+      <p>{{ live.counts.scanned|default:0 }} names scanned</p>
+      <p>{{ live.counts.rsi_band|default:0 }} in RSI 45–70</p>
+      <p>{{ live.counts.qualified|default:0 }} passed gap + RSI</p>
+    </div>
+  </div>
+
+  {% if taken %}
+  <div class="grid md:grid-cols-2 gap-3">
+    {% for t in taken %}
+    <article class="bg-white border border-emerald-200 rounded-xl p-4">
+      <div class="flex justify-between items-start gap-2">
+        <div>
+          <p class="text-xs font-semibold uppercase text-emerald-700">#{{ t.rank }} LONG</p>
+          <h4 class="text-2xl font-bold text-slate-900">{{ t.symbol }}</h4>
+        </div>
+        <div class="text-right">
+          <p class="text-xs text-slate-500">Gap / RSI</p>
+          <p class="font-semibold text-slate-800">{{ t.gap_pct }}% · {{ t.rsi }}</p>
+        </div>
+      </div>
+      <dl class="grid grid-cols-2 gap-x-3 gap-y-2 mt-4 text-sm">
+        <div>
+          <dt class="text-xs text-slate-500">Entry ({{ t.entry_time|default:"09:30" }}{% if t.pending %} · waiting{% endif %})</dt>
+          <dd class="font-mono font-semibold">₹{{ t.entry }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-slate-500">Qty</dt>
+          <dd class="font-mono font-semibold">{{ t.qty }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-slate-500">Stop loss</dt>
+          <dd class="font-mono font-semibold text-red-600">₹{{ t.stop }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-slate-500">Target (+1.0%)</dt>
+          <dd class="font-mono font-semibold text-emerald-700">₹{{ t.target }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-slate-500">Risk</dt>
+          <dd class="font-mono">₹{{ t.risk_inr|floatformat:0 }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-slate-500">If target hits</dt>
+          <dd class="font-mono text-emerald-700">₹{{ t.target_pnl|floatformat:0 }} · {{ t.rr }}R</dd>
+        </div>
+      </dl>
+      <p class="text-[11px] text-slate-400 mt-3">
+        {% if t.pending %}Do not buy yet — wait for the {{ t.entry_time }} print.{% else %}Flatten 15:15 IST if +1% has not printed.{% endif %}
+        Notional ₹{{ t.notional|floatformat:0 }}. Gap vs 9:15 open {{ t.gap_pct }}%.
+      </p>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if watch %}
+  <div class="mt-4 pt-4 border-t border-slate-100">
+    <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold mb-2">
+      Passed filter, not taken (only top {{ strategy.top_k|default:2 }} gaps)
+    </p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-xs uppercase text-slate-500">
+          <tr>
+            <th class="text-left py-1">Symbol</th>
+            <th class="text-right">Gap</th>
+            <th class="text-right">RSI</th>
+            <th class="text-right">Entry</th>
+            <th class="text-right">Stop</th>
+            <th class="text-right">Target</th>
+            <th class="text-right">Qty</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in watch %}
+          <tr class="border-t border-slate-100 text-slate-600">
+            <td class="py-1.5 font-semibold">{{ t.symbol }}</td>
+            <td class="text-right">{{ t.gap_pct }}%</td>
+            <td class="text-right">{{ t.rsi }}</td>
+            <td class="text-right font-mono">{{ t.entry }}</td>
+            <td class="text-right font-mono text-red-600">{{ t.stop }}</td>
+            <td class="text-right font-mono text-emerald-700">{{ t.target }}</td>
+            <td class="text-right">{{ t.qty }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<div class="grid lg:grid-cols-12 gap-4 mb-5">
+  <div class="lg:col-span-4 space-y-4">
+    <section class="card p-4">
+      <h3 class="font-bold mb-2">Entry (all must be true)</h3>
+      <ul class="text-sm text-slate-600 space-y-1 list-disc pl-5">
+        {% for rule in strategy.entry %}
+        <li>{{ rule }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="card p-4">
+      <h3 class="font-bold mb-2">Exit &amp; size</h3>
+      <ul class="text-sm text-slate-600 space-y-1 list-disc pl-5">
+        {% for rule in strategy.exit %}
+        <li>{{ rule }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+
+  <div class="lg:col-span-8 space-y-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div class="stat-card"><p class="label">Net P&amp;L</p><p class="value {% if story.net_pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">₹{{ story.net_pnl|floatformat:0 }}</p></div>
+      <div class="stat-card"><p class="label">Return / 2 mo</p><p class="value">{{ story.total_return_pct|floatformat:1 }}%</p></div>
+      <div class="stat-card"><p class="label">Win rate</p><p class="value">{{ story.win_rate|floatformat:1 }}%</p></div>
+      <div class="stat-card"><p class="label">Profit factor</p><p class="value">{{ story.profit_factor|floatformat:2 }}</p></div>
+      <div class="stat-card"><p class="label">Trades</p><p class="value">{{ story.trades }}</p></div>
+      <div class="stat-card"><p class="label">Max DD</p><p class="value text-red-600">{{ story.max_dd_pct|floatformat:1 }}%</p></div>
+      <div class="stat-card"><p class="label">OOS P&amp;L</p><p class="value">₹{{ story.oos_pnl|floatformat:0 }}</p></div>
+      <div class="stat-card"><p class="label">Worst day</p><p class="value text-red-600">₹{{ story.worst_day|floatformat:0 }}</p></div>
+    </div>
+
+    <section class="card p-4">
+      <h3 class="font-bold mb-2">Monthly (this pack)</h3>
+      <table class="w-full text-sm">
+        <thead class="text-xs uppercase text-slate-500">
+          <tr><th class="text-left py-1">Month</th><th class="text-right">Trades</th><th class="text-right">P&amp;L</th><th class="text-right">WR</th></tr>
+        </thead>
+        <tbody>
+          {% for m in months %}
+          <tr class="border-t border-slate-100">
+            <td class="py-1.5">{{ m.month }}</td>
+            <td class="text-right">{{ m.trades }}</td>
+            <td class="text-right {% if m.pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">₹{{ m.pnl|floatformat:0 }}</td>
+            <td class="text-right">{{ m.wr }}%</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-slate-400 py-3">No months. Run scripts/intraday_gap_rsi_pack.py</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+{% if compare %}
+<section class="card p-4 mb-5">
+  <h3 class="font-bold mb-1">Why we dropped yesterday’s close as target</h3>
+  <p class="text-sm text-slate-600 mb-3">
+    Full gap-fill only printed on ~1 in 3 trades, so most days were a stop-out.
+    Same 2-month window, older RSI 45–65 full-fill packs vs the live 1% target, ₹1,00,000.
+  </p>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="text-xs uppercase text-slate-500">
+        <tr>
+          <th class="text-left py-1">Pack</th>
+          <th class="text-right">Return</th>
+          <th class="text-right">Win rate</th>
+          <th class="text-right">PF</th>
+          <th class="text-right">Median day</th>
+          <th class="text-right">OOS</th>
+          <th class="text-right">Max DD</th>
+          <th class="text-right">n</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in compare %}
+        <tr class="border-t border-slate-100 {% if r.live %}bg-emerald-50/70 font-semibold{% endif %}">
+          <td class="py-1.5">{{ r.label }}{% if r.live %} <span class="text-[10px] uppercase tracking-wide text-emerald-700">live</span>{% endif %}</td>
+          <td class="text-right {% if r.total_return_pct >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">{{ r.total_return_pct|floatformat:1 }}%</td>
+          <td class="text-right">{{ r.win_rate|floatformat:1 }}%</td>
+          <td class="text-right">{{ r.profit_factor|floatformat:2 }}</td>
+          <td class="text-right {% if r.median_daily_pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">₹{{ r.median_daily_pnl|floatformat:0 }}</td>
+          <td class="text-right {% if r.oos_pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">₹{{ r.oos_pnl|floatformat:0 }}</td>
+          <td class="text-right text-red-600">{{ r.max_dd_pct|floatformat:1 }}%</td>
+          <td class="text-right">{{ r.trades }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-xs text-slate-500 mt-3">
+    9:30 vs 9:15: the 9:15 print stops out ~40% of trades in the first 5 minutes.
+    Waiting for 9:30 and taking +1% (not prior close) is the pack that actually has a green typical day.
+  </p>
+</section>
+{% endif %}
+
+<section class="card p-4">
+  <div class="flex flex-wrap justify-between items-end gap-2 mb-3">
+    <div>
+      <h3 class="font-bold">Backtest trades</h3>
+      <p class="text-xs text-slate-500">
+        Same rules as the cards above ·
+        {{ window.start|default:""|slice:":10" }} → {{ window.end|default:""|slice:":10" }} ·
+        {{ trades|length }} fills
+      </p>
+    </div>
+  </div>
+  <div class="overflow-x-auto max-h-[32rem] overflow-y-auto">
+    <table class="w-full text-xs">
+      <thead class="text-slate-500 sticky top-0 bg-white">
+        <tr>
+          <th class="text-left py-1">Date</th>
+          <th class="text-left">Symbol</th>
+          <th>Side</th>
+          <th class="text-right">Gap</th>
+          <th class="text-right">RSI</th>
+          <th class="text-right">Entry</th>
+          <th class="text-right">Stop</th>
+          <th class="text-right">Target</th>
+          <th class="text-right">Exit</th>
+          <th class="text-right">Qty</th>
+          <th class="text-right">P&amp;L</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in trades %}
+        <tr class="border-t border-slate-100">
+          <td class="py-1 text-slate-500 whitespace-nowrap">{{ t.entry_ts|slice:":16" }}</td>
+          <td class="font-semibold">{{ t.symbol }}</td>
+          <td>{{ t.side }}</td>
+          <td class="text-right">{{ t.gap }}%</td>
+          <td class="text-right">{% if t.rsi %}{{ t.rsi }}{% else %}—{% endif %}</td>
+          <td class="text-right font-mono">{{ t.entry }}</td>
+          <td class="text-right font-mono text-red-600">{% if t.stop %}{{ t.stop }}{% else %}—{% endif %}</td>
+          <td class="text-right font-mono text-emerald-700">{% if t.target %}{{ t.target }}{% else %}—{% endif %}</td>
+          <td class="text-right font-mono">{{ t.exit }}</td>
+          <td class="text-right">{{ t.qty }}</td>
+          <td class="text-right font-semibold {% if t.pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">₹{{ t.pnl|floatformat:0 }}</td>
+          <td>{{ t.reason }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="12" class="text-slate-400 py-3">No trades file. Run scripts/intraday_gap_rsi_pack.py</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

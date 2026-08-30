@@ -247,14 +247,26 @@
         <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
           <span class="nav-dot"></span> Dashboard
         </a>
-        <a href="{% url 'stage_analysis_v2:dashboard' %}" class="nav-link {% if request.resolver_match.app_name == 'stage_analysis_v2' and request.resolver_match.url_name != 'backtest' %}active{% endif %}">
+        <a href="{% url 'stage_analysis_v2:dashboard' %}" class="nav-link {% if request.resolver_match.app_name == 'stage_analysis_v2' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
           <span class="nav-dot"></span> Stage Analysis 2.0
+        </a>
+        <a href="{% url 'stage_analysis_v2:signals' %}" class="nav-link {% if request.resolver_match.url_name == 'signals' and request.resolver_match.app_name == 'stage_analysis_v2' %}active{% endif %}">
+          <span class="nav-dot"></span> Stage 2.0 Signals
         </a>
         <a href="{% url 'stage_analysis_v2:backtest' %}" class="nav-link {% if request.resolver_match.url_name == 'backtest' and request.resolver_match.app_name == 'stage_analysis_v2' %}active{% endif %}">
           <span class="nav-dot"></span> Stage 2.0 Backtest
         </a>
+        <a href="{% url 'strategy_builder:builder' %}" class="nav-link {% if request.resolver_match.app_name == 'strategy_builder' %}active{% endif %}">
+          <span class="nav-dot"></span> Strategy Builder
+        </a>
         <a href="{% url 'fno_live' %}" class="nav-link {% if request.resolver_match.url_name == 'fno_live' %}active{% endif %}">
           <span class="nav-dot"></span> F&amp;O Live
+        </a>
+        <a href="{% url 'fno_long_live' %}" class="nav-link {% if request.resolver_match.url_name == 'fno_long_live' %}active{% endif %}">
+          <span class="nav-dot"></span> F&amp;O Long
+        </a>
+        <a href="{% url 'intraday_gap' %}" class="nav-link {% if request.resolver_match.url_name == 'intraday_gap' %}active{% endif %}">
+          <span class="nav-dot"></span> Gap Open
         </a>
         <a href="{% url 'paper_trading' %}" class="nav-link {% if request.resolver_match.url_name == 'paper_trading' %}active{% endif %}">
           <span class="nav-dot"></span> Paper Trading

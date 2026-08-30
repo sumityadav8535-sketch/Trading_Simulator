@@ -1,0 +1,62 @@
+{
+  "window": [
+    "2025-08-19",
+    "2026-08-19"
+  ],
+  "jobs": [
+    {
+      "name": "A  ST14,3 pullback + quality  risk3 cap50 trail90",
+      "ret": 115.68,
+      "wr": 37.14,
+      "pf": 5.16,
+      "dd": 6.31,
+      "n": 70,
+      "final": 2156773.78
+    },
+    {
+      "name": "A+ ST14,3 pullback + quality  risk3 cap50 trail90 +0.1% cost",
+      "ret": 110.03,
+      "wr": 35.82,
+      "pf": 4.61,
+      "dd": 7.02,
+      "n": 67,
+      "final": 2100325.1
+    },
+    {
+      "name": "B  ST14,3 pullback + trend_rsi risk4 cap50 trail90",
+      "ret": 122.66,
+      "wr": 32.63,
+      "pf": 6.18,
+      "dd": 6.32,
+      "n": 95,
+      "final": 2226550.02
+    },
+    {
+      "name": "B+ ST14,3 pullback + trend_rsi risk4 cap50 trail90 +0.1% cost",
+      "ret": 111.03,
+      "wr": 35.37,
+      "pf": 5.14,
+      "dd": 7.16,
+      "n": 82,
+      "final": 2110346.06
+    },
+    {
+      "name": "C  ST14,3 pullback + quality  risk3 cap75 trail90",
+      "ret": 156.57,
+      "wr": 33.33,
+      "pf": 5.94,
+      "dd": 5.75,
+      "n": 54,
+      "final": 2565740.82
+    },
+    {
+      "name": "D  ST21,3 pullback + ADX20    risk3 cap50 trail90",
+      "ret": 119.03,
+      "wr": 27.41,
+      "pf": 3.89,
+      "dd": 8.54,
+      "n": 135,
+      "final": 2190323.0
+    }
+  ]
+}

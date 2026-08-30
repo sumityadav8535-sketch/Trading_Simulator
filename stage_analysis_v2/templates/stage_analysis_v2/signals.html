@@ -1,0 +1,345 @@
+{% extends "trading/base.html" %}
+{% block title %}Stage Analysis 2.0 Signals{% endblock %}
+{% block content %}
+<div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+  <div>
+    <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm font-semibold text-blue-600 hover:underline">← Stage Analysis 2.0</a>
+    <h2 class="page-title mt-1">Stage Analysis <span class="text-blue-600">2.0</span> Signals</h2>
+    <p class="page-sub">Same engine as Backtest · all Stage 2 signals + which ones became trades · default 6 months</p>
+  </div>
+  <div class="flex flex-wrap gap-2 text-sm">
+    <a href="{% url 'stage_analysis_v2:screener' %}" class="btn btn-secondary">Screener</a>
+    <a href="{% url 'stage_analysis_v2:backtest' %}" class="btn btn-secondary" id="sig-backtest-link">Backtest (same period)</a>
+  </div>
+</div>
+
+<div class="mb-4 p-3 rounded-xl border border-amber-200 bg-amber-50 text-xs text-amber-900 leading-relaxed">
+  <strong>Signals vs trades:</strong>
+  This page lists <em>every</em> Stage 2 signal the strategy fired.
+  The Backtest trade log only shows signals that were <em>taken</em> with the shared ₹ capital pool
+  (others are skipped for cash, cooldown, or already-open).
+  For the same dates + tech filter + quality + capital, <strong>signal counts match both pages</strong>.
+</div>
+
+<section class="card p-5 mb-6">
+  <div class="flex flex-wrap justify-between items-end gap-4 mb-4">
+    <div>
+      <h3 class="text-lg font-bold text-slate-900">Signal timeline</h3>
+      <p class="text-xs text-slate-500 mt-0.5">
+        Bars = Stage 2 signals on that <strong>entry day</strong> (next session after weekly confirm).
+        Green = avg quality ≥75 · Blue = 50–74 · Grey = below 50. Click a bar for stock cards.
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-2 text-sm" id="sig-period-btns">
+      <button type="button" data-period="3m" class="sig-period px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">3 months</button>
+      <button type="button" data-period="6m" class="sig-period px-3 py-1.5 rounded-lg border border-blue-600 bg-blue-600 text-white">6 months</button>
+      <button type="button" data-period="1y" class="sig-period px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">1 year</button>
+      <button type="button" data-period="2y" class="sig-period px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">2 years</button>
+      <button type="button" data-period="custom" class="sig-period px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Custom</button>
+    </div>
+  </div>
+
+  <div id="sig-custom-range" class="hidden flex flex-wrap gap-3 items-end text-sm mb-4 p-3 rounded-xl bg-slate-50 border border-slate-100">
+    <label class="text-slate-600">From
+      <input type="date" id="sig-start" value="{{ history_default_start }}" class="block mt-1 border border-slate-200 rounded-lg px-3 py-2 bg-white">
+    </label>
+    <label class="text-slate-600">To
+      <input type="date" id="sig-end" value="{{ history_default_end }}" class="block mt-1 border border-slate-200 rounded-lg px-3 py-2 bg-white">
+    </label>
+    <button type="button" id="sig-apply-custom" class="btn btn-primary">Apply range</button>
+  </div>
+
+  <div class="flex flex-wrap gap-3 items-end text-sm mb-5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+    <label class="text-slate-600">Tech filter
+      <select id="sig-tech-filter" class="block mt-1 border border-slate-200 rounded-lg px-3 py-2 bg-white min-w-[14rem]">
+        {% for val, label in tech_filter_choices %}
+        <option value="{{ val }}" {% if val == default_tech_filter %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="text-slate-600">Min quality
+      <input type="number" id="sig-min-quality" value="0" min="0" max="100" class="block mt-1 border border-slate-200 rounded-lg px-3 py-2 bg-white w-24">
+    </label>
+    <label class="flex items-center gap-2 mt-6 text-slate-700">
+      <input type="checkbox" id="sig-market-filter" class="rounded border-slate-300">
+      Nifty Stage 1/2 only
+    </label>
+    <button type="button" id="sig-reload" class="btn btn-primary mt-5 sm:mt-0">Reload</button>
+  </div>
+
+  <div id="sig-loading" class="text-slate-500 text-sm py-10 text-center">
+    Loading Stage 2 signals… scanning Nifty 200 (may take 30–60s first time).
+  </div>
+
+  <div id="sig-summary" class="hidden grid grid-cols-2 md:grid-cols-5 gap-3 text-sm mb-4"></div>
+  <div id="sig-chart" class="hidden w-full rounded-xl border border-slate-100 bg-white" style="min-height:400px"></div>
+
+  <div id="sig-day-panel" class="hidden mt-6 border-t border-slate-200 pt-5">
+    <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
+      <div>
+        <h4 class="text-lg font-bold text-slate-900" id="sig-day-title"></h4>
+        <p class="text-xs text-slate-500 mt-0.5" id="sig-day-subtitle"></p>
+      </div>
+      <button type="button" id="sig-day-close" class="text-xs font-semibold text-slate-500 hover:text-slate-800">Close</button>
+    </div>
+    <div id="sig-day-cards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const apiUrl = "{% url 'stage_analysis_v2:signals_api' %}";
+  const stockDetailTpl = "{% url 'stage_analysis_v2:stock_detail' ticker='__SYM__' %}";
+  let currentPeriod = "6m";
+  let historyData = null;
+
+  const chartEl = document.getElementById("sig-chart");
+  const loadingEl = document.getElementById("sig-loading");
+  const summaryEl = document.getElementById("sig-summary");
+  const dayPanel = document.getElementById("sig-day-panel");
+  const cardsEl = document.getElementById("sig-day-cards");
+  const customRange = document.getElementById("sig-custom-range");
+
+  function setActivePeriod(period) {
+    currentPeriod = period;
+    document.querySelectorAll(".sig-period").forEach(btn => {
+      const active = btn.dataset.period === period;
+      btn.className = "sig-period px-3 py-1.5 rounded-lg border " +
+        (active
+          ? "border-blue-600 bg-blue-600 text-white"
+          : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50");
+    });
+    customRange.classList.toggle("hidden", period !== "custom");
+  }
+
+  function qualityBadge(score) {
+    if (score >= 75) return '<span class="badge badge-green">High Q' + score + '</span>';
+    if (score >= 50) return '<span class="badge" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0">Q' + score + '</span>';
+    return '<span class="badge badge-slate">Q' + score + '</span>';
+  }
+
+  function stageBadge(stage) {
+    const map = {
+      1: "badge-blue",
+      2: "badge-green",
+      3: "badge-amber",
+      4: "badge-red",
+    };
+    return '<span class="badge ' + (map[stage] || "badge-slate") + '">S' + stage + '</span>';
+  }
+
+  function breakoutBadge(type) {
+    if (type === "clean") return '<span class="badge badge-blue">Clean breakout</span>';
+    if (type === "weak") return '<span class="badge badge-slate">Weak breakout</span>';
+    return '<span class="badge badge-slate">No breakout tag</span>';
+  }
+
+  function renderSummary(summary, meta) {
+    if (!summary) {
+      summaryEl.classList.add("hidden");
+      return;
+    }
+    summaryEl.classList.remove("hidden");
+    const range = (meta && meta.start && meta.end)
+      ? meta.start + " → " + meta.end
+      : "";
+    summaryEl.innerHTML = `
+      <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <span class="text-slate-500 block text-xs font-semibold uppercase">Stage 2 signals</span>
+        <strong class="text-xl text-slate-900">${summary.signals || 0}</strong>
+        <span class="block text-[11px] text-slate-400 mt-1">${range}</span>
+        <span class="block text-[11px] text-slate-400">= Backtest “Stage 2 signals”</span>
+      </div>
+      <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-3">
+        <span class="text-emerald-700 block text-xs font-semibold uppercase">Trades taken</span>
+        <strong class="text-xl text-emerald-700">${summary.trades || 0}</strong>
+        <span class="block text-[11px] text-slate-400 mt-1">= Backtest “Trades”</span>
+      </div>
+      <div class="rounded-xl bg-amber-50 border border-amber-100 p-3">
+        <span class="text-amber-800 block text-xs font-semibold uppercase">Skipped</span>
+        <strong class="text-xl text-amber-800">${summary.skipped || 0}</strong>
+        <span class="block text-[11px] text-slate-400 mt-1">${summary.skipped_cash || 0} no cash · rest cooldown/open</span>
+      </div>
+      <div class="rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <span class="text-slate-500 block text-xs font-semibold uppercase">Avg quality / RS</span>
+        <strong class="text-xl text-slate-900">${summary.avg_quality || 0} <span class="text-base text-slate-400">/ ${summary.avg_rs || 0}</span></strong>
+      </div>
+      <div class="rounded-xl bg-blue-50 border border-blue-100 p-3">
+        <span class="text-blue-700 block text-xs font-semibold uppercase">If run as backtest</span>
+        <strong class="text-xl ${Number(summary.total_return_pct) >= 0 ? 'text-emerald-700' : 'text-red-600'}">${summary.total_return_pct != null ? summary.total_return_pct + '%' : '—'}</strong>
+        <span class="block text-[11px] text-slate-400 mt-1">WR ${summary.win_rate != null ? summary.win_rate + '%' : '—'} · ${summary.stocks_scanned || 0} stocks</span>
+      </div>
+    `;
+  }
+
+  function statusBadge(r) {
+    const st = r.status || "";
+    if (st === "taken") {
+      const pnl = r.pnl;
+      const pnlCls = pnl > 0 ? "text-emerald-700" : (pnl < 0 ? "text-red-600" : "text-slate-600");
+      const pnlTxt = pnl != null ? ` · ₹${Number(pnl).toLocaleString("en-IN")}` : "";
+      return `<span class="badge badge-green">Taken${pnlTxt}</span>`;
+    }
+    if (st === "skipped_cash") return '<span class="badge badge-amber">Skipped — no cash</span>';
+    if (st === "skipped_cooldown") return '<span class="badge badge-slate">Skipped — cooldown</span>';
+    if (st === "skipped_open") return '<span class="badge badge-slate">Skipped — open pos</span>';
+    if (st === "skipped_risk") return '<span class="badge badge-red">Skipped — bad stop</span>';
+    return `<span class="badge badge-slate">${r.status_label || "Skipped"}</span>`;
+  }
+
+  function renderDayCards(dateStr) {
+    const rows = (historyData && historyData.by_date && historyData.by_date[dateStr]) || [];
+    const daily = (historyData && historyData.daily || []).find(d => d.date === dateStr);
+
+    document.getElementById("sig-day-title").textContent = "Signals on " + dateStr;
+    document.getElementById("sig-day-subtitle").textContent = daily
+      ? (daily.count + " signal(s) · " + (daily.taken || 0) + " taken · " +
+         (daily.skipped || 0) + " skipped · avg Q " + daily.avg_quality +
+         " · avg RS " + daily.avg_rs)
+      : "";
+
+    if (!rows.length) {
+      cardsEl.innerHTML = '<p class="text-slate-500 text-sm col-span-full text-center py-6">No signals for this date.</p>';
+      dayPanel.classList.remove("hidden");
+      return;
+    }
+
+    cardsEl.innerHTML = rows.map(r => {
+      const detailUrl = stockDetailTpl.replace("__SYM__", encodeURIComponent(r.symbol));
+      const ft = r.follow_through
+        ? '<span class="badge badge-green">Follow-through</span>'
+        : '';
+      const entryPx = r.entry_price != null
+        ? `₹${Number(r.entry_price).toLocaleString("en-IN")}`
+        : "—";
+      const outcome = (r.status === "taken" && r.exit_reason)
+        ? `<p class="text-xs text-slate-500 mt-2">Exit ${r.exit_date || ""} @ ₹${r.exit_price != null ? Number(r.exit_price).toLocaleString("en-IN") : "—"} · ${r.exit_reason}${r.days_held != null ? " · " + r.days_held + "d" : ""}</p>`
+        : (r.status_label ? `<p class="text-xs text-slate-500 mt-2">${r.status_label}</p>` : "");
+      return `
+        <article class="rounded-2xl border ${r.status === "taken" ? "border-emerald-200" : "border-slate-200"} bg-white p-5 shadow-soft hover:border-blue-200 transition-colors">
+          <div class="flex justify-between items-start gap-3 mb-3">
+            <div>
+              <a href="${detailUrl}" class="text-lg font-bold text-blue-700 hover:underline">${r.symbol}</a>
+              <p class="text-xs text-slate-500 mt-0.5">${r.company_name || "—"}${r.sector ? " · " + r.sector : ""}</p>
+            </div>
+            <div class="text-right space-y-1">
+              ${qualityBadge(r.quality_score)}
+              <div>${statusBadge(r)}</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-1.5 mb-3 text-xs">
+            <span class="text-slate-500 font-semibold self-center">W</span>${stageBadge(r.weekly_stage)}
+            <span class="text-slate-500 font-semibold self-center ml-1">D</span>${stageBadge(r.daily_stage)}
+            ${breakoutBadge(r.breakout_type)}
+            ${ft}
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+            <div class="rounded-xl bg-slate-50 border border-slate-100 p-2.5">
+              <p class="text-[10px] uppercase font-semibold text-slate-500">Signal close</p>
+              <p class="font-bold text-slate-900">₹${Number(r.signal_close).toLocaleString("en-IN")}</p>
+            </div>
+            <div class="rounded-xl bg-slate-50 border border-slate-100 p-2.5">
+              <p class="text-[10px] uppercase font-semibold text-slate-500">Entry open (if taken)</p>
+              <p class="font-bold text-slate-900">${entryPx}</p>
+            </div>
+            <div class="rounded-xl border border-red-100 bg-red-50/50 p-2.5">
+              <p class="text-[10px] uppercase font-semibold text-red-700">Stop</p>
+              <p class="font-bold text-red-600">₹${Number(r.stop_loss).toLocaleString("en-IN")}</p>
+            </div>
+            <div class="rounded-xl border border-emerald-100 bg-emerald-50/50 p-2.5">
+              <p class="text-[10px] uppercase font-semibold text-emerald-700">Target (2.5R)</p>
+              <p class="font-bold text-slate-900">₹${Number(r.target).toLocaleString("en-IN")}</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap justify-between gap-2 text-xs text-slate-500 border-t border-slate-100 pt-3">
+            <span>Confirmed <strong class="text-slate-700">${r.signal_date}</strong></span>
+            <span>Entry day <strong class="text-slate-700">${r.entry_date}</strong></span>
+            <span>RS <strong class="text-slate-700">${r.rs_rating}</strong></span>
+            <span>R:R <strong class="text-slate-700">${r.risk_reward}:1</strong></span>
+          </div>
+          ${outcome}
+          <a href="${detailUrl}" class="inline-block mt-3 text-sm font-semibold text-blue-600 hover:underline">Open full analysis →</a>
+        </article>
+      `;
+    }).join("");
+
+    dayPanel.classList.remove("hidden");
+    dayPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function loadSignals() {
+    loadingEl.classList.remove("hidden");
+    loadingEl.textContent = "Scanning Nifty 200 for Stage 2 signals… this can take up to a minute.";
+    chartEl.classList.add("hidden");
+    summaryEl.classList.add("hidden");
+    dayPanel.classList.add("hidden");
+
+    const params = new URLSearchParams({
+      period: currentPeriod,
+      tech_filter: document.getElementById("sig-tech-filter").value,
+      min_quality: document.getElementById("sig-min-quality").value || "0",
+    });
+    if (document.getElementById("sig-market-filter").checked) {
+      params.set("market_filter", "1");
+    }
+    if (currentPeriod === "custom") {
+      params.set("start_date", document.getElementById("sig-start").value);
+      params.set("end_date", document.getElementById("sig-end").value);
+    }
+
+    fetch(apiUrl + "?" + params.toString())
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) throw new Error(data.error);
+        historyData = data;
+        loadingEl.classList.add("hidden");
+        renderSummary(data.summary, { start: data.start_date, end: data.end_date });
+
+        const btLink = document.getElementById("sig-backtest-link");
+        if (btLink && data.backtest_url) {
+          btLink.href = data.backtest_url;
+        }
+
+        if (!data.chart || !data.chart.data || !data.chart.data.length || !data.summary || !data.summary.signals) {
+          loadingEl.classList.remove("hidden");
+          loadingEl.textContent = "No Stage 2 signals in this period with the selected filters.";
+          return;
+        }
+
+        chartEl.classList.remove("hidden");
+        Plotly.newPlot(chartEl, data.chart.data, data.chart.layout, {
+          responsive: true,
+          displayModeBar: false,
+        });
+        chartEl.on("plotly_click", function(evt) {
+          if (evt.points && evt.points[0]) {
+            renderDayCards(String(evt.points[0].x).slice(0, 10));
+          }
+        });
+      })
+      .catch(err => {
+        loadingEl.classList.remove("hidden");
+        loadingEl.textContent = "Failed to load signals: " + err.message;
+      });
+  }
+
+  document.querySelectorAll(".sig-period").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setActivePeriod(btn.dataset.period);
+      if (btn.dataset.period !== "custom") loadSignals();
+    });
+  });
+  document.getElementById("sig-apply-custom").addEventListener("click", loadSignals);
+  document.getElementById("sig-reload").addEventListener("click", loadSignals);
+  document.getElementById("sig-day-close").addEventListener("click", () => {
+    dayPanel.classList.add("hidden");
+  });
+
+  setActivePeriod("6m");
+  loadSignals();
+})();
+</script>
+{% endblock %}

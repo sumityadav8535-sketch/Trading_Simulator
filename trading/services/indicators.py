@@ -31,7 +31,11 @@ def _rsi(close: pd.Series, length: int = 14) -> pd.Series:
     avg_gain = gain.ewm(alpha=1 / length, min_periods=length, adjust=False).mean()
     avg_loss = loss.ewm(alpha=1 / length, min_periods=length, adjust=False).mean()
     rs = avg_gain / avg_loss.replace(0, np.nan)
-    return 100 - (100 / (1 + rs))
+    rsi = 100 - (100 / (1 + rs))
+    warmed = avg_gain.notna() | avg_loss.notna()
+    rsi = rsi.mask(warmed & (avg_loss.fillna(0) == 0) & (avg_gain > 0), 100.0)
+    rsi = rsi.mask(warmed & (avg_gain.fillna(0) == 0) & (avg_loss > 0), 0.0)
+    return rsi
 
 
 def _atr(high: pd.Series, low: pd.Series, close: pd.Series, length: int = 14) -> pd.Series:
@@ -57,6 +61,54 @@ def _adx(high: pd.Series, low: pd.Series, close: pd.Series, length: int = 14) ->
     dx = (plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, np.nan) * 100
     adx = dx.ewm(alpha=1 / length, adjust=False).mean()
     return adx, plus_di, minus_di
+
+
+def _supertrend(
+    high: pd.Series,
+    low: pd.Series,
+    close: pd.Series,
+    period: int = 10,
+    multiplier: float = 3.0,
+) -> tuple[pd.Series, pd.Series]:
+    """Classic Supertrend. Returns (line, direction) with direction = 1 bull, -1 bear."""
+    atr = _atr(high, low, close, period)
+    hl2 = (high + low) / 2.0
+    basic_ub = hl2 + multiplier * atr
+    basic_lb = hl2 - multiplier * atr
+    final_ub = basic_ub.copy()
+    final_lb = basic_lb.copy()
+    n = len(close)
+    for i in range(1, n):
+        if basic_ub.iloc[i] < final_ub.iloc[i - 1] or close.iloc[i - 1] > final_ub.iloc[i - 1]:
+            final_ub.iloc[i] = basic_ub.iloc[i]
+        else:
+            final_ub.iloc[i] = final_ub.iloc[i - 1]
+        if basic_lb.iloc[i] > final_lb.iloc[i - 1] or close.iloc[i - 1] < final_lb.iloc[i - 1]:
+            final_lb.iloc[i] = basic_lb.iloc[i]
+        else:
+            final_lb.iloc[i] = final_lb.iloc[i - 1]
+    st = pd.Series(index=close.index, dtype=float)
+    direction = pd.Series(index=close.index, dtype=float)
+    if n == 0:
+        return st, direction
+    st.iloc[0] = final_ub.iloc[0]
+    direction.iloc[0] = -1.0
+    for i in range(1, n):
+        if st.iloc[i - 1] == final_ub.iloc[i - 1]:
+            if close.iloc[i] > final_ub.iloc[i]:
+                st.iloc[i] = final_lb.iloc[i]
+                direction.iloc[i] = 1.0
+            else:
+                st.iloc[i] = final_ub.iloc[i]
+                direction.iloc[i] = -1.0
+        else:
+            if close.iloc[i] < final_lb.iloc[i]:
+                st.iloc[i] = final_ub.iloc[i]
+                direction.iloc[i] = -1.0
+            else:
+                st.iloc[i] = final_lb.iloc[i]
+                direction.iloc[i] = 1.0
+    return st, direction
 
 
 def compute_indicators(df: pd.DataFrame) -> pd.DataFrame:

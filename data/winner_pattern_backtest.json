@@ -1,0 +1,1279 @@
+{
+  "window": {
+    "start": "2025-08-27",
+    "end": "2026-08-27"
+  },
+  "runs": [
+    {
+      "label": "Default Stage 2.0 (daily_mtf, Q any, RS any)",
+      "signals": 159,
+      "trades": 55,
+      "skipped_cash": 89,
+      "win_rate": 49.09,
+      "total_return_pct": 11.87,
+      "cagr_pct": 11.87,
+      "max_dd_pct": 8.2,
+      "profit_factor": 1.7,
+      "avg_rr": 0.24,
+      "avg_hold_days": 36.2,
+      "final_capital": 1118658.56,
+      "named_signals": 31,
+      "named_taken": 12,
+      "named_skipped": 19,
+      "named_pnl": 140323.0,
+      "named_trades": [
+        {
+          "symbol": "SAIL",
+          "signal_date": "2025-09-05",
+          "entry_date": "2025-09-08",
+          "exit_date": "2025-12-11",
+          "pnl": -1126.0,
+          "pnl_pct": -0.76,
+          "rr": -0.06,
+          "rs": 57.7,
+          "quality": 56,
+          "exit_reason": "time_exit",
+          "days": 65
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2025-09-12",
+          "entry_date": "2025-09-15",
+          "exit_date": "2025-12-18",
+          "pnl": 79.0,
+          "pnl_pct": 15.14,
+          "rr": 1.74,
+          "rs": 57.1,
+          "quality": 56,
+          "exit_reason": "time_exit",
+          "days": 65
+        },
+        {
+          "symbol": "BHARATFORG",
+          "signal_date": "2025-11-07",
+          "entry_date": "2025-11-10",
+          "exit_date": "2026-02-12",
+          "pnl": 48108.0,
+          "pnl_pct": 31.59,
+          "rr": 2.5,
+          "rs": 83.8,
+          "quality": 68,
+          "exit_reason": "target_2.5r",
+          "days": 65
+        },
+        {
+          "symbol": "POWERINDIA",
+          "signal_date": "2025-11-14",
+          "entry_date": "2025-11-17",
+          "exit_date": "2025-12-19",
+          "pnl": -12077.0,
+          "pnl_pct": -14.0,
+          "rr": -0.75,
+          "rs": 80.2,
+          "quality": 64,
+          "exit_reason": "stage_exit",
+          "days": 24
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2025-12-26",
+          "entry_date": "2025-12-29",
+          "exit_date": "2026-02-10",
+          "pnl": 31686.0,
+          "pnl_pct": 14.49,
+          "rr": 2.5,
+          "rs": 45.0,
+          "quality": 50,
+          "exit_reason": "target_2.5r",
+          "days": 30
+        },
+        {
+          "symbol": "GLENMARK",
+          "signal_date": "2026-02-13",
+          "entry_date": "2026-02-16",
+          "exit_date": "2026-04-23",
+          "pnl": 49954.0,
+          "pnl_pct": 15.16,
+          "rr": 2.5,
+          "rs": 59.4,
+          "quality": 50,
+          "exit_reason": "target_2.5r",
+          "days": 43
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-03-20",
+          "entry_date": "2026-03-23",
+          "exit_date": "2026-03-23",
+          "pnl": -4038.0,
+          "pnl_pct": -3.87,
+          "rr": -1.0,
+          "rs": 88.4,
+          "quality": 74,
+          "exit_reason": "stop_loss",
+          "days": 0
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-03-20",
+          "entry_date": "2026-03-23",
+          "exit_date": "2026-03-27",
+          "pnl": -2033.0,
+          "pnl_pct": -2.04,
+          "rr": -0.45,
+          "rs": 95.0,
+          "quality": 68,
+          "exit_reason": "stage_exit",
+          "days": 3
+        },
+        {
+          "symbol": "BEL",
+          "signal_date": "2026-04-03",
+          "entry_date": "2026-04-06",
+          "exit_date": "2026-05-15",
+          "pnl": 914.0,
+          "pnl_pct": 0.39,
+          "rr": 0.06,
+          "rs": 94.9,
+          "quality": 62,
+          "exit_reason": "stage_exit",
+          "days": 28
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-06-12",
+          "entry_date": "2026-06-15",
+          "exit_date": "2026-08-27",
+          "pnl": 171.0,
+          "pnl_pct": 5.51,
+          "rr": 0.52,
+          "rs": 95.0,
+          "quality": 68,
+          "exit_reason": "eod_force",
+          "days": 53
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2026-07-31",
+          "entry_date": "2026-08-03",
+          "exit_date": "2026-08-27",
+          "pnl": 28558.0,
+          "pnl_pct": 7.64,
+          "rr": 1.37,
+          "rs": 71.2,
+          "quality": 62,
+          "exit_reason": "eod_force",
+          "days": 18
+        },
+        {
+          "symbol": "SAIL",
+          "signal_date": "2026-08-21",
+          "entry_date": "2026-08-24",
+          "exit_date": "2026-08-27",
+          "pnl": 127.0,
+          "pnl_pct": 10.41,
+          "rr": 1.43,
+          "rs": 65.0,
+          "quality": 56,
+          "exit_reason": "eod_force",
+          "days": 3
+        }
+      ],
+      "named_skips": [
+        {
+          "symbol": "FEDERALBNK",
+          "signal_date": "2025-10-17",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 51.5,
+          "quality": 62
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2025-10-24",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 84
+        },
+        {
+          "symbol": "SHRIRAMFIN",
+          "signal_date": "2025-10-24",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 74.4,
+          "quality": 69
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2025-10-31",
+          "status": "skipped_open",
+          "status_label": "Skipped \u2014 already in position",
+          "rs": 95.0,
+          "quality": 83
+        },
+        {
+          "symbol": "SAIL",
+          "signal_date": "2025-12-26",
+          "status": "skipped_cooldown",
+          "status_label": "Skipped \u2014 cooldown (40d)",
+          "rs": 42.1,
+          "quality": 45
+        },
+        {
+          "symbol": "BEL",
+          "signal_date": "2026-01-02",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 22.8,
+          "quality": 56
+        },
+        {
+          "symbol": "GLENMARK",
+          "signal_date": "2026-01-09",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 41.4,
+          "quality": 51
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-01-30",
+          "status": "skipped_open",
+          "status_label": "Skipped \u2014 already in position",
+          "rs": 86.9,
+          "quality": 74
+        },
+        {
+          "symbol": "CUMMINSIND",
+          "signal_date": "2026-01-30",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 67.1,
+          "quality": 56
+        },
+        {
+          "symbol": "GLENMARK",
+          "signal_date": "2026-01-30",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 59.6,
+          "quality": 55
+        },
+        {
+          "symbol": "GVT&D",
+          "signal_date": "2026-02-06",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 91
+        },
+        {
+          "symbol": "ADANIENSOL",
+          "signal_date": "2026-02-06",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 70
+        },
+        {
+          "symbol": "POWERINDIA",
+          "signal_date": "2026-02-27",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 69
+        },
+        {
+          "symbol": "BEL",
+          "signal_date": "2026-02-27",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 68
+        },
+        {
+          "symbol": "ADANIENSOL",
+          "signal_date": "2026-04-10",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 84
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-04-10",
+          "status": "skipped_cooldown",
+          "status_label": "Skipped \u2014 cooldown (40d)",
+          "rs": 88.7,
+          "quality": 80
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-04-10",
+          "status": "skipped_cooldown",
+          "status_label": "Skipped \u2014 cooldown (40d)",
+          "rs": 94.8,
+          "quality": 68
+        },
+        {
+          "symbol": "SHRIRAMFIN",
+          "signal_date": "2026-06-19",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 88.2,
+          "quality": 68
+        },
+        {
+          "symbol": "SAIL",
+          "signal_date": "2026-07-31",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 65.0,
+          "quality": 56
+        }
+      ],
+      "top_trades": [
+        {
+          "symbol": "GLENMARK",
+          "signal_date": "2026-02-13",
+          "pnl": 49954.0,
+          "pnl_pct": 15.16,
+          "rs": 59.4,
+          "exit_reason": "target_2.5r"
+        },
+        {
+          "symbol": "BHARATFORG",
+          "signal_date": "2025-11-07",
+          "pnl": 48108.0,
+          "pnl_pct": 31.59,
+          "rs": 83.8,
+          "exit_reason": "target_2.5r"
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2025-12-26",
+          "pnl": 31686.0,
+          "pnl_pct": 14.49,
+          "rs": 45.0,
+          "exit_reason": "target_2.5r"
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2026-07-31",
+          "pnl": 28558.0,
+          "pnl_pct": 7.64,
+          "rs": 71.2,
+          "exit_reason": "eod_force"
+        },
+        {
+          "symbol": "MARICO",
+          "signal_date": "2026-04-24",
+          "pnl": 20928.0,
+          "pnl_pct": 9.62,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "MOTHERSON",
+          "signal_date": "2026-05-22",
+          "pnl": 19711.0,
+          "pnl_pct": 23.12,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "SUNPHARMA",
+          "signal_date": "2026-05-01",
+          "pnl": 16309.0,
+          "pnl_pct": 8.17,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "HAL",
+          "signal_date": "2025-09-05",
+          "pnl": 14438.0,
+          "pnl_pct": 4.58,
+          "rs": 60.0,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "OFSS",
+          "signal_date": "2026-06-05",
+          "pnl": 14385.0,
+          "pnl_pct": 20.97,
+          "rs": 95.0,
+          "exit_reason": "eod_force"
+        },
+        {
+          "symbol": "COALINDIA",
+          "signal_date": "2026-01-16",
+          "pnl": 11212.0,
+          "pnl_pct": 9.78,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "INDUSINDBK",
+          "signal_date": "2026-05-01",
+          "pnl": 8938.0,
+          "pnl_pct": 11.38,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "IDEA",
+          "signal_date": "2026-05-15",
+          "pnl": 7166.0,
+          "pnl_pct": 7.61,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        }
+      ],
+      "worst_trades": [
+        {
+          "symbol": "PFC",
+          "signal_date": "2026-07-31",
+          "pnl": -21622.0,
+          "pnl_pct": -8.12,
+          "rs": 65.0,
+          "exit_reason": "stop_loss"
+        },
+        {
+          "symbol": "ICICIGI",
+          "signal_date": "2025-11-14",
+          "pnl": -14136.0,
+          "pnl_pct": -7.19,
+          "rs": 63.1,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "GODREJCP",
+          "signal_date": "2025-09-05",
+          "pnl": -13123.0,
+          "pnl_pct": -5.91,
+          "rs": 76.4,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "AXISBANK",
+          "signal_date": "2026-01-30",
+          "pnl": -12318.0,
+          "pnl_pct": -10.58,
+          "rs": 95.0,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "POWERINDIA",
+          "signal_date": "2025-11-14",
+          "pnl": -12077.0,
+          "pnl_pct": -14.0,
+          "rs": 80.2,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "SBIN",
+          "signal_date": "2026-08-07",
+          "pnl": -11913.0,
+          "pnl_pct": -5.88,
+          "rs": 89.1,
+          "exit_reason": "eod_force"
+        },
+        {
+          "symbol": "TATACOMM",
+          "signal_date": "2026-01-16",
+          "pnl": -10816.0,
+          "pnl_pct": -4.68,
+          "rs": 33.3,
+          "exit_reason": "stop_loss"
+        },
+        {
+          "symbol": "HINDUNILVR",
+          "signal_date": "2025-08-29",
+          "pnl": -10471.0,
+          "pnl_pct": -8.53,
+          "rs": 92.3,
+          "exit_reason": "stage_exit"
+        }
+      ],
+      "wins": 27,
+      "losses": 28
+    },
+    {
+      "label": "Winner pattern: RS>=70 and price > SMA150",
+      "signals": 85,
+      "trades": 46,
+      "skipped_cash": 30,
+      "win_rate": 58.7,
+      "total_return_pct": 20.02,
+      "cagr_pct": 20.03,
+      "max_dd_pct": 4.67,
+      "profit_factor": 2.45,
+      "avg_rr": 0.34,
+      "avg_hold_days": 44.3,
+      "final_capital": 1200168.32,
+      "named_signals": 19,
+      "named_taken": 9,
+      "named_skipped": 10,
+      "named_pnl": 149601.0,
+      "named_trades": [
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2025-10-31",
+          "entry_date": "2025-11-03",
+          "exit_date": "2026-02-05",
+          "pnl": 26601.0,
+          "pnl_pct": 19.41,
+          "rr": 1.36,
+          "rs": 95.0,
+          "quality": 83,
+          "exit_reason": "time_exit",
+          "days": 65
+        },
+        {
+          "symbol": "BHARATFORG",
+          "signal_date": "2025-11-07",
+          "entry_date": "2025-11-10",
+          "exit_date": "2026-02-12",
+          "pnl": 48108.0,
+          "pnl_pct": 31.59,
+          "rr": 2.5,
+          "rs": 83.8,
+          "quality": 68,
+          "exit_reason": "target_2.5r",
+          "days": 65
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-01-30",
+          "entry_date": "2026-02-02",
+          "exit_date": "2026-03-13",
+          "pnl": -11394.0,
+          "pnl_pct": -6.73,
+          "rr": -0.59,
+          "rs": 86.9,
+          "quality": 74,
+          "exit_reason": "stage_exit",
+          "days": 28
+        },
+        {
+          "symbol": "GVT&D",
+          "signal_date": "2026-02-06",
+          "entry_date": "2026-02-09",
+          "exit_date": "2026-05-18",
+          "pnl": 18609.0,
+          "pnl_pct": 22.43,
+          "rr": 0.95,
+          "rs": 95.0,
+          "quality": 91,
+          "exit_reason": "time_exit",
+          "days": 65
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-03-20",
+          "entry_date": "2026-03-23",
+          "exit_date": "2026-03-23",
+          "pnl": -13072.0,
+          "pnl_pct": -3.87,
+          "rr": -1.0,
+          "rs": 88.4,
+          "quality": 74,
+          "exit_reason": "stop_loss",
+          "days": 0
+        },
+        {
+          "symbol": "BEL",
+          "signal_date": "2026-04-03",
+          "entry_date": "2026-04-06",
+          "exit_date": "2026-05-15",
+          "pnl": 1270.0,
+          "pnl_pct": 0.39,
+          "rr": 0.06,
+          "rs": 94.9,
+          "quality": 62,
+          "exit_reason": "stage_exit",
+          "days": 28
+        },
+        {
+          "symbol": "ADANIENSOL",
+          "signal_date": "2026-04-10",
+          "entry_date": "2026-04-13",
+          "exit_date": "2026-07-06",
+          "pnl": 49575.0,
+          "pnl_pct": 44.26,
+          "rr": 2.5,
+          "rs": 95.0,
+          "quality": 84,
+          "exit_reason": "target_2.5r",
+          "days": 59
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-06-12",
+          "entry_date": "2026-06-15",
+          "exit_date": "2026-08-27",
+          "pnl": 114.0,
+          "pnl_pct": 5.51,
+          "rr": 0.52,
+          "rs": 95.0,
+          "quality": 68,
+          "exit_reason": "eod_force",
+          "days": 53
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2026-07-31",
+          "entry_date": "2026-08-03",
+          "exit_date": "2026-08-27",
+          "pnl": 29789.0,
+          "pnl_pct": 7.64,
+          "rr": 1.37,
+          "rs": 71.2,
+          "quality": 62,
+          "exit_reason": "eod_force",
+          "days": 18
+        }
+      ],
+      "named_skips": [
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2025-10-24",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 84
+        },
+        {
+          "symbol": "SHRIRAMFIN",
+          "signal_date": "2025-10-24",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 74.4,
+          "quality": 69
+        },
+        {
+          "symbol": "POWERINDIA",
+          "signal_date": "2025-11-14",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 80.2,
+          "quality": 64
+        },
+        {
+          "symbol": "ADANIENSOL",
+          "signal_date": "2026-02-06",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 70
+        },
+        {
+          "symbol": "POWERINDIA",
+          "signal_date": "2026-02-27",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 69
+        },
+        {
+          "symbol": "BEL",
+          "signal_date": "2026-02-27",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 68
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-03-20",
+          "status": "skipped_cooldown",
+          "status_label": "Skipped \u2014 cooldown (40d)",
+          "rs": 95.0,
+          "quality": 68
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-04-10",
+          "status": "skipped_cooldown",
+          "status_label": "Skipped \u2014 cooldown (40d)",
+          "rs": 88.7,
+          "quality": 80
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-04-10",
+          "status": "skipped_cooldown",
+          "status_label": "Skipped \u2014 cooldown (40d)",
+          "rs": 94.8,
+          "quality": 68
+        },
+        {
+          "symbol": "SHRIRAMFIN",
+          "signal_date": "2026-06-19",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 88.2,
+          "quality": 68
+        }
+      ],
+      "top_trades": [
+        {
+          "symbol": "ADANIENSOL",
+          "signal_date": "2026-04-10",
+          "pnl": 49575.0,
+          "pnl_pct": 44.26,
+          "rs": 95.0,
+          "exit_reason": "target_2.5r"
+        },
+        {
+          "symbol": "BHARATFORG",
+          "signal_date": "2025-11-07",
+          "pnl": 48108.0,
+          "pnl_pct": 31.59,
+          "rs": 83.8,
+          "exit_reason": "target_2.5r"
+        },
+        {
+          "symbol": "VEDL",
+          "signal_date": "2025-10-03",
+          "pnl": 34392.0,
+          "pnl_pct": 27.07,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2026-07-31",
+          "pnl": 29789.0,
+          "pnl_pct": 7.64,
+          "rs": 71.2,
+          "exit_reason": "eod_force"
+        },
+        {
+          "symbol": "RADICO",
+          "signal_date": "2026-05-22",
+          "pnl": 29651.0,
+          "pnl_pct": 28.58,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2025-10-31",
+          "pnl": 26601.0,
+          "pnl_pct": 19.41,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "MOTHERSON",
+          "signal_date": "2026-05-22",
+          "pnl": 26186.0,
+          "pnl_pct": 23.12,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "GVT&D",
+          "signal_date": "2026-02-06",
+          "pnl": 18609.0,
+          "pnl_pct": 22.43,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "OFSS",
+          "signal_date": "2026-06-05",
+          "pnl": 16440.0,
+          "pnl_pct": 20.97,
+          "rs": 95.0,
+          "exit_reason": "eod_force"
+        },
+        {
+          "symbol": "SUNPHARMA",
+          "signal_date": "2026-05-01",
+          "pnl": 15716.0,
+          "pnl_pct": 8.17,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "COALINDIA",
+          "signal_date": "2026-01-16",
+          "pnl": 11910.0,
+          "pnl_pct": 9.78,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "IDEA",
+          "signal_date": "2026-05-15",
+          "pnl": 7030.0,
+          "pnl_pct": 7.61,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        }
+      ],
+      "worst_trades": [
+        {
+          "symbol": "VOLTAS",
+          "signal_date": "2026-01-09",
+          "pnl": -19802.0,
+          "pnl_pct": -10.96,
+          "rs": 70.4,
+          "exit_reason": "stop_loss"
+        },
+        {
+          "symbol": "GODREJCP",
+          "signal_date": "2025-09-05",
+          "pnl": -13123.0,
+          "pnl_pct": -5.91,
+          "rs": 76.4,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-03-20",
+          "pnl": -13072.0,
+          "pnl_pct": -3.87,
+          "rs": 88.4,
+          "exit_reason": "stop_loss"
+        },
+        {
+          "symbol": "AXISBANK",
+          "signal_date": "2026-01-30",
+          "pnl": -13026.0,
+          "pnl_pct": -10.58,
+          "rs": 95.0,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-01-30",
+          "pnl": -11394.0,
+          "pnl_pct": -6.73,
+          "rs": 86.9,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "NYKAA",
+          "signal_date": "2026-02-06",
+          "pnl": -11344.0,
+          "pnl_pct": -14.03,
+          "rs": 95.0,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "HINDUNILVR",
+          "signal_date": "2025-08-29",
+          "pnl": -10471.0,
+          "pnl_pct": -8.53,
+          "rs": 92.3,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "APLAPOLLO",
+          "signal_date": "2026-01-30",
+          "pnl": -7473.0,
+          "pnl_pct": -7.7,
+          "rs": 95.0,
+          "exit_reason": "stage_exit"
+        }
+      ],
+      "wins": 27,
+      "losses": 19
+    },
+    {
+      "label": "Winner pattern + 5-day cooldown",
+      "signals": 85,
+      "trades": 47,
+      "skipped_cash": 35,
+      "win_rate": 57.45,
+      "total_return_pct": 17.59,
+      "cagr_pct": 17.6,
+      "max_dd_pct": 5.31,
+      "profit_factor": 2.17,
+      "avg_rr": 0.35,
+      "avg_hold_days": 43.0,
+      "final_capital": 1175862.6,
+      "named_signals": 19,
+      "named_taken": 10,
+      "named_skipped": 9,
+      "named_pnl": 142690.0,
+      "named_trades": [
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2025-10-31",
+          "entry_date": "2025-11-03",
+          "exit_date": "2026-02-05",
+          "pnl": 26601.0,
+          "pnl_pct": 19.41,
+          "rr": 1.36,
+          "rs": 95.0,
+          "quality": 83,
+          "exit_reason": "time_exit",
+          "days": 65
+        },
+        {
+          "symbol": "BHARATFORG",
+          "signal_date": "2025-11-07",
+          "entry_date": "2025-11-10",
+          "exit_date": "2026-02-12",
+          "pnl": 48108.0,
+          "pnl_pct": 31.59,
+          "rr": 2.5,
+          "rs": 83.8,
+          "quality": 68,
+          "exit_reason": "target_2.5r",
+          "days": 65
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-01-30",
+          "entry_date": "2026-02-02",
+          "exit_date": "2026-03-13",
+          "pnl": -11394.0,
+          "pnl_pct": -6.73,
+          "rr": -0.59,
+          "rs": 86.9,
+          "quality": 74,
+          "exit_reason": "stage_exit",
+          "days": 28
+        },
+        {
+          "symbol": "GVT&D",
+          "signal_date": "2026-02-06",
+          "entry_date": "2026-02-09",
+          "exit_date": "2026-05-18",
+          "pnl": 18609.0,
+          "pnl_pct": 22.43,
+          "rr": 0.95,
+          "rs": 95.0,
+          "quality": 91,
+          "exit_reason": "time_exit",
+          "days": 65
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-03-20",
+          "entry_date": "2026-03-23",
+          "exit_date": "2026-03-23",
+          "pnl": -13072.0,
+          "pnl_pct": -3.87,
+          "rr": -1.0,
+          "rs": 88.4,
+          "quality": 74,
+          "exit_reason": "stop_loss",
+          "days": 0
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-03-20",
+          "entry_date": "2026-03-23",
+          "exit_date": "2026-03-27",
+          "pnl": -6614.0,
+          "pnl_pct": -2.04,
+          "rr": -0.45,
+          "rs": 95.0,
+          "quality": 68,
+          "exit_reason": "stage_exit",
+          "days": 3
+        },
+        {
+          "symbol": "BEL",
+          "signal_date": "2026-04-03",
+          "entry_date": "2026-04-06",
+          "exit_date": "2026-05-15",
+          "pnl": 1262.0,
+          "pnl_pct": 0.39,
+          "rr": 0.06,
+          "rs": 94.9,
+          "quality": 62,
+          "exit_reason": "stage_exit",
+          "days": 28
+        },
+        {
+          "symbol": "ADANIENSOL",
+          "signal_date": "2026-04-10",
+          "entry_date": "2026-04-13",
+          "exit_date": "2026-07-06",
+          "pnl": 49079.0,
+          "pnl_pct": 44.26,
+          "rr": 2.5,
+          "rs": 95.0,
+          "quality": 84,
+          "exit_reason": "target_2.5r",
+          "days": 59
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-04-10",
+          "entry_date": "2026-04-13",
+          "exit_date": "2026-07-14",
+          "pnl": 111.0,
+          "pnl_pct": 4.65,
+          "rr": 0.63,
+          "rs": 88.7,
+          "quality": 80,
+          "exit_reason": "time_exit",
+          "days": 65
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2026-07-31",
+          "entry_date": "2026-08-03",
+          "exit_date": "2026-08-27",
+          "pnl": 29999.0,
+          "pnl_pct": 7.64,
+          "rr": 1.37,
+          "rs": 71.2,
+          "quality": 62,
+          "exit_reason": "eod_force",
+          "days": 18
+        }
+      ],
+      "named_skips": [
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2025-10-24",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 84
+        },
+        {
+          "symbol": "SHRIRAMFIN",
+          "signal_date": "2025-10-24",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 74.4,
+          "quality": 69
+        },
+        {
+          "symbol": "POWERINDIA",
+          "signal_date": "2025-11-14",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 80.2,
+          "quality": 64
+        },
+        {
+          "symbol": "ADANIENSOL",
+          "signal_date": "2026-02-06",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 70
+        },
+        {
+          "symbol": "POWERINDIA",
+          "signal_date": "2026-02-27",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 69
+        },
+        {
+          "symbol": "BEL",
+          "signal_date": "2026-02-27",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 68
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-04-10",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 94.8,
+          "quality": 68
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-06-12",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 95.0,
+          "quality": 68
+        },
+        {
+          "symbol": "SHRIRAMFIN",
+          "signal_date": "2026-06-19",
+          "status": "skipped_cash",
+          "status_label": "Skipped \u2014 no free cash",
+          "rs": 88.2,
+          "quality": 68
+        }
+      ],
+      "top_trades": [
+        {
+          "symbol": "ADANIENSOL",
+          "signal_date": "2026-04-10",
+          "pnl": 49079.0,
+          "pnl_pct": 44.26,
+          "rs": 95.0,
+          "exit_reason": "target_2.5r"
+        },
+        {
+          "symbol": "BHARATFORG",
+          "signal_date": "2025-11-07",
+          "pnl": 48108.0,
+          "pnl_pct": 31.59,
+          "rs": 83.8,
+          "exit_reason": "target_2.5r"
+        },
+        {
+          "symbol": "VEDL",
+          "signal_date": "2025-10-03",
+          "pnl": 34392.0,
+          "pnl_pct": 27.07,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2026-07-31",
+          "pnl": 29999.0,
+          "pnl_pct": 7.64,
+          "rs": 71.2,
+          "exit_reason": "eod_force"
+        },
+        {
+          "symbol": "RADICO",
+          "signal_date": "2026-05-22",
+          "pnl": 29651.0,
+          "pnl_pct": 28.58,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "UNIONBANK",
+          "signal_date": "2025-10-31",
+          "pnl": 26601.0,
+          "pnl_pct": 19.41,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "GVT&D",
+          "signal_date": "2026-02-06",
+          "pnl": 18609.0,
+          "pnl_pct": 22.43,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "TITAN",
+          "signal_date": "2026-06-05",
+          "pnl": 17475.0,
+          "pnl_pct": 16.07,
+          "rs": 95.0,
+          "exit_reason": "target_2.5r"
+        },
+        {
+          "symbol": "OFSS",
+          "signal_date": "2026-06-05",
+          "pnl": 16440.0,
+          "pnl_pct": 20.97,
+          "rs": 95.0,
+          "exit_reason": "eod_force"
+        },
+        {
+          "symbol": "SUNPHARMA",
+          "signal_date": "2026-05-01",
+          "pnl": 15567.0,
+          "pnl_pct": 8.17,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "COALINDIA",
+          "signal_date": "2026-01-16",
+          "pnl": 11910.0,
+          "pnl_pct": 9.78,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        },
+        {
+          "symbol": "IDEA",
+          "signal_date": "2026-05-15",
+          "pnl": 6986.0,
+          "pnl_pct": 7.61,
+          "rs": 95.0,
+          "exit_reason": "time_exit"
+        }
+      ],
+      "worst_trades": [
+        {
+          "symbol": "VOLTAS",
+          "signal_date": "2026-01-09",
+          "pnl": -19802.0,
+          "pnl_pct": -10.96,
+          "rs": 70.4,
+          "exit_reason": "stop_loss"
+        },
+        {
+          "symbol": "GODREJCP",
+          "signal_date": "2025-09-05",
+          "pnl": -13123.0,
+          "pnl_pct": -5.91,
+          "rs": 76.4,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "AUBANK",
+          "signal_date": "2026-03-20",
+          "pnl": -13072.0,
+          "pnl_pct": -3.87,
+          "rs": 88.4,
+          "exit_reason": "stop_loss"
+        },
+        {
+          "symbol": "AXISBANK",
+          "signal_date": "2026-01-30",
+          "pnl": -13026.0,
+          "pnl_pct": -10.58,
+          "rs": 95.0,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "JSWSTEEL",
+          "signal_date": "2026-01-30",
+          "pnl": -11394.0,
+          "pnl_pct": -6.73,
+          "rs": 86.9,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "NYKAA",
+          "signal_date": "2026-02-06",
+          "pnl": -11344.0,
+          "pnl_pct": -14.03,
+          "rs": 95.0,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "HINDUNILVR",
+          "signal_date": "2025-08-29",
+          "pnl": -10471.0,
+          "pnl_pct": -8.53,
+          "rs": 92.3,
+          "exit_reason": "stage_exit"
+        },
+        {
+          "symbol": "SBIN",
+          "signal_date": "2026-08-07",
+          "pnl": -9374.0,
+          "pnl_pct": -5.88,
+          "rs": 89.1,
+          "exit_reason": "eod_force"
+        }
+      ],
+      "wins": 27,
+      "losses": 20
+    }
+  ]
+}

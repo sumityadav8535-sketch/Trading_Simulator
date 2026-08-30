@@ -1,0 +1,2202 @@
+{
+  "winners": [
+    {
+      "label": "RSI45-70 g2-6 largest k4",
+      "trades": 24,
+      "win_rate": 70.83,
+      "total_return_pct": 30.25,
+      "profit_factor": 4.56,
+      "max_dd_pct": 4.18,
+      "oos_pnl": 11713.05,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 13007.57,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7787.63,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-6 largest k3",
+      "trades": 22,
+      "win_rate": 72.73,
+      "total_return_pct": 29.72,
+      "profit_factor": 5.6,
+      "max_dd_pct": 2.6,
+      "oos_pnl": 13440.96,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 14637.23,
+          "wr": 64.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7729.9,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-72 g2-8 largest k4",
+      "trades": 26,
+      "win_rate": 69.23,
+      "total_return_pct": 29.24,
+      "profit_factor": 3.81,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 13009.82,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 13614.64,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 6174.39,
+          "wr": 75.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-65 g2-8 smallest k4",
+      "trades": 22,
+      "win_rate": 72.73,
+      "total_return_pct": 28.51,
+      "profit_factor": 4.63,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11033.02,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 10595.4,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 10249.59,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7668.54,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "BASE RSI45-65 k4",
+      "trades": 22,
+      "win_rate": 72.73,
+      "total_return_pct": 28.51,
+      "profit_factor": 4.63,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11033.02,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 10595.4,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 10249.59,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7668.54,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 largest k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 smallest k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 midgap k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + ST7 g2-8 k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + 5mST g2-8 k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 rank ST7 then gap k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 rank 5mST then gap k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 largest k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + ST7 g2-8 k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + 5mST g2-8 k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 rank ST7 then gap k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 rank 5mST then gap k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    }
+  ],
+  "all": [
+    {
+      "label": "RSI45-70 g2-8 largest k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 largest k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-72 g2-8 largest k3",
+      "trades": 24,
+      "win_rate": 66.67,
+      "total_return_pct": 24.37,
+      "profit_factor": 3.4,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 10346.21,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 11046.22,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 5974.06,
+          "wr": 75.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-72 g2-8 largest k4",
+      "trades": 26,
+      "win_rate": 69.23,
+      "total_return_pct": 29.24,
+      "profit_factor": 3.81,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 13009.82,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 13614.64,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 6174.39,
+          "wr": 75.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI42-70 g2-8 largest k3",
+      "trades": 25,
+      "win_rate": 64.0,
+      "total_return_pct": 21.73,
+      "profit_factor": 2.91,
+      "max_dd_pct": 3.6,
+      "oos_pnl": 11113.51,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 7,
+          "pnl": 4318.44,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 10160.87,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7253.07,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI42-70 g2-8 largest k4",
+      "trades": 28,
+      "win_rate": 64.29,
+      "total_return_pct": 24.75,
+      "profit_factor": 2.83,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9624.4,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": 6366.52,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 17,
+          "pnl": 10949.59,
+          "wr": 58.8
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7430.34,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-6 largest k3",
+      "trades": 22,
+      "win_rate": 72.73,
+      "total_return_pct": 29.72,
+      "profit_factor": 5.6,
+      "max_dd_pct": 2.6,
+      "oos_pnl": 13440.96,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 14637.23,
+          "wr": 64.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7729.9,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-6 largest k4",
+      "trades": 24,
+      "win_rate": 70.83,
+      "total_return_pct": 30.25,
+      "profit_factor": 4.56,
+      "max_dd_pct": 4.18,
+      "oos_pnl": 11713.05,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 13007.57,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7787.63,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-5 largest k3",
+      "trades": 18,
+      "win_rate": 66.67,
+      "total_return_pct": 19.53,
+      "profit_factor": 4.13,
+      "max_dd_pct": 2.6,
+      "oos_pnl": 6369.63,
+      "keep": false,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 9752.54,
+          "wr": 58.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 1,
+          "pnl": 2429.89,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-5 largest k4",
+      "trades": 20,
+      "win_rate": 65.0,
+      "total_return_pct": 19.97,
+      "profit_factor": 3.44,
+      "max_dd_pct": 4.18,
+      "oos_pnl": 4616.72,
+      "keep": false,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 13,
+          "pnl": 8084.94,
+          "wr": 53.8
+        },
+        {
+          "month": "2026-08",
+          "trades": 1,
+          "pnl": 2429.89,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-65 g2-8 smallest k3",
+      "trades": 21,
+      "win_rate": 71.43,
+      "total_return_pct": 26.04,
+      "profit_factor": 4.39,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 10841.3,
+      "keep": false,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 4,
+          "pnl": 8464.92,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 10040.1,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7536.7,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-65 g2-8 smallest k4",
+      "trades": 22,
+      "win_rate": 72.73,
+      "total_return_pct": 28.51,
+      "profit_factor": 4.63,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11033.02,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 10595.4,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 10249.59,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7668.54,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 smallest k3",
+      "trades": 23,
+      "win_rate": 65.22,
+      "total_return_pct": 22.75,
+      "profit_factor": 3.17,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 7154.51,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7347.52,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 8093.53,
+          "wr": 53.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7308.07,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 smallest k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 midgap k3",
+      "trades": 23,
+      "win_rate": 65.22,
+      "total_return_pct": 22.75,
+      "profit_factor": 3.17,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 7154.51,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7347.52,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 8093.53,
+          "wr": 53.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7308.07,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 g2-8 midgap k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + ST7 g2-8 k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + ST7 g2-8 k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 or ST7 g2-8 k3",
+      "trades": 40,
+      "win_rate": 50.0,
+      "total_return_pct": 17.53,
+      "profit_factor": 1.68,
+      "max_dd_pct": 6.75,
+      "oos_pnl": 8060.45,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 12,
+          "pnl": 8804.7,
+          "wr": 58.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 7122.82,
+          "wr": 47.6
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1602.35,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 or ST7 g2-8 k4",
+      "trades": 44,
+      "win_rate": 52.27,
+      "total_return_pct": 22.24,
+      "profit_factor": 1.81,
+      "max_dd_pct": 5.68,
+      "oos_pnl": 10596.22,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 14,
+          "pnl": 9690.32,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-07",
+          "trades": 23,
+          "pnl": 10863.9,
+          "wr": 52.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1690.39,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "ST52 g2-8 k3",
+      "trades": 40,
+      "win_rate": 50.0,
+      "total_return_pct": 17.53,
+      "profit_factor": 1.68,
+      "max_dd_pct": 6.75,
+      "oos_pnl": 8060.45,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 12,
+          "pnl": 8804.7,
+          "wr": 58.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 7122.82,
+          "wr": 47.6
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1602.35,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "ST52 g2-8 k4",
+      "trades": 44,
+      "win_rate": 52.27,
+      "total_return_pct": 22.24,
+      "profit_factor": 1.81,
+      "max_dd_pct": 5.68,
+      "oos_pnl": 10596.22,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 14,
+          "pnl": 9690.32,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-07",
+          "trades": 23,
+          "pnl": 10863.9,
+          "wr": 52.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1690.39,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "ST72 g2-8 k3",
+      "trades": 40,
+      "win_rate": 50.0,
+      "total_return_pct": 17.53,
+      "profit_factor": 1.68,
+      "max_dd_pct": 6.75,
+      "oos_pnl": 8060.45,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 12,
+          "pnl": 8804.7,
+          "wr": 58.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 7122.82,
+          "wr": 47.6
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1602.35,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "ST72 g2-8 k4",
+      "trades": 44,
+      "win_rate": 52.27,
+      "total_return_pct": 22.24,
+      "profit_factor": 1.81,
+      "max_dd_pct": 5.68,
+      "oos_pnl": 10596.22,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 14,
+          "pnl": 9690.32,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-07",
+          "trades": 23,
+          "pnl": 10863.9,
+          "wr": 52.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1690.39,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "ST102 g2-8 k3",
+      "trades": 40,
+      "win_rate": 50.0,
+      "total_return_pct": 17.53,
+      "profit_factor": 1.68,
+      "max_dd_pct": 6.75,
+      "oos_pnl": 8060.45,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 12,
+          "pnl": 8804.7,
+          "wr": 58.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 7122.82,
+          "wr": 47.6
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1602.35,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "ST102 g2-8 k4",
+      "trades": 44,
+      "win_rate": 52.27,
+      "total_return_pct": 22.24,
+      "profit_factor": 1.81,
+      "max_dd_pct": 5.68,
+      "oos_pnl": 10596.22,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 14,
+          "pnl": 9690.32,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-07",
+          "trades": 23,
+          "pnl": 10863.9,
+          "wr": 52.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1690.39,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "ST53 g2-8 k3",
+      "trades": 40,
+      "win_rate": 50.0,
+      "total_return_pct": 17.53,
+      "profit_factor": 1.68,
+      "max_dd_pct": 6.75,
+      "oos_pnl": 8060.45,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 12,
+          "pnl": 8804.7,
+          "wr": 58.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 7122.82,
+          "wr": 47.6
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1602.35,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "ST53 g2-8 k4",
+      "trades": 44,
+      "win_rate": 52.27,
+      "total_return_pct": 22.24,
+      "profit_factor": 1.81,
+      "max_dd_pct": 5.68,
+      "oos_pnl": 10596.22,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 14,
+          "pnl": 9690.32,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-07",
+          "trades": 23,
+          "pnl": 10863.9,
+          "wr": 52.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1690.39,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "5m ST prev g2-8 k3",
+      "trades": 40,
+      "win_rate": 50.0,
+      "total_return_pct": 17.53,
+      "profit_factor": 1.68,
+      "max_dd_pct": 6.75,
+      "oos_pnl": 8060.45,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 12,
+          "pnl": 8804.7,
+          "wr": 58.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 7122.82,
+          "wr": 47.6
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1602.35,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "5m ST prev g2-8 k4",
+      "trades": 44,
+      "win_rate": 52.27,
+      "total_return_pct": 22.24,
+      "profit_factor": 1.81,
+      "max_dd_pct": 5.68,
+      "oos_pnl": 10596.22,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 14,
+          "pnl": 9690.32,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-07",
+          "trades": 23,
+          "pnl": 10863.9,
+          "wr": 52.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1690.39,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + 5mST g2-8 k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + 5mST g2-8 k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 or 5mST g2-8 k3",
+      "trades": 40,
+      "win_rate": 50.0,
+      "total_return_pct": 17.53,
+      "profit_factor": 1.68,
+      "max_dd_pct": 6.75,
+      "oos_pnl": 8060.45,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 12,
+          "pnl": 8804.7,
+          "wr": 58.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 7122.82,
+          "wr": 47.6
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1602.35,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 or 5mST g2-8 k4",
+      "trades": 44,
+      "win_rate": 52.27,
+      "total_return_pct": 22.24,
+      "profit_factor": 1.81,
+      "max_dd_pct": 5.68,
+      "oos_pnl": 10596.22,
+      "keep": "False",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 14,
+          "pnl": 9690.32,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-07",
+          "trades": 23,
+          "pnl": 10863.9,
+          "wr": 52.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1690.39,
+          "wr": 42.9
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 rank ST7 then gap k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 rank ST7 then gap k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 rank 5mST then gap k3",
+      "trades": 23,
+      "win_rate": 69.57,
+      "total_return_pct": 27.19,
+      "profit_factor": 4.15,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11595.63,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 7351.49,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 12280.55,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7562.17,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 rank 5mST then gap k4",
+      "trades": 25,
+      "win_rate": 68.0,
+      "total_return_pct": 27.69,
+      "profit_factor": 3.59,
+      "max_dd_pct": 5.16,
+      "oos_pnl": 9848.33,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 9455.1,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 10623.86,
+          "wr": 56.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7607.62,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "SMA20 + RSI45-70 g2-8 k3",
+      "trades": 17,
+      "win_rate": 70.59,
+      "total_return_pct": 19.04,
+      "profit_factor": 3.83,
+      "max_dd_pct": 2.9,
+      "oos_pnl": 10051.04,
+      "keep": false,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 3,
+          "pnl": 3147.47,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 11077.62,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 2,
+          "pnl": 4810.87,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "SMA20 + RSI45-70 g2-8 k4",
+      "trades": 18,
+      "win_rate": 66.67,
+      "total_return_pct": 17.22,
+      "profit_factor": 3.03,
+      "max_dd_pct": 3.81,
+      "oos_pnl": 8231.33,
+      "keep": false,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 3,
+          "pnl": 3147.47,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-07",
+          "trades": 13,
+          "pnl": 9328.81,
+          "wr": 61.5
+        },
+        {
+          "month": "2026-08",
+          "trades": 2,
+          "pnl": 4739.97,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + above SMA50 g2-8 k3",
+      "trades": 18,
+      "win_rate": 66.67,
+      "total_return_pct": 18.87,
+      "profit_factor": 3.71,
+      "max_dd_pct": 3.04,
+      "oos_pnl": 10055.21,
+      "keep": false,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 3,
+          "pnl": 3141.39,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 13286.73,
+          "wr": 64.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 1,
+          "pnl": 2438.56,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "RSI45-70 + above SMA50 g2-8 k4",
+      "trades": 19,
+      "win_rate": 63.16,
+      "total_return_pct": 17.05,
+      "profit_factor": 2.95,
+      "max_dd_pct": 3.95,
+      "oos_pnl": 8234.06,
+      "keep": false,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 3,
+          "pnl": 3141.39,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 11503.78,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 1,
+          "pnl": 2400.36,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "BASE RSI45-65 k3",
+      "trades": 21,
+      "win_rate": 71.43,
+      "total_return_pct": 26.07,
+      "profit_factor": 4.39,
+      "max_dd_pct": 3.6,
+      "oos_pnl": 10844.48,
+      "keep": false,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 4,
+          "pnl": 8491.79,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 10035.66,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7539.88,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 3,
+        "max_deploy": 0.5
+      }
+    },
+    {
+      "label": "BASE RSI45-65 k4",
+      "trades": 22,
+      "win_rate": 72.73,
+      "total_return_pct": 28.51,
+      "profit_factor": 4.63,
+      "max_dd_pct": 3.59,
+      "oos_pnl": 11033.02,
+      "keep": "True",
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 10595.4,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 14,
+          "pnl": 10249.59,
+          "wr": 57.1
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 7668.54,
+          "wr": 100.0
+        }
+      ],
+      "size": {
+        "risk_pct": 8.0,
+        "max_pos": 4,
+        "top_k": 4,
+        "max_deploy": 0.5
+      }
+    }
+  ]
+}

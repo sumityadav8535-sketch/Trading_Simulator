@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 from django.conf import settings
-from django.db.models import Max
+from django.db.models import Max, Min
 
 from trading.constants import NIFTY50_SYMBOL
 from trading.models import DailyPrice, Stock
@@ -25,13 +25,20 @@ logger = logging.getLogger(__name__)
 IST = ZoneInfo("Asia/Kolkata")
 YFINANCE_SUFFIX = ".NS"
 BACKFILL_DAYS = 365 * 5
+# NSE symbol → Yahoo ticker when the .NS name was renamed / delisted.
+YFINANCE_TICKER_OVERRIDES = {
+    "TATAMOTORS": "TMPV.NS",  # continuous Tata Motors series after PV/CV split
+    "TMCV": "TMCV.NS",
+    "TMPV": "TMPV.NS",
+    "ZOMATO": "ETERNAL.NS",  # Zomato rebranded to Eternal
+}
 
 _sync_lock = threading.Lock()
 _sync_started = False
 
 
 def yfinance_ticker(symbol: str) -> str:
-    return f"{symbol}{YFINANCE_SUFFIX}"
+    return YFINANCE_TICKER_OVERRIDES.get(symbol.upper(), f"{symbol}{YFINANCE_SUFFIX}")
 
 
 def nse_symbol_from_ticker(ticker: str) -> str:
@@ -54,8 +61,24 @@ def get_symbol_last_date(symbol: str) -> Optional[date]:
     return DailyPrice.objects.filter(stock_id=symbol).aggregate(m=Max("date"))["m"]
 
 
+def get_symbol_first_date(symbol: str) -> Optional[date]:
+    return DailyPrice.objects.filter(stock_id=symbol).aggregate(m=Min("date"))["m"]
+
+
 def active_equity_symbols(nifty200_only: bool = True) -> list[str]:
+    """Equities included in daily price sync.
+
+    When nifty200_only is True, include both Nifty 200 and Nifty Smallcap 250
+    so both universes stay current. Pass nifty200_only=False for every active stock.
+    """
     symbols = get_universe_symbols(nifty200_only=nifty200_only)
+    if nifty200_only:
+        extra = get_universe_symbols(nifty_smallcap250_only=True)
+        seen = set(symbols)
+        for sym in extra:
+            if sym not in seen:
+                symbols.append(sym)
+                seen.add(sym)
     return [s for s in symbols if s != NIFTY50_SYMBOL]
 
 
@@ -115,10 +138,18 @@ def _update_stock_meta(symbol: str, frame: pd.DataFrame) -> None:
     Stock.objects.filter(pk=symbol).update(last_price=last_close, avg_volume_20d=avg_vol)
 
 
-def _parse_download_frame(data: pd.DataFrame, tickers: list[str]) -> dict[str, pd.DataFrame]:
+def _parse_download_frame(
+    data: pd.DataFrame,
+    tickers: list[str],
+    ticker_to_symbol: Optional[dict[str, str]] = None,
+) -> dict[str, pd.DataFrame]:
     result: dict[str, pd.DataFrame] = {}
     if data.empty:
         return result
+    ticker_to_symbol = ticker_to_symbol or {}
+
+    def _sym(ticker: str) -> str:
+        return ticker_to_symbol.get(ticker, nse_symbol_from_ticker(ticker))
 
     if isinstance(data.columns, pd.MultiIndex):
         available = set(data.columns.get_level_values(0))
@@ -127,12 +158,11 @@ def _parse_download_frame(data: pd.DataFrame, tickers: list[str]) -> dict[str, p
                 continue
             sub = data[ticker].dropna(how="all")
             if not sub.empty:
-                result[nse_symbol_from_ticker(ticker)] = sub
+                result[_sym(ticker)] = sub
     else:
-        sym = nse_symbol_from_ticker(tickers[0])
         sub = data.dropna(how="all")
         if not sub.empty:
-            result[sym] = sub
+            result[_sym(tickers[0])] = sub
     return result
 
 
@@ -142,10 +172,14 @@ def sync_symbols(
     batch_size: Optional[int] = None,
     pause_seconds: float = 0.4,
     force: bool = False,
+    backfill_from: Optional[date] = None,
 ) -> dict:
     """
     Incrementally download and upsert OHLCV for NSE symbols.
     Returns stats: symbols_checked, symbols_updated, bars_upserted, errors.
+
+    backfill_from: also fetch history from this date (fills years before the
+    existing 5y store). Overlap dates are upserted so splits stay consistent.
     """
     try:
         import yfinance as yf
@@ -169,9 +203,18 @@ def sync_symbols(
     for sym in symbols:
         stats["symbols_checked"] += 1
         last = get_symbol_last_date(sym)
-        if not force and last is not None and last >= expected:
-            continue
-        start = (last + timedelta(days=1)) if last else (date.today() - timedelta(days=BACKFILL_DAYS))
+        first = get_symbol_first_date(sym)
+        if backfill_from is not None:
+            # Need older history, a forward gap, or a forced refresh.
+            needs_older = first is None or first > backfill_from
+            needs_newer = last is None or last < expected
+            if not needs_older and not needs_newer and not force:
+                continue
+            start = backfill_from
+        else:
+            if not force and last is not None and last >= expected:
+                continue
+            start = (last + timedelta(days=1)) if last else (date.today() - timedelta(days=BACKFILL_DAYS))
         pending.append((sym, start))
 
     if not pending:
@@ -184,6 +227,7 @@ def sync_symbols(
         batch = pending[i : i + batch_size]
         batch_start = min(start for _, start in batch)
         yf_tickers = [yfinance_ticker(sym) for sym, _ in batch]
+        ticker_to_symbol = {yfinance_ticker(sym): sym for sym, _ in batch}
         ticker_str = " ".join(yf_tickers)
 
         try:
@@ -202,16 +246,18 @@ def sync_symbols(
             stats["errors"].append(msg)
             continue
 
-        frames = _parse_download_frame(raw, yf_tickers)
+        frames = _parse_download_frame(raw, yf_tickers, ticker_to_symbol)
 
         for sym, start in batch:
             frame = frames.get(sym)
             if frame is None or frame.empty:
                 continue
             last = get_symbol_last_date(sym)
-            if last:
+            if backfill_from is None and last:
                 cutoff = pd.Timestamp(last)
                 frame = frame[frame.index > cutoff]
+            elif start:
+                frame = frame[frame.index >= pd.Timestamp(start)]
             if frame.empty:
                 continue
             n = _upsert_bars(sym, frame)
@@ -231,16 +277,26 @@ def sync_universe(
     nifty200_only: bool = True,
     include_index: bool = True,
     force: bool = False,
+    backfill_from: Optional[date] = None,
     **kwargs,
 ) -> dict:
     """Sync all active equities and optionally the Nifty 50 index."""
-    stats = sync_symbols(active_equity_symbols(nifty200_only=nifty200_only), force=force, **kwargs)
+    stats = sync_symbols(
+        active_equity_symbols(nifty200_only=nifty200_only),
+        force=force,
+        backfill_from=backfill_from,
+        **kwargs,
+    )
 
     if include_index:
         try:
             from trading.services.nifty50_index import sync_nifty50_from_yfinance
 
-            stats["nifty50_bars"] = sync_nifty50_from_yfinance(years=1)
+            if backfill_from is not None:
+                years = max(1, (date.today() - backfill_from).days // 365 + 1)
+            else:
+                years = 1
+            stats["nifty50_bars"] = sync_nifty50_from_yfinance(years=years)
         except Exception as exc:
             logger.warning("Nifty 50 sync failed: %s", exc)
             stats["errors"].append(f"NIFTY50: {exc}")

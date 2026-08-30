@@ -1,0 +1,287 @@
+{
+  "capital": 100000.0,
+  "timeframe": "5m",
+  "universe": "nifty200",
+  "window": {
+    "start": "2026-06-03 09:15:00+05:30",
+    "end": "2026-08-26 15:15:00+05:30",
+    "stocks": 203
+  },
+  "idea": "Qualify 9:15 gap-downs 2%-6% with RSI 45\u201370, buy 09:30 only if it holds the 9:15 close, target 1.0% from entry.",
+  "strategy": {
+    "name": "Gap-down bounce \u00b7 RSI 45\u201370",
+    "mode": "down_bounce",
+    "side": "long",
+    "gap_min": 0.02,
+    "gap_max": 0.06,
+    "rsi_lo": 45.0,
+    "rsi_hi": 70.0,
+    "sl_atr": 0.6,
+    "risk_pct": 8.0,
+    "max_pos": 4,
+    "top_k": 4,
+    "max_deploy": 0.5,
+    "leverage": 5.0,
+    "capital": 100000.0,
+    "tp_kind": "pct1.0",
+    "entry_hhmm": "09:30",
+    "require_bounce": true,
+    "entry": [
+      "Yesterday\u2019s official close vs today\u2019s 9:15 open",
+      "Gap down \u2265 2% and \u2264 6% (skip crash gaps >6%)",
+      "Yesterday\u2019s daily RSI(14) between 45 and 70",
+      "Price > \u20b960",
+      "Wait for the 9:30 open",
+      "9:30 open must be \u2265 9:15 close (bounce confirmation \u2014 skip if still falling)",
+      "If several names qualify, take the 4 largest gaps"
+    ],
+    "exit": [
+      "Target: 1.0% above the 9:30 entry",
+      "Stop: 0.6 \u00d7 5-minute ATR below the 9:30 entry",
+      "Flatten 15:15 IST if not filled",
+      "8% equity risk, 5\u00d7 MIS cap, 50% of buying power per name"
+    ]
+  },
+  "fill_stats": [
+    {
+      "bucket": "1\u20132%",
+      "down_n": 399,
+      "down_fill_pct": 40.4,
+      "down_close_green_pct": 47.6,
+      "down_avg_mfe_pct": 1.37,
+      "down_avg_mae_pct": -1.42,
+      "up_n": 1432,
+      "up_fill_pct": 32.1,
+      "up_close_red_pct": 50.3,
+      "up_avg_mfe_pct": 1.14,
+      "up_avg_mae_pct": 1.26
+    },
+    {
+      "bucket": "2\u20133%",
+      "down_n": 60,
+      "down_fill_pct": 28.3,
+      "down_close_green_pct": 55.0,
+      "down_avg_mfe_pct": 1.65,
+      "down_avg_mae_pct": -1.84,
+      "up_n": 373,
+      "up_fill_pct": 13.1,
+      "up_close_red_pct": 51.2,
+      "up_avg_mfe_pct": 1.22,
+      "up_avg_mae_pct": 1.53
+    },
+    {
+      "bucket": "3\u20135%",
+      "down_n": 33,
+      "down_fill_pct": 21.2,
+      "down_close_green_pct": 51.5,
+      "down_avg_mfe_pct": 1.89,
+      "down_avg_mae_pct": -1.86,
+      "up_n": 180,
+      "up_fill_pct": 5.0,
+      "up_close_red_pct": 51.1,
+      "up_avg_mfe_pct": 1.36,
+      "up_avg_mae_pct": 1.52
+    },
+    {
+      "bucket": "5\u20138%",
+      "down_n": 14,
+      "down_fill_pct": 7.1,
+      "down_close_green_pct": 42.9,
+      "down_avg_mfe_pct": 2.38,
+      "down_avg_mae_pct": -2.77,
+      "up_n": 44,
+      "up_fill_pct": 0.0,
+      "up_close_red_pct": 47.7,
+      "up_avg_mfe_pct": 1.09,
+      "up_avg_mae_pct": 1.55
+    },
+    {
+      "bucket": "8\u201315%",
+      "down_n": 4,
+      "down_fill_pct": 0.0,
+      "down_close_green_pct": 0.0,
+      "down_avg_mfe_pct": 1.58,
+      "down_avg_mae_pct": -3.66,
+      "up_n": 1,
+      "up_fill_pct": 0.0,
+      "up_close_red_pct": 100.0,
+      "up_avg_mfe_pct": 0.78,
+      "up_avg_mae_pct": 1.44
+    }
+  ],
+  "story": {
+    "name": "down_bounce 930_bounce pct1.0 g2%-6% sl0.6",
+    "trades": 24,
+    "win_rate": 70.83,
+    "profit_factor": 4.56,
+    "net_pnl": 30250.29,
+    "total_return_pct": 30.25,
+    "max_dd_pct": 4.18,
+    "avg_daily_pnl": 2326.95,
+    "median_daily_pnl": 2462.93,
+    "days_ge_2k": 9,
+    "days_ge_5k": 3,
+    "trading_days": 13,
+    "pct_days_ge_2k": 69.2,
+    "worst_day": -1634.85,
+    "best_day": 8417.32,
+    "oos_avg_daily": 2928.26,
+    "oos_pnl": 11713.05,
+    "oos_wr": 75.0,
+    "oos_days_ge_2k": 3,
+    "oos_days": 4,
+    "avg_hold_bars": 0.0,
+    "params": {
+      "mode": "down_bounce",
+      "target": "pct1.0",
+      "entry": "09:30",
+      "bounce": true,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45.0,
+      "rsi_hi": 70.0,
+      "sl_atr": 0.6,
+      "risk_pct": 8.0,
+      "max_pos": 4,
+      "top_k": 4,
+      "max_deploy": 0.5
+    },
+    "months": [
+      {
+        "month": "2026-06",
+        "trades": 6,
+        "pnl": 9455.1,
+        "wr": 83.3
+      },
+      {
+        "month": "2026-07",
+        "trades": 15,
+        "pnl": 13007.57,
+        "wr": 60.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 3,
+        "pnl": 7787.63,
+        "wr": 100.0
+      }
+    ]
+  },
+  "result": {
+    "name": "down_bounce 930_bounce pct1.0 g2%-6% sl0.6",
+    "trades": 24,
+    "win_rate": 70.83,
+    "profit_factor": 4.56,
+    "net_pnl": 30250.29,
+    "total_return_pct": 30.25,
+    "max_dd_pct": 4.18,
+    "avg_daily_pnl": 2326.95,
+    "median_daily_pnl": 2462.93,
+    "days_ge_2k": 9,
+    "days_ge_5k": 3,
+    "trading_days": 13,
+    "pct_days_ge_2k": 69.2,
+    "worst_day": -1634.85,
+    "best_day": 8417.32,
+    "oos_avg_daily": 2928.26,
+    "oos_pnl": 11713.05,
+    "oos_wr": 75.0,
+    "oos_days_ge_2k": 3,
+    "oos_days": 4,
+    "avg_hold_bars": 0.0,
+    "params": {
+      "mode": "down_bounce",
+      "target": "pct1.0",
+      "entry": "09:30",
+      "bounce": true,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45.0,
+      "rsi_hi": 70.0,
+      "sl_atr": 0.6,
+      "risk_pct": 8.0,
+      "max_pos": 4,
+      "top_k": 4,
+      "max_deploy": 0.5
+    },
+    "months": [
+      {
+        "month": "2026-06",
+        "trades": 6,
+        "pnl": 9455.1,
+        "wr": 83.3
+      },
+      {
+        "month": "2026-07",
+        "trades": 15,
+        "pnl": 13007.57,
+        "wr": 60.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 3,
+        "pnl": 7787.63,
+        "wr": 100.0
+      }
+    ]
+  },
+  "winner": {
+    "name": "both_fill fill g3% sl0.6 r10 p5",
+    "trades": 148,
+    "win_rate": 22.97,
+    "profit_factor": 1.64,
+    "net_pnl": 100740.77,
+    "total_return_pct": 100.74,
+    "max_dd_pct": 20.01,
+    "avg_daily_pnl": 1798.94,
+    "median_daily_pnl": -2040.92,
+    "days_ge_2k": 19,
+    "days_ge_5k": 14,
+    "trading_days": 56,
+    "pct_days_ge_2k": 33.9,
+    "worst_day": -5579.24,
+    "best_day": 35026.01,
+    "oos_avg_daily": 1813.83,
+    "oos_pnl": 30835.19,
+    "oos_wr": 19.51,
+    "oos_days_ge_2k": 3,
+    "oos_days": 17,
+    "avg_hold_bars": 0.0,
+    "params": {
+      "mode": "both_fill",
+      "target": "fill",
+      "gap_min": 0.03,
+      "sl_atr": 0.6,
+      "risk_pct": 10.0,
+      "max_pos": 5,
+      "top_k": 3,
+      "max_deploy": 0.4
+    },
+    "months": [
+      {
+        "month": "2026-04",
+        "trades": 1,
+        "pnl": 8406.99,
+        "wr": 100.0
+      },
+      {
+        "month": "2026-06",
+        "trades": 54,
+        "pnl": 65411.13,
+        "wr": 31.5
+      },
+      {
+        "month": "2026-07",
+        "trades": 64,
+        "pnl": 2126.41,
+        "wr": 17.2
+      },
+      {
+        "month": "2026-08",
+        "trades": 29,
+        "pnl": 24796.27,
+        "wr": 17.2
+      }
+    ]
+  }
+}

@@ -1,0 +1,665 @@
+{% extends "trading/base.html" %}
+{% block title %}Strategy Builder{% endblock %}
+{% block content %}
+<div class="flex flex-wrap justify-between items-start gap-3 mb-4">
+  <div>
+    <h2 class="page-title">Strategy <span class="text-blue-600">Builder</span></h2>
+    <p class="page-sub">Build · modify · backtest · analyze — no code · Nifty universe · daily bars</p>
+  </div>
+  <div class="flex flex-wrap gap-2 text-sm">
+    <button type="button" id="btn-save" class="btn btn-secondary">Save</button>
+    <button type="button" id="btn-load" class="btn btn-secondary">Load</button>
+    <button type="button" id="btn-export" class="btn btn-secondary">Export JSON</button>
+    <label class="btn btn-secondary cursor-pointer">Import
+      <input type="file" id="import-file" accept="application/json" class="hidden">
+    </label>
+  </div>
+</div>
+
+<div class="mb-3 p-3 rounded-xl border border-amber-200 bg-amber-50 text-xs text-amber-900">
+  Uses <strong>current</strong> index constituents (possible survivorship bias).
+  Signals use <strong>next-bar open</strong> entry (no look-ahead). Stage 2.0 page is unchanged.
+</div>
+
+<div class="grid lg:grid-cols-12 gap-4">
+  {# LEFT: builder #}
+  <div class="lg:col-span-5 space-y-4">
+    <section class="card p-4">
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <label class="col-span-2">Strategy name
+          <input id="strat-name" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2" value="My Strategy">
+        </label>
+        <label>Universe
+          <select id="universe" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+            <option value="nifty200">Nifty 200</option>
+            <option value="nifty100">Nifty 100</option>
+            <option value="nifty50">Nifty 50 (approx)</option>
+            <option value="nifty_smallcap250">Nifty Smallcap 250</option>
+          </select>
+        </label>
+        <label>Timeframe
+          <select id="timeframe" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2" disabled>
+            <option value="daily">Daily</option>
+          </select>
+        </label>
+        <label class="flex items-center gap-2 mt-6"><input type="checkbox" id="long-on" checked> Long</label>
+        <label class="flex items-center gap-2 mt-6"><input type="checkbox" id="short-on"> Short</label>
+      </div>
+      <div class="mt-3">
+        <p class="text-xs font-semibold text-slate-500 mb-1">Presets</p>
+        <div id="preset-btns" class="flex flex-wrap gap-1.5"></div>
+      </div>
+    </section>
+
+    <section class="card p-4">
+      <div class="flex justify-between items-center mb-2">
+        <h3 class="font-bold text-slate-900">Long entry <span class="text-xs font-normal text-slate-400">ALL must be true (AND)</span></h3>
+        <button type="button" class="btn btn-primary text-xs" data-add="entry_long">+ Condition</button>
+      </div>
+      <div id="entry_long" class="space-y-2"></div>
+    </section>
+
+    <section class="card p-4">
+      <div class="flex justify-between items-center mb-2">
+        <h3 class="font-bold text-slate-900">Long exit <span class="text-xs font-normal text-slate-400">ANY (OR) + risk exits</span></h3>
+        <button type="button" class="btn btn-primary text-xs" data-add="exit_long">+ Condition</button>
+      </div>
+      <div id="exit_long" class="space-y-2"></div>
+    </section>
+
+    <section class="card p-4 hidden" id="short-panels">
+      <div class="flex justify-between items-center mb-2">
+        <h3 class="font-bold">Short entry</h3>
+        <button type="button" class="btn btn-primary text-xs" data-add="entry_short">+ Condition</button>
+      </div>
+      <div id="entry_short" class="space-y-2 mb-4"></div>
+      <div class="flex justify-between items-center mb-2">
+        <h3 class="font-bold">Short exit</h3>
+        <button type="button" class="btn btn-primary text-xs" data-add="exit_short">+ Condition</button>
+      </div>
+      <div id="exit_short" class="space-y-2"></div>
+    </section>
+
+    <section class="card p-4">
+      <h3 class="font-bold text-slate-900 mb-3">Position sizing &amp; risk</h3>
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <label>Capital ₹
+          <input type="number" id="capital" value="1000000" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Sizing
+          <select id="sizing" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+            <option value="risk_pct">Risk %</option>
+            <option value="fixed_capital">Fixed capital</option>
+            <option value="fixed_qty">Fixed qty</option>
+          </select>
+        </label>
+        <label>Risk % / trade
+          <input type="number" step="0.1" id="risk_pct" value="1" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Max positions
+          <input type="number" id="max_positions" value="10" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Stop type
+          <select id="stop_type" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+            <option value="pct">% from entry</option>
+            <option value="points">Points</option>
+            <option value="atr">ATR ×</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+        <label>Stop value
+          <input type="number" step="0.1" id="stop_value" value="2" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Target type
+          <select id="target_type" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+            <option value="rr">Risk:Reward</option>
+            <option value="pct">%</option>
+            <option value="points">Points</option>
+            <option value="atr">ATR ×</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+        <label>Target value
+          <input type="number" step="0.1" id="target_value" value="2" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Max hold (bars)
+          <input type="number" id="max_hold" value="20" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Cooldown from
+          <input type="date" id="start_date" value="{{ default_start }}" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Date to
+          <input type="date" id="end_date" value="{{ default_end }}" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Commission % / side
+          <input type="number" step="0.01" id="commission" value="0.03" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+        <label>Slippage %
+          <input type="number" step="0.01" id="slippage" value="0.05" class="block w-full mt-1 border border-slate-200 rounded-lg px-3 py-2">
+        </label>
+      </div>
+      <button type="button" id="btn-run" class="btn btn-primary w-full mt-4 text-base py-3">▶ RUN BACKTEST</button>
+      <button type="button" id="btn-optimize" class="btn btn-secondary w-full mt-2 text-sm">Optimize stop / risk (grid)</button>
+      <p id="run-status" class="text-xs text-slate-500 mt-2 text-center"></p>
+    </section>
+
+    <section class="card p-4">
+      <h3 class="font-bold mb-2">Strategy logic</h3>
+      <p id="explanation" class="text-sm text-slate-600 mb-3"></p>
+      <pre id="expression" class="text-[11px] bg-slate-900 text-emerald-300 p-3 rounded-xl overflow-x-auto max-h-64 overflow-y-auto whitespace-pre-wrap"></pre>
+      <button type="button" id="btn-copy-expr" class="text-xs font-semibold text-blue-600 mt-2">Copy expression</button>
+    </section>
+  </div>
+
+  {# RIGHT: results #}
+  <div class="lg:col-span-7 space-y-4">
+    <div id="results-empty" class="card p-10 text-center text-slate-500">
+      <p class="font-semibold text-slate-700">Results appear here after you run a backtest</p>
+      <p class="text-sm mt-2">Add conditions, set risk, click <strong>RUN BACKTEST</strong>.</p>
+    </div>
+
+    <div id="results-panel" class="hidden space-y-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm" id="kpi-grid"></div>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="card p-2"><div id="eq-chart" style="min-height:300px"></div></div>
+        <div class="card p-2"><div id="dd-chart" style="min-height:300px"></div></div>
+      </div>
+      <div class="card p-2"><div id="mo-chart" style="min-height:260px"></div></div>
+
+      <div class="card p-4" id="benchmark-box"></div>
+      <div class="card p-4">
+        <h3 class="font-bold mb-2">Stock performance</h3>
+        <div class="overflow-x-auto max-h-48 overflow-y-auto">
+          <table class="w-full text-xs" id="stock-table"></table>
+        </div>
+      </div>
+      <div class="card p-4">
+        <div class="flex justify-between mb-2">
+          <h3 class="font-bold">Trades</h3>
+          <span class="text-xs text-slate-500" id="trade-count"></span>
+        </div>
+        <div class="overflow-x-auto max-h-96 overflow-y-auto">
+          <table class="w-full text-xs" id="trade-table"></table>
+        </div>
+      </div>
+      <div class="card p-4 hidden" id="optimize-box">
+        <h3 class="font-bold mb-1">Parameter grid</h3>
+        <p class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded p-2 mb-2" id="opt-warn"></p>
+        <div class="overflow-x-auto"><table class="w-full text-xs" id="opt-table"></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Load modal #}
+<div id="load-modal" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-5 max-h-[80vh] overflow-y-auto">
+    <div class="flex justify-between mb-3">
+      <h3 class="font-bold">Saved strategies</h3>
+      <button type="button" id="load-close" class="text-slate-500">✕</button>
+    </div>
+    <div id="load-list" class="space-y-2 text-sm"></div>
+  </div>
+</div>
+
+<script>
+window.SB_CATALOG = {{ catalog_json|safe }};
+window.SB_DEFAULT = {{ default_strategy_json|safe }};
+window.SB_PRESETS = {{ presets_json|safe }};
+window.SB_URLS = {
+  backtest: "{% url 'strategy_builder:backtest_api' %}",
+  explain: "{% url 'strategy_builder:explain_api' %}",
+  strategies: "{% url 'strategy_builder:strategies_api' %}",
+  optimize: "{% url 'strategy_builder:optimize_api' %}",
+  csrf: "{{ csrf_token }}",
+};
+</script>
+<script>
+(function(){
+  const C = window.SB_CATALOG;
+  const OPS = C.operators;
+  const INDS = C.indicators;
+  let state = JSON.parse(JSON.stringify(window.SB_DEFAULT));
+
+  function csrfHeaders() {
+    return {
+      "Content-Type": "application/json",
+      "X-CSRFToken": window.SB_URLS.csrf,
+    };
+  }
+
+  function opSelect(selected) {
+    return OPS.map(o => `<option value="${o.id}" ${o.id===selected?'selected':''}>${o.label}</option>`).join('');
+  }
+  function indOptions(selected) {
+    let html = '';
+    const cats = {};
+    INDS.forEach(i => { (cats[i.category]=cats[i.category]||[]).push(i); });
+    Object.keys(cats).sort().forEach(cat => {
+      html += `<optgroup label="${cat}">`;
+      cats[cat].forEach(i => {
+        html += `<option value="${i.id}" ${i.id===selected?'selected':''}>${i.name}</option>`;
+      });
+      html += `</optgroup>`;
+    });
+    return html;
+  }
+
+  function defaultCondition() {
+    return {
+      type: 'condition',
+      left: { type: 'price', field: 'close', offset: 0 },
+      operator: 'gt',
+      right: { type: 'indicator', name: 'sma', params: { length: 44, source: 'close' }, offset: 0 },
+    };
+  }
+
+  function ensureGroup(key) {
+    if (!state[key] || state[key].type !== 'group') {
+      state[key] = { type: 'group', op: key.startsWith('exit') ? 'OR' : 'AND', children: [] };
+    }
+    return state[key];
+  }
+
+  function operandUI(op, side, groupKey, idx) {
+    const t = op.type || 'price';
+    const typeSel = `
+      <select data-side="${side}" data-g="${groupKey}" data-i="${idx}" data-f="type" class="op-type border border-slate-200 rounded px-1 py-1 text-xs">
+        <option value="price" ${t==='price'?'selected':''}>Price</option>
+        <option value="indicator" ${t==='indicator'?'selected':''}>Indicator</option>
+        <option value="constant" ${t==='constant'?'selected':''}>Number</option>
+        <option value="volume" ${t==='volume'?'selected':''}>Volume</option>
+        <option value="market" ${t==='market'?'selected':''}>Market</option>
+      </select>`;
+    let rest = '';
+    if (t === 'price') {
+      rest = `<select data-side="${side}" data-g="${groupKey}" data-i="${idx}" data-f="field" class="border border-slate-200 rounded px-1 py-1 text-xs">
+        ${['open','high','low','close','body','body_pct','is_bullish'].map(f=>`<option value="${f}" ${op.field===f?'selected':''}>${f}</option>`).join('')}
+      </select>`;
+    } else if (t === 'indicator') {
+      const params = op.params || {};
+      rest = `<select data-side="${side}" data-g="${groupKey}" data-i="${idx}" data-f="name" class="border border-slate-200 rounded px-1 py-1 text-xs max-w-[7rem]">${indOptions(op.name||'sma')}</select>
+        <input type="number" data-side="${side}" data-g="${groupKey}" data-i="${idx}" data-f="length" value="${params.length||params.fast||20}" class="w-14 border border-slate-200 rounded px-1 py-1 text-xs" title="Primary length / fast">`;
+    } else if (t === 'constant') {
+      rest = `<input type="number" step="any" data-side="${side}" data-g="${groupKey}" data-i="${idx}" data-f="value" value="${op.value??50}" class="w-20 border border-slate-200 rounded px-1 py-1 text-xs">`;
+    } else if (t === 'market') {
+      rest = `<select data-side="${side}" data-g="${groupKey}" data-i="${idx}" data-f="field" class="border border-slate-200 rounded px-1 py-1 text-xs">
+        <option value="nifty_close" ${op.field==='nifty_close'?'selected':''}>Nifty Close</option>
+        <option value="nifty_sma" ${op.field==='nifty_sma'?'selected':''}>Nifty SMA</option>
+      </select>
+      <input type="number" data-side="${side}" data-g="${groupKey}" data-i="${idx}" data-f="length" value="${(op.params&&op.params.length)||44}" class="w-14 border border-slate-200 rounded px-1 py-1 text-xs">`;
+    } else if (t === 'volume') {
+      rest = `<span class="text-xs text-slate-500">VOLUME</span>`;
+    }
+    rest += ` <span class="text-[10px] text-slate-400">off</span><input type="number" min="0" max="20" data-side="${side}" data-g="${groupKey}" data-i="${idx}" data-f="offset" value="${op.offset||0}" class="w-10 border border-slate-200 rounded px-1 py-1 text-xs">`;
+    return typeSel + rest;
+  }
+
+  function renderGroup(key) {
+    const g = ensureGroup(key);
+    const el = document.getElementById(key);
+    if (!el) return;
+    const unary = new Set(['rising','falling','increasing','decreasing']);
+    if (!g.children.length) {
+      el.innerHTML = '<p class="text-xs text-slate-400">No conditions — click + Condition</p>';
+      return;
+    }
+    el.innerHTML = g.children.map((c, idx) => {
+      if (c.type !== 'condition') return '';
+      const showRight = !unary.has(c.operator);
+      return `<div class="flex flex-wrap items-center gap-1 p-2 rounded-lg bg-slate-50 border border-slate-100">
+        ${operandUI(c.left||{}, 'left', key, idx)}
+        <select data-g="${key}" data-i="${idx}" data-f="operator" class="border border-slate-200 rounded px-1 py-1 text-xs font-semibold">${opSelect(c.operator)}</select>
+        <span class="right-wrap ${showRight?'':'hidden'}">${showRight ? operandUI(c.right||{type:'constant',value:0}, 'right', key, idx) : ''}</span>
+        <button type="button" data-del="${key}" data-i="${idx}" class="ml-auto text-red-500 text-xs font-bold">✕</button>
+      </div>`;
+    }).join('');
+  }
+
+  function renderAll() {
+    ['entry_long','exit_long','entry_short','exit_short'].forEach(renderGroup);
+    document.getElementById('strat-name').value = state.name || '';
+    document.getElementById('universe').value = state.universe || 'nifty200';
+    document.getElementById('long-on').checked = !!state.long_enabled;
+    document.getElementById('short-on').checked = !!state.short_enabled;
+    document.getElementById('short-panels').classList.toggle('hidden', !state.short_enabled);
+    const r = state.risk || {};
+    document.getElementById('capital').value = r.capital ?? 1000000;
+    document.getElementById('sizing').value = r.sizing || 'risk_pct';
+    document.getElementById('risk_pct').value = r.risk_pct ?? 1;
+    document.getElementById('max_positions').value = r.max_positions ?? 10;
+    document.getElementById('stop_type').value = r.stop_type || 'pct';
+    document.getElementById('stop_value').value = r.stop_value ?? 2;
+    document.getElementById('target_type').value = r.target_type || 'rr';
+    document.getElementById('target_value').value = r.target_value ?? 2;
+    document.getElementById('max_hold').value = r.max_hold_bars ?? 20;
+    document.getElementById('commission').value = r.commission_pct ?? 0.03;
+    document.getElementById('slippage').value = r.slippage_pct ?? 0.05;
+    refreshExplain();
+  }
+
+  function readOperand(side, g, i) {
+    const root = document.getElementById(g);
+    const row = root.children[i];
+    if (!row) return { type: 'constant', value: 0 };
+    const typeEl = row.querySelector(`[data-side="${side}"][data-f="type"]`);
+    const t = typeEl ? typeEl.value : 'price';
+    const get = (f) => {
+      const el = row.querySelector(`[data-side="${side}"][data-f="${f}"]`);
+      return el ? el.value : null;
+    };
+    if (t === 'price') return { type:'price', field: get('field')||'close', offset: parseInt(get('offset')||0,10) };
+    if (t === 'volume') return { type:'volume', offset: parseInt(get('offset')||0,10) };
+    if (t === 'constant') return { type:'constant', value: parseFloat(get('value')||0) };
+    if (t === 'market') {
+      const field = get('field')||'nifty_close';
+      return { type:'market', field, params: { length: parseInt(get('length')||44,10) }, offset: parseInt(get('offset')||0,10) };
+    }
+    // indicator
+    const name = get('name')||'sma';
+    const length = parseInt(get('length')||20,10);
+    const meta = INDS.find(x => x.id === name) || {};
+    const params = {};
+    (meta.params||[]).forEach(p => {
+      if (p.key === 'source') params.source = 'close';
+      else if (p.key === 'length') params.length = length;
+      else if (p.key === 'fast') params.fast = length;
+      else if (p.key === 'slow') params.slow = Math.max(length+10, 26);
+      else if (p.key === 'signal') params.signal = 9;
+      else if (p.key === 'k') params.k = length;
+      else if (p.key === 'd') params.d = 3;
+      else if (p.key === 'smooth') params.smooth = 3;
+      else if (p.key === 'mult') params.mult = 2;
+      else params[p.key] = p.default;
+    });
+    if (!meta.params || !meta.params.length) {
+      // still ok
+    }
+    return { type:'indicator', name, params, offset: parseInt(get('offset')||0,10) };
+  }
+
+  function syncFromDOM() {
+    state.name = document.getElementById('strat-name').value || 'My Strategy';
+    state.universe = document.getElementById('universe').value;
+    state.long_enabled = document.getElementById('long-on').checked;
+    state.short_enabled = document.getElementById('short-on').checked;
+    state.risk = state.risk || {};
+    state.risk.capital = parseFloat(document.getElementById('capital').value)||1000000;
+    state.risk.sizing = document.getElementById('sizing').value;
+    state.risk.risk_pct = parseFloat(document.getElementById('risk_pct').value)||1;
+    state.risk.max_positions = parseInt(document.getElementById('max_positions').value,10)||10;
+    state.risk.stop_type = document.getElementById('stop_type').value;
+    state.risk.stop_value = parseFloat(document.getElementById('stop_value').value)||0;
+    state.risk.target_type = document.getElementById('target_type').value;
+    state.risk.target_value = parseFloat(document.getElementById('target_value').value)||0;
+    state.risk.max_hold_bars = parseInt(document.getElementById('max_hold').value,10)||20;
+    state.risk.commission_pct = parseFloat(document.getElementById('commission').value)||0;
+    state.risk.slippage_pct = parseFloat(document.getElementById('slippage').value)||0;
+
+    ['entry_long','exit_long','entry_short','exit_short'].forEach(key => {
+      const g = ensureGroup(key);
+      g.children.forEach((c, i) => {
+        if (c.type !== 'condition') return;
+        const row = document.getElementById(key).children[i];
+        if (!row) return;
+        const opEl = row.querySelector('[data-f="operator"]');
+        c.operator = opEl ? opEl.value : 'gt';
+        c.left = readOperand('left', key, i);
+        if (!['rising','falling','increasing','decreasing'].includes(c.operator)) {
+          c.right = readOperand('right', key, i);
+        }
+      });
+    });
+  }
+
+  async function refreshExplain() {
+    syncFromDOM();
+    try {
+      const r = await fetch(window.SB_URLS.explain, {
+        method: 'POST', headers: csrfHeaders(),
+        body: JSON.stringify({ definition: state }),
+      });
+      const data = await r.json();
+      if (data.error) return;
+      state = data.definition;
+      document.getElementById('explanation').textContent = data.explanation;
+      document.getElementById('expression').textContent = data.expression;
+    } catch(e) {}
+  }
+
+  // presets
+  const pb = document.getElementById('preset-btns');
+  window.SB_PRESETS.forEach(p => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'px-2 py-1 rounded-lg border border-slate-200 text-xs hover:bg-blue-50 hover:border-blue-300';
+    b.textContent = p.name;
+    b.title = p.description || '';
+    b.onclick = () => { state = JSON.parse(JSON.stringify(p.definition)); renderAll(); };
+    pb.appendChild(b);
+  });
+
+  document.querySelectorAll('[data-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      syncFromDOM();
+      const key = btn.getAttribute('data-add');
+      ensureGroup(key).children.push(defaultCondition());
+      renderAll();
+    });
+  });
+
+  document.body.addEventListener('click', e => {
+    const del = e.target.closest('[data-del]');
+    if (del) {
+      syncFromDOM();
+      const key = del.getAttribute('data-del');
+      const i = parseInt(del.getAttribute('data-i'),10);
+      ensureGroup(key).children.splice(i,1);
+      renderAll();
+    }
+  });
+
+  document.body.addEventListener('change', e => {
+    if (e.target.matches('[data-f], #long-on, #short-on, #universe, #strat-name, #capital, #sizing, #risk_pct, #stop_type, #stop_value, #target_type, #target_value, #max_hold, #max_positions, #commission, #slippage')) {
+      if (e.target.id === 'short-on') {
+        document.getElementById('short-panels').classList.toggle('hidden', !e.target.checked);
+      }
+      // re-render if operator/type changed for right side visibility
+      if (e.target.dataset && (e.target.dataset.f === 'operator' || e.target.dataset.f === 'type' || e.target.dataset.f === 'name')) {
+        syncFromDOM();
+        renderAll();
+      } else {
+        refreshExplain();
+      }
+    }
+  });
+
+  function fmt(n) {
+    return Number(n).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+  }
+
+  function showResults(data) {
+    const r = data.result;
+    document.getElementById('results-empty').classList.add('hidden');
+    document.getElementById('results-panel').classList.remove('hidden');
+    const kpis = [
+      ['Return', r.total_return_pct + '%', r.total_return_pct>=0],
+      ['CAGR', r.cagr_pct + '%', r.cagr_pct>=0],
+      ['Max DD', r.max_drawdown_pct + '%', false],
+      ['Trades', r.total_trades, true],
+      ['Win rate', r.win_rate + '%', r.win_rate>=50],
+      ['PF', r.profit_factor, r.profit_factor>=1],
+      ['Sharpe', r.sharpe, r.sharpe>=0],
+      ['Expectancy', '₹'+fmt(r.expectancy), r.expectancy>=0],
+      ['Final', '₹'+fmt(r.final_capital), true],
+      ['Signals', r.total_signals, true],
+      ['Avg hold', r.avg_hold_days + 'd', true],
+      ['Calmar', r.calmar, true],
+    ];
+    document.getElementById('kpi-grid').innerHTML = kpis.map(([l,v,good]) =>
+      `<div class="card p-3 text-center"><p class="text-[10px] uppercase text-slate-500">${l}</p>
+       <p class="font-bold ${good?'text-slate-900':'text-red-600'}">${v}</p></div>`
+    ).join('');
+
+    if (data.charts && data.charts.equity) {
+      Plotly.newPlot('eq-chart', data.charts.equity.data, data.charts.equity.layout, {responsive:true, displayModeBar:false});
+    }
+    if (data.charts && data.charts.drawdown) {
+      Plotly.newPlot('dd-chart', data.charts.drawdown.data, data.charts.drawdown.layout, {responsive:true, displayModeBar:false});
+    }
+    if (data.charts && data.charts.monthly) {
+      Plotly.newPlot('mo-chart', data.charts.monthly.data, data.charts.monthly.layout, {responsive:true, displayModeBar:false});
+    }
+
+    const b = r.benchmark || {};
+    document.getElementById('benchmark-box').innerHTML = b.name
+      ? `<h3 class="font-bold mb-2">Benchmark: ${b.name}</h3>
+         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+           <div>Strategy return <strong>${r.total_return_pct}%</strong></div>
+           <div>Nifty return <strong>${b.return_pct}%</strong></div>
+           <div>Strategy DD <strong class="text-red-600">${r.max_drawdown_pct}%</strong></div>
+           <div>Nifty DD <strong class="text-red-600">${b.max_drawdown_pct}%</strong></div>
+         </div>
+         <p class="text-[11px] text-slate-500 mt-2">${(r.warnings||[]).join(' · ')}</p>`
+      : `<p class="text-sm text-slate-500">${(r.warnings||[]).join(' · ')}</p>`;
+
+    const st = r.stock_stats || [];
+    document.getElementById('stock-table').innerHTML =
+      '<thead><tr class="text-slate-500 border-b"><th class="p-1 text-left">Symbol</th><th>Trades</th><th>WR</th><th>Net</th><th>PF</th></tr></thead><tbody>' +
+      st.map(s => `<tr class="border-b border-slate-50"><td class="p-1 font-medium">${s.symbol}</td><td class="text-center">${s.trades}</td>
+        <td class="text-center">${s.win_rate}%</td>
+        <td class="text-center ${s.net_pnl>=0?'text-emerald-700':'text-red-600'}">₹${fmt(s.net_pnl)}</td>
+        <td class="text-center">${s.profit_factor}</td></tr>`).join('') + '</tbody>';
+
+    const trades = r.trades || [];
+    document.getElementById('trade-count').textContent = trades.length + ' trades';
+    document.getElementById('trade-table').innerHTML =
+      '<thead class="sticky top-0 bg-white"><tr class="text-slate-500 border-b"><th class="p-1 text-left">Symbol</th><th>Dir</th><th>Entry</th><th>Exit</th><th>P/L</th><th>%</th><th>Days</th><th>Reason</th></tr></thead><tbody>' +
+      trades.map(t => `<tr class="border-b border-slate-50">
+        <td class="p-1 font-medium">${t.symbol}</td><td class="text-center">${t.direction}</td>
+        <td class="text-center text-[10px]">${t.entry_date}<br>@${t.entry_price}</td>
+        <td class="text-center text-[10px]">${t.exit_date}<br>@${t.exit_price}</td>
+        <td class="text-center font-semibold ${t.pnl>=0?'text-emerald-700':'text-red-600'}">${fmt(t.pnl)}</td>
+        <td class="text-center">${t.pnl_pct}</td><td class="text-center">${t.days_held}</td>
+        <td class="text-center text-slate-500">${t.exit_reason}</td></tr>`).join('') + '</tbody>';
+
+    if (data.expression) document.getElementById('expression').textContent = data.expression;
+    if (data.explanation) document.getElementById('explanation').textContent = data.explanation;
+  }
+
+  document.getElementById('btn-run').addEventListener('click', async () => {
+    syncFromDOM();
+    const st = document.getElementById('run-status');
+    st.textContent = 'Loading market data & processing universe… this can take 30–90s';
+    document.getElementById('btn-run').disabled = true;
+    try {
+      const r = await fetch(window.SB_URLS.backtest, {
+        method: 'POST', headers: csrfHeaders(),
+        body: JSON.stringify({
+          definition: state,
+          start_date: document.getElementById('start_date').value,
+          end_date: document.getElementById('end_date').value,
+        }),
+      });
+      const data = await r.json();
+      if (data.error) throw new Error(data.error);
+      showResults(data);
+      st.textContent = `Done · ${data.result.total_trades} trades · ${data.result.total_return_pct}% return`;
+    } catch (err) {
+      st.textContent = 'Error: ' + err.message;
+    } finally {
+      document.getElementById('btn-run').disabled = false;
+    }
+  });
+
+  document.getElementById('btn-optimize').addEventListener('click', async () => {
+    syncFromDOM();
+    const st = document.getElementById('run-status');
+    st.textContent = 'Running parameter grid…';
+    try {
+      const r = await fetch(window.SB_URLS.optimize, {
+        method: 'POST', headers: csrfHeaders(),
+        body: JSON.stringify({
+          definition: state,
+          start_date: document.getElementById('start_date').value,
+          end_date: document.getElementById('end_date').value,
+        }),
+      });
+      const data = await r.json();
+      if (data.error) throw new Error(data.error);
+      document.getElementById('results-panel').classList.remove('hidden');
+      document.getElementById('results-empty').classList.add('hidden');
+      document.getElementById('optimize-box').classList.remove('hidden');
+      document.getElementById('opt-warn').textContent = data.warning + ' · ' + data.label;
+      document.getElementById('opt-table').innerHTML =
+        '<thead><tr class="border-b"><th class="p-1">Stop%</th><th>Risk%</th><th>Trades</th><th>Return</th><th>DD</th><th>WR</th><th>PF</th><th>Sharpe</th></tr></thead><tbody>' +
+        (data.rows||[]).map((row,i) => row.error ? `<tr><td colspan="8" class="p-1 text-red-600">${row.error}</td></tr>` :
+          `<tr class="border-b ${i===0?'bg-emerald-50':''}"><td class="p-1 text-center">${row.stop_pct}</td><td class="text-center">${row.risk_pct}</td>
+           <td class="text-center">${row.trades}</td><td class="text-center font-semibold">${row.return_pct}%</td>
+           <td class="text-center text-red-600">${row.max_dd}%</td><td class="text-center">${row.win_rate}%</td>
+           <td class="text-center">${row.profit_factor}</td><td class="text-center">${row.sharpe}</td></tr>`
+        ).join('') + '</tbody>';
+      st.textContent = 'Optimization grid complete';
+    } catch (err) {
+      st.textContent = 'Optimize error: ' + err.message;
+    }
+  });
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    syncFromDOM();
+    const r = await fetch(window.SB_URLS.strategies, {
+      method: 'POST', headers: csrfHeaders(),
+      body: JSON.stringify({ name: state.name, definition: state, version_label: 'manual save' }),
+    });
+    const data = await r.json();
+    if (data.error) alert(data.error);
+    else alert('Saved "' + data.name + '" as version ' + data.version);
+  });
+
+  document.getElementById('btn-load').addEventListener('click', async () => {
+    const r = await fetch(window.SB_URLS.strategies);
+    const data = await r.json();
+    const list = document.getElementById('load-list');
+    list.innerHTML = (data.strategies||[]).map(s =>
+      `<button type="button" class="w-full text-left p-2 rounded-lg border hover:bg-blue-50" data-load-id="${s.id}">
+        <strong>${s.name}</strong><span class="text-xs text-slate-400 block">${s.updated_at}</span></button>`
+    ).join('') || '<p class="text-slate-500">No saved strategies yet.</p>';
+    document.getElementById('load-modal').classList.remove('hidden');
+    list.querySelectorAll('[data-load-id]').forEach(btn => {
+      btn.onclick = () => {
+        const s = data.strategies.find(x => String(x.id) === btn.getAttribute('data-load-id'));
+        if (s) { state = JSON.parse(JSON.stringify(s.definition)); renderAll(); }
+        document.getElementById('load-modal').classList.add('hidden');
+      };
+    });
+  });
+  document.getElementById('load-close').onclick = () => document.getElementById('load-modal').classList.add('hidden');
+
+  document.getElementById('btn-export').onclick = () => {
+    syncFromDOM();
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (state.name || 'strategy').replace(/\s+/g,'_') + '.json';
+    a.click();
+  };
+  document.getElementById('import-file').onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        state = JSON.parse(reader.result);
+        renderAll();
+      } catch(err) { alert('Invalid JSON'); }
+    };
+    reader.readAsText(f);
+  };
+  document.getElementById('btn-copy-expr').onclick = () => {
+    navigator.clipboard.writeText(document.getElementById('expression').textContent || '');
+  };
+
+  renderAll();
+})();
+</script>
+{% endblock %}

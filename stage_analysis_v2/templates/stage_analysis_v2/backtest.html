@@ -3,46 +3,487 @@
 {% block content %}
 <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
   <div>
-    <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-sm text-slate-400 hover:text-emerald-400">← Stage Analysis 2.0</a>
+    <div class="flex flex-wrap gap-3 items-center text-sm">
+      <a href="{% url 'stage_analysis_v2:dashboard' %}" class="text-slate-400 hover:text-emerald-400">← Stage Analysis 2.0</a>
+      <a href="{% url 'stage_analysis_v2:signals' %}" class="text-slate-400 hover:text-emerald-400">Signals</a>
+    </div>
     <h2 class="text-2xl font-bold mt-2">Stage Analysis <span class="text-emerald-400">2.0</span> Backtest</h2>
-    <p class="text-slate-400 text-sm mt-1">Buy on weekly Stage 2 entry · Exit on stop, 2.5R target, stage deterioration, or 65-day max hold</p>
+    <p class="text-slate-400 text-sm mt-1">Pick a strategy, then run. Results use the same shared-capital engine and charts.</p>
   </div>
 </div>
 
-<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 text-sm">
+<form method="get" class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6 text-sm" id="backtest-form">
   <input type="hidden" name="run" value="1">
+
+  <div class="mb-4 p-3 rounded-lg border-2 border-emerald-700/60 bg-emerald-950/20">
+    <label class="block">
+      <span class="text-emerald-300 font-semibold uppercase tracking-wide text-xs">Strategy</span>
+      <select name="strategy" id="strategy-select"
+              class="block w-full mt-1 bg-slate-800 border border-emerald-600 rounded px-3 py-2 text-base font-medium">
+        {% for val, label in form.fields.strategy.choices %}
+        <option value="{{ val }}" {% if form.strategy.value == val or not form.strategy.value and val == 'stage_v2' %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <p id="strategy-blurb" class="mt-2 text-[12px] text-slate-400 leading-relaxed"></p>
+    <p class="st-only hidden mt-1 text-[11px] text-amber-300/80">Supertrend scan of Nifty 200 takes ~15–30 seconds.</p>
+    <p class="cup-only hidden mt-1 text-[11px] text-amber-300/80">Cup scan of Nifty 200 takes ~20–40 seconds (daily geometry + volume filters).</p>
+  </div>
+
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
     <label class="block">Universe
       <select name="universe" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
         {% for val, label in form.fields.universe.choices %}
-        <option value="{{ val }}" {% if form.universe.value == val %}selected{% endif %}>{{ label }}</option>
+        <option value="{{ val }}" {% if form.universe.value == val or not form.universe.value and val == 'nifty200' %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
     </label>
-    <label class="block">Symbol
+    <label class="block">Symbol <span class="text-slate-500 text-xs">(only if Single stock)</span>
       {{ form.symbol }}
       {% if form.symbol.errors %}<span class="text-red-400 text-xs">{{ form.symbol.errors.0 }}</span>{% endif %}
     </label>
     <label class="block">Start date
-      <input type="date" name="start_date" value="{{ form.start_date.value|date:'Y-m-d' }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+      <input type="date" name="start_date" value="{{ start_date_str }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2" required>
     </label>
     <label class="block">End date
-      <input type="date" name="end_date" value="{{ form.end_date.value|date:'Y-m-d' }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
+      <input type="date" name="end_date" value="{{ end_date_str }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2" required>
     </label>
     <label class="block">Capital ₹
       <input type="number" name="capital" value="{{ form.capital.value|default:1000000 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2">
     </label>
-    <label class="block">Min quality (0–100)
-      <input type="number" name="min_quality_score" value="{{ form.min_quality_score.value|default:0 }}" min="0" max="100" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 w-24">
+    <label class="block stage-only">
+      <span class="text-amber-300 font-medium">Entry stage</span>
+      <select name="entry_stage" class="block w-full mt-1 bg-slate-800 border border-amber-700 rounded px-3 py-2">
+        {% for val, label in form.fields.entry_stage.choices %}
+        <option value="{{ val }}" {% if form.entry_stage.value|stringformat:"s" == val|stringformat:"s" or not form.entry_stage.value and val == 2 %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
     </label>
-    <label class="flex items-center gap-2 mt-6">
+    <label class="block stage-only">
+      <span class="text-amber-300 font-medium">Entry timing</span>
+      <select name="entry_on" class="block w-full mt-1 bg-slate-800 border border-amber-700 rounded px-3 py-2">
+        {% for val, label in form.fields.entry_on.choices %}
+        <option value="{{ val }}" {% if form.entry_on.value == val or not form.entry_on.value and val == 'transition' %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="block stage-only">
+      <span class="text-violet-300 font-medium">Tech filter</span>
+      <select name="tech_filter" id="tech_filter" class="block w-full mt-1 bg-slate-800 border border-violet-700 rounded px-3 py-2">
+        {% for val, label in form.fields.tech_filter.choices %}
+        <option value="{{ val }}" {% if form.tech_filter.value == val or not form.tech_filter.value and val == 'daily_mtf' %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="flex items-center gap-2 mt-6 stage-only">
       <input type="checkbox" name="market_filter" {% if form.market_filter.value %}checked{% endif %} class="rounded bg-slate-800 border-slate-600">
       <span>Nifty Stage 1/2 only</span>
     </label>
-    <div class="flex items-end">
-      <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2 font-medium w-full md:w-auto">Run Backtest</button>
+    <label class="block stage-only">
+      <span class="text-sky-300 font-medium">Capital model</span>
+      <select name="shared_capital" class="block w-full mt-1 bg-slate-800 border border-sky-700 rounded px-3 py-2">
+        <option value="1" {% if not form.is_bound or form.shared_capital.value != '0' and form.shared_capital.value != False %}selected{% endif %}>Shared capital (skip if no cash)</option>
+        <option value="0" {% if form.is_bound and form.shared_capital.value == '0' or form.shared_capital.value == False %}selected{% endif %}>Take every signal</option>
+      </select>
+    </label>
+    <div class="flex flex-wrap items-end gap-2">
+      <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-6 py-2 font-medium">Run Backtest</button>
+      <button type="button" id="reset-defaults-btn"
+              class="bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded px-4 py-2 font-medium text-slate-200"
+              title="Restore Stage Analysis 2.0 Signals / strategy defaults">
+        Reset to default
+      </button>
+      <button type="button" id="aggressive-300-btn"
+              class="bg-fuchsia-900/50 hover:bg-fuchsia-800/60 border border-fuchsia-600 rounded px-4 py-2 font-medium text-fuchsia-200"
+              title="Load researched pack: ~300%+ on 2023–early 2026 (higher risk)">
+        Load 300% pack
+      </button>
+      <button type="button" id="cup-100-btn"
+              class="bg-amber-900/50 hover:bg-amber-800/60 border border-amber-600 rounded px-4 py-2 font-medium text-amber-200"
+              title="Cup Breakout researched pack: +172% in calendar 2023 (10% risk, EMA20 trail)">
+        Load cup 100% pack
+      </button>
+      <button type="button" id="rs70-pack-btn"
+              class="bg-sky-900/50 hover:bg-sky-800/60 border border-sky-600 rounded px-4 py-2 font-medium text-sky-200"
+              title="Stage 2.0 last-1y pack: RS ≥ 70 and price above SMA150. Nifty 200: WR 49%→59%, return 12%→20%, smaller drawdown.">
+        Load RS 70 pack
+      </button>
     </div>
   </div>
+
+  {# Exit / risk: target RR, hold, stop, stage exit mode #}
+  <div class="mb-4 p-3 rounded-lg border border-sky-900/50 bg-sky-950/20">
+    <p class="text-sky-300 text-xs font-semibold uppercase tracking-wide mb-2">Exit &amp; risk</p>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      <label class="block text-xs stage-or-cup">
+        <span class="text-emerald-300 font-medium">Target R:R</span>
+        <input type="number" name="target_rr" step="0.1" min="0" max="10"
+               value="{{ form.target_rr.value|default:2.5 }}"
+               class="block w-full mt-1 bg-slate-800 border border-emerald-700 rounded px-3 py-2 text-sm">
+        <span class="text-[10px] text-slate-500 stage-only">Default 2.5 · try 1.5 / 2 / 3</span>
+        <span class="text-[10px] text-slate-500 cup-only hidden">Cup default 2 · also 3R</span>
+      </label>
+      <label class="block text-xs stage-only">
+        <span class="text-sky-300 font-medium">Exit mode (stage)</span>
+        <select name="exit_mode" class="block w-full mt-1 bg-slate-800 border border-sky-700 rounded px-3 py-2 text-sm">
+          {% for val, label in form.fields.exit_mode.choices %}
+          <option value="{{ val }}" {% if form.exit_mode.value == val or not form.exit_mode.value and val == 'stage_4_only' %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="block text-xs">
+        <span class="text-sky-300 font-medium">Max hold (days)</span>
+        <input type="number" name="max_hold_days" min="1" max="500"
+               value="{{ form.max_hold_days.value|default:65 }}"
+               class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs stage-only">
+        <span class="text-red-300 font-medium">Stop = 30w MA ×</span>
+        <input type="number" name="stop_ma_mult" step="0.01" min="0.5" max="0.999"
+               value="{{ form.stop_ma_mult.value|default:0.95 }}"
+               class="block w-full mt-1 bg-slate-800 border border-red-900/50 rounded px-3 py-2 text-sm">
+        <span class="text-[10px] text-slate-500">0.95 = 5% below MA</span>
+      </label>
+      <label class="block text-xs stage-only">
+        <span class="text-amber-300 font-medium">Trail = 30w MA ×</span>
+        <input type="number" name="trail_ma_mult" step="0.01" min="0.5" max="0.999"
+               value="{{ form.trail_ma_mult.value|default:0.98 }}"
+               class="block w-full mt-1 bg-slate-800 border border-amber-900/40 rounded px-3 py-2 text-sm">
+        <span class="text-[10px] text-slate-500">Only if Trail MA + S4</span>
+      </label>
+      <label class="block text-xs">
+        <span class="text-fuchsia-300 font-medium">Risk % / trade</span>
+        <input type="number" name="risk_pct" step="0.1" min="0.1" max="50"
+               value="{{ form.risk_pct.value|default:2 }}"
+               class="block w-full mt-1 bg-slate-800 border border-fuchsia-800/50 rounded px-3 py-2 text-sm">
+        <span class="text-[10px] text-slate-500 stage-only">Default 2 · aggressive ~5</span>
+        <span class="text-[10px] text-slate-500 st-only hidden">ST researched: 3% (Quality) / 4% (Trend+RSI)</span>
+      </label>
+      <label class="block text-xs">
+        <span class="text-fuchsia-300 font-medium">Symbol cooldown (days)</span>
+        <input type="number" name="cooldown_days" min="0" max="365"
+               value="{{ form.cooldown_days.value|default:40 }}"
+               class="block w-full mt-1 bg-slate-800 border border-fuchsia-800/50 rounded px-3 py-2 text-sm">
+        <span class="text-[10px] text-slate-500 stage-only">Default 40 · aggressive 0–5</span>
+        <span class="text-[10px] text-slate-500 st-only hidden">ST researched: 10 days</span>
+      </label>
+      <label class="block text-xs swing-pos-cap hidden">
+        <span class="text-emerald-300 font-medium">Max position % of equity</span>
+        <input type="number" name="max_pos_pct" step="5" min="5" max="100"
+               value="{{ form.max_pos_pct.value|default:50 }}"
+               class="block w-full mt-1 bg-slate-800 border border-emerald-800/50 rounded px-3 py-2 text-sm">
+        <span class="text-[10px] text-slate-500">Cap per name · default 50</span>
+      </label>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-2 stage-only" id="rr-presets">
+      <span class="text-[10px] text-slate-500 self-center">Quick target:</span>
+      <button type="button" data-rr="1" class="rr-preset px-2 py-1 rounded border border-slate-700 text-xs bg-slate-800 hover:border-emerald-600">1R</button>
+      <button type="button" data-rr="1.5" class="rr-preset px-2 py-1 rounded border border-slate-700 text-xs bg-slate-800 hover:border-emerald-600">1.5R</button>
+      <button type="button" data-rr="2" class="rr-preset px-2 py-1 rounded border border-slate-700 text-xs bg-slate-800 hover:border-emerald-600">2R</button>
+      <button type="button" data-rr="2.5" class="rr-preset px-2 py-1 rounded border border-emerald-600 text-xs bg-emerald-900/40 text-emerald-300">2.5R</button>
+      <button type="button" data-rr="3" class="rr-preset px-2 py-1 rounded border border-slate-700 text-xs bg-slate-800 hover:border-emerald-600">3R</button>
+      <button type="button" data-rr="4" class="rr-preset px-2 py-1 rounded border border-slate-700 text-xs bg-slate-800 hover:border-emerald-600">4R</button>
+    </div>
+  </div>
+
+  {# Supertrend rules (shown when ST strategy selected) #}
+  <div class="mb-4 p-3 rounded-lg border border-emerald-900/50 bg-emerald-950/20 st-only hidden text-[12px] text-slate-300 leading-relaxed">
+    <p class="text-emerald-300 text-xs font-semibold uppercase tracking-wide mb-1">Supertrend pullback rules</p>
+    <ul class="list-disc list-inside space-y-0.5 text-slate-400">
+      <li>Daily <strong class="text-slate-200">Supertrend(14, 3)</strong> already bullish</li>
+      <li><strong class="text-slate-200">First tag only</strong> in each bull run (skip repeat wicks)</li>
+      <li>Today’s low tags ST and close stays above it · buy <strong class="text-slate-200">next open</strong></li>
+      <li>Stop = pullback low − 0.25 ATR (not the ST line — avoids noise stop-outs)</li>
+      <li>Trail = Supertrend − 0.5 ATR · exit on ST flip or max hold</li>
+      <li>Skip if stop tighter than 1.8% or wider than 12%</li>
+      <li>Size = risk % of equity, capped at max position %</li>
+    </ul>
+  </div>
+
+  <div class="mb-4 p-3 rounded-lg border border-emerald-900/50 bg-emerald-950/20 st-union-only hidden text-[12px] text-slate-300 leading-relaxed">
+    <p class="text-emerald-300 text-xs font-semibold uppercase tracking-wide mb-1">Dual Supertrend + Minervini (5-year pack)</p>
+    <ul class="list-disc list-inside space-y-0.5 text-slate-400">
+      <li>First pullback on <strong class="text-slate-200">ST(14,3) or ST(21,3)</strong> · buy next open</li>
+      <li>Minervini template: close &gt; SMA50 &gt; SMA150 &gt; SMA200, 200-SMA rising, ≥25% off 52w low, within 25% of 52w high</li>
+      <li>Only when <strong class="text-slate-200">Nifty is above EMA50</strong></li>
+      <li>Stop = pullback low − 0.25 ATR · skip if stop &lt; 1.8% or &gt; 12%</li>
+      <li>Exit when <strong class="text-slate-200">Supertrend(21, 4)</strong> flips bear (or max hold)</li>
+      <li>Risk 2% of equity per trade · max 4 names · 80% cap · no leverage</li>
+    </ul>
+  </div>
+
+  <div class="mb-4 p-3 rounded-lg border border-amber-900/50 bg-amber-950/20 cup-only hidden text-[12px] text-slate-300 leading-relaxed">
+    <p class="text-amber-300 text-xs font-semibold uppercase tracking-wide mb-1">Cup breakout rules</p>
+    <ul class="list-disc list-inside space-y-0.5 text-slate-400">
+      <li>Rounded cup: left-rim high → <strong class="text-slate-200">12–45%</strong> correction → time near the low → recover to <strong class="text-slate-200">≥90%</strong> of the rim</li>
+      <li>Cup lasts <strong class="text-slate-200">20–180</strong> trading days · V-shaped recoveries are rejected</li>
+      <li>Handle preferred (5–30 days, depth ≤15%) · stop = handle/pullback low − 0.5 ATR</li>
+      <li>Buy when daily close breaks the rim by ≥0.5% on ≥1.1× 20-day volume · fill next open</li>
+      <li>Breakout: close &gt; EMA20, close &gt; SMA50, SMA50 &gt; SMA200, RSI 40–85, gap ≤5%</li>
+      <li>Researched pack: EMA20 trail, 10% risk, 40-day hold · only if <strong class="text-slate-200">Nifty &gt; EMA20</strong> · pause 10 days after 3 losses</li>
+    </ul>
+  </div>
+
+  <div class="mb-4 p-3 rounded-lg border border-amber-900/40 bg-amber-950/15 cup-only hidden">
+    <p class="text-amber-300 text-xs font-semibold uppercase tracking-wide mb-2">Cup parameters</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <label class="block text-xs">Entry
+        <select name="entry_mode" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+          {% for val, label in form.fields.entry_mode.choices %}
+          <option value="{{ val }}" {% if form.entry_mode.value == val or not form.entry_mode.value and val == 'next_open' %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="block text-xs">Exit
+        <select name="cup_exit_mode" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+          {% for val, label in form.fields.cup_exit_mode.choices %}
+          <option value="{{ val }}" {% if form.cup_exit_mode.value == val or not form.cup_exit_mode.value and val == 'ema20_trail' %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="block text-xs">Cup min days
+        <input type="number" name="cup_min_days" min="10" max="400" value="{{ form.cup_min_days.value|default:20 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Cup max days
+        <input type="number" name="cup_max_days" min="20" max="500" value="{{ form.cup_max_days.value|default:180 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Min depth %
+        <input type="number" name="min_depth_pct" step="1" min="5" max="50" value="{{ form.min_depth_pct.value|default:12 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Max depth %
+        <input type="number" name="max_depth_pct" step="1" min="10" max="70" value="{{ form.max_depth_pct.value|default:45 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Right-rim recovery %
+        <input type="number" name="recovery_pct" step="1" min="70" max="100" value="{{ form.recovery_pct.value|default:90 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Handle min / max days
+        <div class="flex gap-1 mt-1">
+          <input type="number" name="handle_min_days" min="0" max="40" value="{{ form.handle_min_days.value|default:5 }}" class="w-1/2 bg-slate-800 border border-slate-700 rounded px-2 py-2 text-sm">
+          <input type="number" name="handle_max_days" min="1" max="80" value="{{ form.handle_max_days.value|default:30 }}" class="w-1/2 bg-slate-800 border border-slate-700 rounded px-2 py-2 text-sm">
+        </div>
+      </label>
+      <label class="block text-xs">Handle max depth %
+        <input type="number" name="handle_max_depth_pct" step="0.5" min="3" max="30" value="{{ form.handle_max_depth_pct.value|default:15 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Breakout buffer %
+        <input type="number" name="breakout_buffer_pct" step="0.1" min="0" max="5" value="{{ form.breakout_buffer_pct.value|default:0.5 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Volume × 20d avg
+        <input type="number" name="vol_mult" step="0.1" min="0" max="5" value="{{ form.vol_mult.value|default:1.1 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">RSI min / max
+        <div class="flex gap-1 mt-1">
+          <input type="number" name="rsi_min" min="0" max="90" value="{{ form.rsi_min.value|default:40 }}" class="w-1/2 bg-slate-800 border border-slate-700 rounded px-2 py-2 text-sm">
+          <input type="number" name="rsi_max" min="10" max="100" value="{{ form.rsi_max.value|default:85 }}" class="w-1/2 bg-slate-800 border border-slate-700 rounded px-2 py-2 text-sm">
+        </div>
+      </label>
+      <label class="block text-xs">Max opening gap %
+        <input type="number" name="max_gap_pct" step="0.5" min="0" max="20" value="{{ form.max_gap_pct.value|default:5 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Min close location
+        <input type="number" name="min_close_loc" step="0.05" min="0" max="1" value="{{ form.min_close_loc.value|default:0.70 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+        <span class="text-[10px] text-slate-500">0.70 = upper 30% of the bar</span>
+      </label>
+      <label class="block text-xs">Stop ATR multiple
+        <input type="number" name="stop_atr_mult" step="0.1" min="0" max="3" value="{{ form.stop_atr_mult.value|default:0.5 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Retest tolerance %
+        <input type="number" name="retest_tol_pct" step="0.1" min="0.2" max="8" value="{{ form.retest_tol_pct.value|default:2 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Retest window (days)
+        <input type="number" name="retest_max_days" min="2" max="40" value="{{ form.retest_max_days.value|default:10 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Min days near cup low
+        <input type="number" name="min_bottom_days" min="2" max="40" value="{{ form.min_bottom_days.value|default:5 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Max new / day
+        <input type="number" name="max_new_per_day" min="1" max="30" value="{{ form.max_new_per_day.value|default:10 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Nifty above EMA (0=off)
+        <input type="number" name="nifty_ema_period" min="0" max="200" value="{{ form.nifty_ema_period.value|default:20 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Pause after N losses
+        <input type="number" name="loss_streak" min="0" max="10" value="{{ form.loss_streak.value|default:3 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Loss pause (days)
+        <input type="number" name="loss_streak_cooloff_days" min="0" max="60" value="{{ form.loss_streak_cooloff_days.value|default:10 }}" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+    </div>
+    <div class="flex flex-wrap gap-4 mt-3 text-xs text-slate-300">
+      <label class="inline-flex items-center gap-2">
+        <input type="checkbox" name="require_handle" {% if form.require_handle.value %}checked{% endif %} class="rounded bg-slate-800 border-slate-600">
+        Require handle
+      </label>
+      <label class="inline-flex items-center gap-2">
+        <input type="checkbox" name="require_close_strength" {% if form.require_close_strength.value %}checked{% endif %} class="rounded bg-slate-800 border-slate-600">
+        Require upper-30% close
+      </label>
+      <label class="inline-flex items-center gap-2">
+        <input type="checkbox" name="require_sma200_rising" {% if form.require_sma200_rising.value %}checked{% endif %} class="rounded bg-slate-800 border-slate-600">
+        200 SMA rising
+      </label>
+      <label class="inline-flex items-center gap-2">
+        <input type="checkbox" name="require_rs_vs_nifty" {% if form.require_rs_vs_nifty.value %}checked{% endif %} class="rounded bg-slate-800 border-slate-600">
+        60d return &gt; Nifty 50
+      </label>
+      <label class="inline-flex items-center gap-2">
+        <input type="checkbox" name="require_trend_stack" {% if form.require_trend_stack.value != False %}checked{% endif %} class="rounded bg-slate-800 border-slate-600">
+        EMA20 / SMA50 / SMA200 stack
+      </label>
+      <label class="inline-flex items-center gap-2">
+        <input type="checkbox" name="require_nifty_sma200" {% if form.require_nifty_sma200.value %}checked{% endif %} class="rounded bg-slate-800 border-slate-600">
+        Nifty 50 &gt; 200 SMA
+      </label>
+    </div>
+  </div>
+
+  {# Stock filters: price, volume, MA #}
+  <div class="mb-4 p-3 rounded-lg border border-amber-900/40 bg-amber-950/15 stage-only">
+    <p class="text-amber-300 text-xs font-semibold uppercase tracking-wide mb-2">Stock filters (signal day) · leave 0 / “No MA” to disable</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <label class="block text-xs">Min price ₹
+        <input type="number" name="min_price" step="0.01" min="0"
+               value="{{ form.min_price.value|default_if_none:0 }}"
+               class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Max price ₹
+        <input type="number" name="max_price" step="0.01" min="0"
+               value="{{ form.max_price.value|default_if_none:0 }}"
+               class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Min volume (shares)
+        <input type="number" name="min_volume" step="1" min="0"
+               value="{{ form.min_volume.value|default_if_none:0 }}"
+               class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">Min volume × 20d avg
+        <input type="number" name="min_volume_ratio" step="0.1" min="0"
+               value="{{ form.min_volume_ratio.value|default_if_none:0 }}"
+               class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm"
+               placeholder="e.g. 1.5">
+      </label>
+      <label class="block text-xs">Price vs MA
+        <select name="ma_condition" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+          {% for val, label in form.fields.ma_condition.choices %}
+          <option value="{{ val }}" {% if form.ma_condition.value == val or not form.ma_condition.value and val == 'none' %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="block text-xs">MA period
+        <input type="number" name="ma_period" min="0" max="500"
+               value="{{ form.ma_period.value|default_if_none:50 }}"
+               class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+      </label>
+      <label class="block text-xs">MA type
+        <select name="ma_type" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+          {% for val, label in form.fields.ma_type.choices %}
+          <option value="{{ val }}" {% if form.ma_type.value == val or not form.ma_type.value and val == 'sma' %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+    <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">
+      Filters use the stock’s last daily bar on the signal week-end.
+      Example: Stage 1 + min price 100 + volume ≥ 1.5× avg + price above SMA 50.
+    </p>
+  </div>
+  {% if form.errors %}
+  <div class="mb-3 p-3 rounded border border-red-800 bg-red-950/40 text-red-300 text-xs">
+    <strong>Form errors:</strong>
+    <ul class="list-disc list-inside mt-1">
+      {% for field, errs in form.errors.items %}
+      <li>{{ field }}: {{ errs|join:", " }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="mb-4 p-3 rounded-lg border border-amber-900/40 bg-amber-950/20 text-[11px] text-slate-400 leading-relaxed stage-only">
+    <span class="text-amber-300 font-medium">Entry stage:</span>
+    Choose weekly stage <strong class="text-slate-300">1 / 2 / 3 / 4</strong>.
+    <strong class="text-slate-300">Transition</strong> = only the first week stage becomes that value (default for Stage 2).
+    <strong class="text-slate-300">In stage</strong> = every week while still in that stage (more signals, more noise).
+  </div>
+  <div class="mb-4 p-3 rounded-lg border border-sky-900/40 bg-sky-950/20 text-[11px] text-slate-400 leading-relaxed stage-only">
+    <span class="text-sky-300 font-medium">Exit modes:</span>
+    <strong class="text-slate-300">Stage 4 only</strong> — ignore noisy Stage 3 tops (recommended) ·
+    <strong class="text-slate-300">Trail MA + S4</strong> — raise stop to 0.98×30w MA, force-exit on Stage 4 ·
+    <strong class="text-slate-300">Stage 3 or 4</strong> — legacy ·
+    <strong class="text-slate-300">No stage exit</strong> — stop/target/time only (research)
+  </div>
+  <div class="mb-4 p-3 rounded-lg border border-violet-900/40 bg-violet-950/20 text-[11px] text-slate-400 leading-relaxed stage-only">
+    <span class="text-violet-300 font-medium">Tech filters</span> (extra confirmation on Stage 2 entries — last-1y tested):
+    <strong class="text-slate-300">Daily Stage 1/2</strong> — best WR + return ·
+    <strong class="text-slate-300">Not extended</strong> — avoid chase (&gt;8% above EMA20) ·
+    <strong class="text-slate-300">EMA stack / BB mid</strong> — higher WR, fewer trades ·
+    <strong class="text-slate-300">Confluence</strong> — strict multi-indicator
+  </div>
+
+  {# Signal quality filter — only trades with quality ≥ this score are included #}
+  <div class="mb-4 p-3 rounded-lg border border-emerald-900/50 bg-emerald-950/20 stage-only">
+    <div class="flex flex-wrap items-end gap-3">
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-emerald-300 font-medium mb-1">
+          Signal quality filter
+          <span class="text-slate-500 font-normal text-xs ml-1">(only include Stage 2 signals at or above this score)</span>
+        </label>
+        <div class="flex flex-wrap gap-2 mb-2" id="quality-presets">
+          {% with q=form.min_quality_score.value|default_if_none:0 %}
+          <button type="button" data-q="0" class="quality-preset px-3 py-1.5 rounded border text-xs font-medium transition
+            {% if q == 0 or q == '0' %}bg-emerald-600 border-emerald-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-emerald-600{% endif %}">Any (0)</button>
+          <button type="button" data-q="50" class="quality-preset px-3 py-1.5 rounded border text-xs font-medium transition
+            {% if q == 50 or q == '50' %}bg-emerald-600 border-emerald-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-emerald-600{% endif %}">Q ≥ 50</button>
+          <button type="button" data-q="75" class="quality-preset px-3 py-1.5 rounded border text-xs font-medium transition
+            {% if q == 75 or q == '75' %}bg-emerald-600 border-emerald-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-emerald-600{% endif %}">Q ≥ 75</button>
+          <button type="button" data-q="85" class="quality-preset px-3 py-1.5 rounded border text-xs font-medium transition
+            {% if q == 85 or q == '85' %}bg-emerald-600 border-emerald-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-emerald-600{% endif %}">Q ≥ 85</button>
+          <button type="button" data-q="90" class="quality-preset px-3 py-1.5 rounded border text-xs font-medium transition
+            {% if q == 90 or q == '90' %}bg-emerald-600 border-emerald-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-emerald-600{% endif %}">Q ≥ 90</button>
+          {% endwith %}
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-slate-400 text-xs whitespace-nowrap">Custom min quality</label>
+          <input type="number" name="min_quality_score" id="min_quality_score"
+                 value="{{ form.min_quality_score.value|default_if_none:0 }}"
+                 min="0" max="100" step="1"
+                 class="bg-slate-800 border border-slate-700 rounded px-3 py-2 w-24 text-sm focus:border-emerald-500 focus:outline-none">
+          <span class="text-slate-500 text-xs">/ 100</span>
+        </div>
+        <div class="mt-3">
+          <label class="block text-sky-300 font-medium mb-1">
+            Min RS vs Nifty
+            <span class="text-slate-500 font-normal text-xs ml-1">(researched pack uses 70)</span>
+          </label>
+          <div class="flex flex-wrap gap-2 mb-2" id="rs-presets">
+            {% with rs=form.min_rs_rating.value|default_if_none:0 %}
+            <button type="button" data-rs="0" class="rs-preset px-3 py-1.5 rounded border text-xs font-medium transition
+              {% if rs == 0 or rs == '0' or not rs %}bg-sky-600 border-sky-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-sky-600{% endif %}">Any</button>
+            <button type="button" data-rs="50" class="rs-preset px-3 py-1.5 rounded border text-xs font-medium transition
+              {% if rs == 50 or rs == '50' %}bg-sky-600 border-sky-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-sky-600{% endif %}">RS ≥ 50</button>
+            <button type="button" data-rs="70" class="rs-preset px-3 py-1.5 rounded border text-xs font-medium transition
+              {% if rs == 70 or rs == '70' %}bg-sky-600 border-sky-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-sky-600{% endif %}">RS ≥ 70</button>
+            <button type="button" data-rs="80" class="rs-preset px-3 py-1.5 rounded border text-xs font-medium transition
+              {% if rs == 80 or rs == '80' %}bg-sky-600 border-sky-500 text-white{% else %}bg-slate-800 border-slate-700 text-slate-300 hover:border-sky-600{% endif %}">RS ≥ 80</button>
+            {% endwith %}
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-slate-400 text-xs whitespace-nowrap">Custom min RS</label>
+            <input type="number" name="min_rs_rating" id="min_rs_rating"
+                   value="{{ form.min_rs_rating.value|default_if_none:0 }}"
+                   min="0" max="100" step="1"
+                   class="bg-slate-800 border border-slate-700 rounded px-3 py-2 w-24 text-sm focus:border-sky-500 focus:outline-none">
+            <span class="text-slate-500 text-xs">/ 100</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-[11px] text-slate-500 max-w-md leading-relaxed">
+        Quality is the confluence score (0–100) from breakout, RS, daily stage, pullback, and market context.
+        Higher filter → fewer trades, typically higher-conviction setups. Try 75 or 85 for “strict” results.
+        <strong class="text-sky-300">RS ≥ 70 + price above SMA150</strong> was the last-1y winner pack (fewer weak Stage 2 tags, cash left for strong names).
+      </p>
+    </div>
+  </div>
+
   <label class="block md:col-span-2">Custom symbols (comma-separated, for Custom list)
     <textarea name="symbols" rows="2" class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="TCS, INFY, HDFCBANK">{{ form.symbols.value|default:'' }}</textarea>
     {% if form.symbols.errors %}<span class="text-red-400 text-xs">{{ form.symbols.errors.0 }}</span>{% endif %}
@@ -52,25 +493,487 @@
   {% endif %}
 </form>
 
+{{ form_defaults|json_script:"backtest-defaults" }}
+{{ aggressive_300_defaults|json_script:"aggressive-300-defaults" }}
+{{ cup_100_defaults|json_script:"cup-100-defaults" }}
+{{ rs70_pack_defaults|json_script:"rs70-pack-defaults" }}
+{{ strategy_presets|json_script:"strategy-presets" }}
+{{ strategy_blurbs|json_script:"strategy-blurbs" }}
+<script>
+(function () {
+  const defaultsEl = document.getElementById('backtest-defaults');
+  const DEFAULTS = defaultsEl ? JSON.parse(defaultsEl.textContent) : {};
+  const aggressiveEl = document.getElementById('aggressive-300-defaults');
+  const AGGRESSIVE_300 = aggressiveEl ? JSON.parse(aggressiveEl.textContent) : {};
+  const cup100El = document.getElementById('cup-100-defaults');
+  const CUP_100 = cup100El ? JSON.parse(cup100El.textContent) : {};
+  const rs70El = document.getElementById('rs70-pack-defaults');
+  const RS70_PACK = rs70El ? JSON.parse(rs70El.textContent) : {};
+  const presetsEl = document.getElementById('strategy-presets');
+  const STRATEGY_PRESETS = presetsEl ? JSON.parse(presetsEl.textContent) : {};
+  const blurbsEl = document.getElementById('strategy-blurbs');
+  const STRATEGY_BLURBS = blurbsEl ? JSON.parse(blurbsEl.textContent) : {};
+  const ST_IDS = { st_pullback_quality: true, st_pullback_trend_rsi: true, st_union_minervini: true };
+  const UNION_IDS = { st_union_minervini: true };
+  const CUP_IDS = { cup_breakout: true };
+
+  // Target R:R quick presets
+  const rrInput = document.querySelector('input[name="target_rr"]');
+  function highlightRr(val) {
+    const n = String(val);
+    document.querySelectorAll('.rr-preset').forEach(b => {
+      const on = b.getAttribute('data-rr') === n;
+      b.classList.toggle('bg-emerald-900/40', on);
+      b.classList.toggle('border-emerald-600', on);
+      b.classList.toggle('text-emerald-300', on);
+      b.classList.toggle('bg-slate-800', !on);
+      b.classList.toggle('border-slate-700', !on);
+    });
+  }
+  document.querySelectorAll('.rr-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (rrInput) rrInput.value = btn.getAttribute('data-rr');
+      highlightRr(btn.getAttribute('data-rr'));
+    });
+  });
+
+  const input = document.getElementById('min_quality_score');
+  const presets = document.querySelectorAll('.quality-preset');
+  function highlight(val) {
+    const n = String(parseInt(val, 10) || 0);
+    presets.forEach(btn => {
+      const active = btn.getAttribute('data-q') === n;
+      btn.classList.toggle('bg-emerald-600', active);
+      btn.classList.toggle('border-emerald-500', active);
+      btn.classList.toggle('text-white', active);
+      btn.classList.toggle('bg-slate-800', !active);
+      btn.classList.toggle('border-slate-700', !active);
+      btn.classList.toggle('text-slate-300', !active);
+    });
+  }
+  presets.forEach(btn => {
+    btn.addEventListener('click', () => {
+      input.value = btn.getAttribute('data-q');
+      highlight(input.value);
+    });
+  });
+  if (input) input.addEventListener('input', () => highlight(input.value));
+
+  const rsInput = document.getElementById('min_rs_rating');
+  const rsPresets = document.querySelectorAll('.rs-preset');
+  function highlightRs(val) {
+    const n = String(parseInt(val, 10) || 0);
+    rsPresets.forEach(btn => {
+      const active = btn.getAttribute('data-rs') === n;
+      btn.classList.toggle('bg-sky-600', active);
+      btn.classList.toggle('border-sky-500', active);
+      btn.classList.toggle('text-white', active);
+      btn.classList.toggle('bg-slate-800', !active);
+      btn.classList.toggle('border-slate-700', !active);
+      btn.classList.toggle('text-slate-300', !active);
+    });
+  }
+  rsPresets.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (rsInput) rsInput.value = btn.getAttribute('data-rs');
+      highlightRs(btn.getAttribute('data-rs'));
+    });
+  });
+  if (rsInput) rsInput.addEventListener('input', () => highlightRs(rsInput.value));
+
+  function setSelect(name, value) {
+    const el = document.querySelector('[name="' + name + '"]');
+    if (!el) return;
+    el.value = value;
+  }
+  function setInput(name, value) {
+    const el = document.querySelector('[name="' + name + '"]');
+    if (!el) return;
+    if (el.type === 'checkbox') {
+      el.checked = !!value;
+    } else if (name === 'shared_capital') {
+      const on = value === true || value === 1 || value === '1' || value === 'true';
+      el.value = on ? '1' : '0';
+    } else {
+      el.value = value == null ? '' : value;
+    }
+  }
+
+  function isStStrategy(id) {
+    return !!ST_IDS[id];
+  }
+  function isCupStrategy(id) {
+    return !!CUP_IDS[id];
+  }
+
+  function syncStrategyUI(id) {
+    const st = isStStrategy(id);
+    const union = !!UNION_IDS[id];
+    const cup = isCupStrategy(id);
+    document.querySelectorAll('.stage-only').forEach(el => el.classList.toggle('hidden', st || cup));
+    document.querySelectorAll('.stage-or-cup').forEach(el => el.classList.toggle('hidden', st && !cup));
+    document.querySelectorAll('.st-only').forEach(el => el.classList.toggle('hidden', !st || union));
+    document.querySelectorAll('.st-union-only').forEach(el => el.classList.toggle('hidden', !union));
+    document.querySelectorAll('.cup-only').forEach(el => el.classList.toggle('hidden', !cup));
+    document.querySelectorAll('.swing-pos-cap').forEach(el => el.classList.toggle('hidden', !(st || cup)));
+    const blurb = document.getElementById('strategy-blurb');
+    if (blurb) blurb.textContent = STRATEGY_BLURBS[id] || '';
+  }
+
+  function applyStrategyDefaults(id) {
+    const p = STRATEGY_PRESETS[id];
+    if (!p) return;
+    if (p.risk_pct != null) setInput('risk_pct', p.risk_pct);
+    if (p.max_hold_days != null) setInput('max_hold_days', p.max_hold_days);
+    if (p.cooldown_days != null) setInput('cooldown_days', p.cooldown_days);
+    if (p.max_pos_pct != null) setInput('max_pos_pct', p.max_pos_pct);
+    if (p.target_rr != null) setInput('target_rr', p.target_rr);
+    if (p.exit_mode != null) setSelect('exit_mode', p.exit_mode);
+    if (p.entry_mode != null) setSelect('entry_mode', p.entry_mode);
+    if (p.cup_exit_mode != null) setSelect('cup_exit_mode', p.cup_exit_mode);
+    ['cup_min_days', 'cup_max_days', 'min_depth_pct', 'max_depth_pct', 'min_bottom_days',
+     'vol_mult', 'rsi_min', 'rsi_max', 'max_new_per_day', 'nifty_ema_period',
+     'loss_streak', 'loss_streak_cooloff_days'].forEach(k => {
+      if (p[k] != null) setInput(k, p[k]);
+    });
+    ['require_handle', 'require_close_strength', 'require_sma200_rising',
+     'require_rs_vs_nifty', 'require_nifty_sma200', 'require_trend_stack'].forEach(k => {
+      if (p[k] != null) setInput(k, p[k]);
+    });
+    highlightRr(p.target_rr);
+  }
+
+  function coerceStageLeftoversToSt(id) {
+    if (!isStStrategy(id) && !isCupStrategy(id)) return;
+    const p = STRATEGY_PRESETS[id];
+    const stage = STRATEGY_PRESETS.stage_v2 || {};
+    if (!p) return;
+    let leftovers = 0;
+    ['risk_pct', 'max_hold_days', 'cooldown_days', 'max_pos_pct'].forEach(name => {
+      const el = document.querySelector('[name="' + name + '"]');
+      if (!el) return;
+      if (String(el.value) === String(stage[name])) leftovers += 1;
+    });
+    if (leftovers >= 2) applyStrategyDefaults(id);
+  }
+
+  const strategySelect = document.getElementById('strategy-select');
+  if (strategySelect) {
+    syncStrategyUI(strategySelect.value);
+    strategySelect.addEventListener('change', () => {
+      applyStrategyDefaults(strategySelect.value);
+      syncStrategyUI(strategySelect.value);
+    });
+  }
+  const backtestForm = document.getElementById('backtest-form');
+  if (backtestForm && strategySelect) {
+    backtestForm.addEventListener('submit', () => {
+      coerceStageLeftoversToSt(strategySelect.value);
+    });
+  }
+
+  function applyPreset(src, btn, okLabel) {
+    if (!src || !Object.keys(src).length) return;
+    setSelect('strategy', src.strategy || 'stage_v2');
+    setSelect('universe', src.universe);
+    setInput('symbol', src.symbol);
+    setInput('symbols', src.symbols);
+    setInput('start_date', src.start_date);
+    setInput('end_date', src.end_date);
+    setInput('capital', src.capital);
+    setSelect('entry_stage', src.entry_stage);
+    setSelect('entry_on', src.entry_on);
+    setSelect('tech_filter', src.tech_filter);
+    setInput('market_filter', src.market_filter);
+    setInput('shared_capital', src.shared_capital);
+    setSelect('exit_mode', src.exit_mode);
+    setInput('target_rr', src.target_rr);
+    setInput('max_hold_days', src.max_hold_days);
+    setInput('stop_ma_mult', src.stop_ma_mult);
+    setInput('trail_ma_mult', src.trail_ma_mult);
+    setInput('risk_pct', src.risk_pct);
+    setInput('cooldown_days', src.cooldown_days);
+    setInput('min_price', src.min_price);
+    setInput('max_price', src.max_price);
+    setInput('min_volume', src.min_volume);
+    setInput('min_volume_ratio', src.min_volume_ratio);
+    setSelect('ma_condition', src.ma_condition);
+    setInput('ma_period', src.ma_period);
+    setSelect('ma_type', src.ma_type);
+    setInput('min_quality_score', src.min_quality_score);
+    setInput('min_rs_rating', src.min_rs_rating);
+    setInput('max_pos_pct', src.max_pos_pct);
+    highlight(src.min_quality_score);
+    highlightRs(src.min_rs_rating);
+    highlightRr(src.target_rr);
+    syncStrategyUI(src.strategy || 'stage_v2');
+    if (btn) {
+      btn.blur();
+      const prev = btn.textContent;
+      btn.textContent = okLabel || 'Applied';
+      setTimeout(() => { btn.textContent = prev; }, 1200);
+    }
+  }
+
+  const resetBtn = document.getElementById('reset-defaults-btn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (!DEFAULTS || !Object.keys(DEFAULTS).length) {
+        window.location.href = "{% url 'stage_analysis_v2:backtest' %}";
+        return;
+      }
+      applyPreset(DEFAULTS, resetBtn, 'Defaults restored');
+    });
+  }
+
+  const aggBtn = document.getElementById('aggressive-300-btn');
+  if (aggBtn) {
+    aggBtn.addEventListener('click', () => {
+      if (!AGGRESSIVE_300 || !Object.keys(AGGRESSIVE_300).length) return;
+      applyPreset(AGGRESSIVE_300, aggBtn, '300% pack loaded');
+    });
+  }
+  const cup100Btn = document.getElementById('cup-100-btn');
+  if (cup100Btn) {
+    cup100Btn.addEventListener('click', () => {
+      if (!CUP_100 || !Object.keys(CUP_100).length) return;
+      applyPreset(CUP_100, cup100Btn, 'Cup 100% pack loaded');
+      applyStrategyDefaults('cup_breakout');
+      syncStrategyUI('cup_breakout');
+    });
+  }
+  const rs70Btn = document.getElementById('rs70-pack-btn');
+  if (rs70Btn) {
+    rs70Btn.addEventListener('click', () => {
+      if (!RS70_PACK || !Object.keys(RS70_PACK).length) return;
+      applyPreset(RS70_PACK, rs70Btn, 'RS 70 pack loaded');
+      syncStrategyUI('stage_v2');
+    });
+  }
+})();
+</script>
+
 {% if bt_result %}
-<div class="text-xs text-slate-500 mb-4">
-  {{ bt_result.strategy_name }} · {{ bt_result.start_date }} → {{ bt_result.end_date }} ·
-  {% if symbol_list|length <= 5 %}{{ symbol_list|join:", " }}{% else %}{{ symbol_list|length }} symbols{% endif %}
+{# Prominent "what actually ran" panel so filters are never ambiguous #}
+<div class="mb-4 p-4 rounded-lg border-2 border-violet-700/60 bg-violet-950/30">
+  <p class="text-violet-300 text-xs font-semibold uppercase tracking-wide mb-2">Applied settings (this run)</p>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+    <div class="md:col-span-2">
+      <p class="text-slate-500 text-xs">Strategy</p>
+      <p class="font-medium text-emerald-300">{{ bt_result.strategy_name }}</p>
+    </div>
+    <div>
+      <p class="text-slate-500 text-xs">Period</p>
+      <p class="font-medium">{{ bt_result.start_date }} → {{ bt_result.end_date }}</p>
+    </div>
+    <div>
+      <p class="text-slate-500 text-xs">Universe</p>
+      <p class="font-medium">{% if symbol_list|length <= 5 %}{{ symbol_list|join:", " }}{% else %}{{ symbol_list|length }} symbols{% endif %}</p>
+    </div>
+    <div>
+      <p class="text-slate-500 text-xs">Exit mode</p>
+      <p class="font-medium text-sky-300">{{ bt_result.exit_mode_label|default:bt_result.exit_mode }}</p>
+      <p class="text-[10px] text-slate-500">code: {{ bt_result.exit_mode }}</p>
+    </div>
+    <div>
+      <p class="text-slate-500 text-xs">Target / hold / stop</p>
+      {% if bt_result.strategy_id == 'cup_breakout' %}
+      <p class="font-medium text-emerald-300">{{ bt_result.exit_mode_label }}</p>
+      <p class="text-[10px] text-slate-500">max pos {{ bt_result.max_pos_pct|default:50 }}% of equity</p>
+      {% elif bt_result.strategy_id != 'stage_v2' %}
+      <p class="font-medium text-emerald-300">Trail ST · ≤{{ bt_result.max_hold_days|default:90 }}d</p>
+      <p class="text-[10px] text-slate-500">max pos {{ bt_result.max_pos_pct|default:50 }}% of equity</p>
+      {% else %}
+      <p class="font-medium text-emerald-300">{{ bt_result.target_rr|default:2.5 }}R · ≤{{ bt_result.max_hold_days|default:65 }}d</p>
+      <p class="text-[10px] text-slate-500">stop MA×{{ bt_result.stop_ma_mult|default:0.95 }}{% if bt_result.exit_mode == 'trail_ma_s4' %} · trail×{{ bt_result.trail_ma_mult|default:0.98 }}{% endif %}</p>
+      {% endif %}
+    </div>
+    <div>
+      <p class="text-slate-500 text-xs">Risk / cooldown</p>
+      <p class="font-medium text-fuchsia-300">{{ bt_result.risk_pct|default:2 }}% · cd {{ bt_result.cooldown_days|default:40 }}d</p>
+    </div>
+    <div>
+      <p class="text-slate-500 text-xs">Tech filter</p>
+      <p class="font-medium text-violet-300">{{ bt_result.tech_filter_label|default:bt_result.tech_filter|default:"none" }}</p>
+      <p class="text-[10px] text-slate-500">code: {{ bt_result.tech_filter|default:"none" }}</p>
+    </div>
+    <div>
+      <p class="text-slate-500 text-xs">Entry stage</p>
+      <p class="font-medium text-amber-300">Stage {{ bt_result.entry_stage|default:2 }}</p>
+      <p class="text-[10px] text-slate-500">{{ bt_result.entry_on|default:"transition" }}</p>
+    </div>
+    <div>
+      <p class="text-slate-500 text-xs">Stock filters</p>
+      <p class="font-medium text-slate-200 text-xs">{{ bt_result.entry_filters_label|default:"none" }}</p>
+    </div>
+  </div>
+  <div class="mt-3 flex flex-wrap gap-3 text-xs">
+    <button type="button" class="js-open-signals px-2 py-1 rounded bg-slate-900 border border-emerald-700 text-emerald-300 hover:bg-emerald-950/60 hover:border-emerald-500 cursor-pointer"
+            title="Open every signal with entry, stop, exit, and chart">
+      {% if bt_result.strategy_id == 'cup_breakout' %}Cup signals{% elif bt_result.strategy_id != 'stage_v2' %}ST signals{% else %}Signals{% endif %}: <strong class="text-emerald-400">{{ bt_result.stage2_entries }}</strong>
+      <span class="text-[10px] text-slate-400 ml-1">click to review →</span>
+    </button>
+    <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700">Trades: <strong class="text-emerald-400">{{ bt_result.total_trades }}</strong></span>
+    <button type="button" class="js-open-wl px-2 py-1 rounded bg-slate-900 border border-emerald-700 text-emerald-300 hover:bg-emerald-950/60 hover:border-emerald-500 cursor-pointer"
+            data-outcome="win" title="List every winning trade">
+      Wins: <strong class="text-emerald-400">{{ bt_result.win_count }}</strong>
+      <span class="text-[10px] text-slate-400 ml-1">click to list →</span>
+    </button>
+    <button type="button" class="js-open-wl px-2 py-1 rounded bg-slate-900 border border-red-800 text-red-300 hover:bg-red-950/60 hover:border-red-500 cursor-pointer"
+            data-outcome="loss" title="List every losing trade">
+      Losses: <strong class="text-red-400">{{ bt_result.loss_count }}</strong>
+      <span class="text-[10px] text-slate-400 ml-1">click to list →</span>
+    </button>
+    <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700">Win rate: <strong>{{ bt_result.win_rate }}%</strong></span>
+    <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700">Return: <strong class="{% if bt_result.total_return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ bt_result.total_return_pct }}%</strong></span>
+    <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700">Quality min: <strong>{% if bt_result.min_quality_score %}Q≥{{ bt_result.min_quality_score }}{% else %}Any{% endif %}</strong></span>
+    <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700">RS min: <strong>{% if bt_result.min_rs_rating %}RS≥{{ bt_result.min_rs_rating|floatformat:0 }}{% else %}Any{% endif %}</strong></span>
+  </div>
+  <p class="mt-2 text-[11px] text-slate-500">
+    {% if bt_result.strategy_id == 'cup_breakout' %}
+    <strong>Signals</strong> ({{ bt_result.stage2_entries }}) = cup breakouts that passed geometry, volume, and trend filters.
+    <strong>Trades</strong> ({{ bt_result.total_trades }}) = those taken with shared capital (cash / cooldown / daily cap can skip some).
+    <strong>Wins</strong> / <strong>Losses</strong> = closed trades with P&amp;L &gt; 0 vs ≤ 0 — click either button to list them.
+    {% elif bt_result.strategy_id != 'stage_v2' %}
+    <strong>Signals</strong> ({{ bt_result.stage2_entries }}) = Supertrend pullback setups that passed the filter.
+    <strong>Trades</strong> ({{ bt_result.total_trades }}) = those taken with shared capital (cash / cooldown / daily cap can skip some).
+    <strong>Wins</strong> / <strong>Losses</strong> = closed trades with P&amp;L &gt; 0 vs ≤ 0 — click either button to list them.
+    {% else %}
+    <strong>Signals</strong> ({{ bt_result.stage2_entries }}) = every Stage 2 setup.
+    <strong>Trades</strong> ({{ bt_result.total_trades }}) = only those taken with shared capital
+    (rest skipped for cash / cooldown — same list on
+    <a href="{% url 'stage_analysis_v2:signals' %}" class="text-sky-400 hover:underline">Signals chart</a>
+    for the matching date range).
+    <strong>Wins</strong> / <strong>Losses</strong> = closed trades with P&amp;L &gt; 0 vs ≤ 0 — click either button to list them.
+    Default backtest window is <strong>1 year</strong>; Signals page defaults to <strong>6 months</strong> — align dates to compare.
+    {% endif %}
+  </p>
 </div>
 
-<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+{% if bt_result.capital_compare %}
+{% with cc=bt_result.capital_compare %}
+<div class="mb-6 grid md:grid-cols-2 gap-4">
+  <div class="rounded-lg p-4 border {% if not bt_result.shared_capital %}border-2 border-emerald-600 bg-emerald-950/30{% else %}border-slate-700 bg-slate-900{% endif %}">
+    <p class="text-xs font-semibold uppercase tracking-wide {% if not bt_result.shared_capital %}text-emerald-300{% else %}text-slate-400{% endif %}">
+      Take every signal
+      {% if not bt_result.shared_capital %}<span class="ml-1 text-[10px] normal-case text-emerald-400">showing this book</span>{% endif %}
+    </p>
+    <p class="text-[11px] text-slate-500 mt-0.5 mb-3">
+      All {{ cc.signals }} setups taken (no cash / cooldown skip). Size is still {{ bt_result.risk_pct|default:2 }}% of equity per trade.
+    </p>
+    <div class="grid grid-cols-3 gap-2 text-sm">
+      <div><p class="text-slate-500 text-xs">Trades</p><p class="font-bold">{{ cc.take_all.trades }}</p></div>
+      <div><p class="text-slate-500 text-xs">Win rate</p><p class="font-bold">{{ cc.take_all.win_rate }}%</p></div>
+      <div>
+        <p class="text-slate-500 text-xs">Return</p>
+        <p class="font-bold {% if cc.take_all.total_return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ cc.take_all.total_return_pct }}%</p>
+      </div>
+      <div><p class="text-slate-500 text-xs">PF</p><p class="font-bold">{{ cc.take_all.profit_factor }}</p></div>
+      <div><p class="text-slate-500 text-xs">Max DD</p><p class="font-bold text-red-400">{{ cc.take_all.max_drawdown_pct }}%</p></div>
+      <div><p class="text-slate-500 text-xs">Final ₹</p><p class="font-bold">{{ cc.take_all.final_capital|floatformat:0 }}</p></div>
+    </div>
+  </div>
+  <div class="rounded-lg p-4 border {% if bt_result.shared_capital %}border-2 border-emerald-600 bg-emerald-950/30{% else %}border-slate-700 bg-slate-900{% endif %}">
+    <p class="text-xs font-semibold uppercase tracking-wide {% if bt_result.shared_capital %}text-emerald-300{% else %}text-slate-400{% endif %}">
+      Shared capital
+      {% if bt_result.shared_capital %}<span class="ml-1 text-[10px] normal-case text-emerald-400">showing this book</span>{% endif %}
+    </p>
+    <p class="text-[11px] text-slate-500 mt-0.5 mb-3">
+      One ₹ pool · cash / cooldown / already-open can skip.
+      {{ cc.signals }} signals → {{ cc.shared.trades }} trades
+      {% if cc.shared.skipped_cash %} · {{ cc.shared.skipped_cash }} no cash{% endif %}.
+    </p>
+    <div class="grid grid-cols-3 gap-2 text-sm">
+      <div><p class="text-slate-500 text-xs">Trades</p><p class="font-bold">{{ cc.shared.trades }}</p></div>
+      <div><p class="text-slate-500 text-xs">Win rate</p><p class="font-bold">{{ cc.shared.win_rate }}%</p></div>
+      <div>
+        <p class="text-slate-500 text-xs">Return</p>
+        <p class="font-bold {% if cc.shared.total_return_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ cc.shared.total_return_pct }}%</p>
+      </div>
+      <div><p class="text-slate-500 text-xs">PF</p><p class="font-bold">{{ cc.shared.profit_factor }}</p></div>
+      <div><p class="text-slate-500 text-xs">Max DD</p><p class="font-bold text-red-400">{{ cc.shared.max_drawdown_pct }}%</p></div>
+      <div><p class="text-slate-500 text-xs">Final ₹</p><p class="font-bold">{{ cc.shared.final_capital|floatformat:0 }}</p></div>
+    </div>
+  </div>
+</div>
+<p class="text-[11px] text-slate-500 -mt-4 mb-6">
+  Uncheck <strong>Shared capital</strong> and re-run to make the charts / trade table the take-every-signal book.
+  The two cards above are always both computed from the same signals.
+</p>
+{% endwith %}
+{% endif %}
+
+<div class="flex flex-wrap gap-2 mb-4 text-xs">
+  <span class="px-2.5 py-1 rounded-full border bg-amber-900/40 border-amber-700 text-amber-300">
+    {% if bt_result.strategy_id == 'cup_breakout' %}
+    Entry: <strong>Cup breakout</strong> · {{ bt_result.entry_on|default:"next_open" }}
+    {% elif bt_result.strategy_id != 'stage_v2' %}
+    Entry: <strong>ST pullback</strong> · next open
+    {% else %}
+    Entry: <strong>Stage {{ bt_result.entry_stage|default:2 }}</strong> · {{ bt_result.entry_on|default:"transition" }}
+    {% endif %}
+  </span>
+  <span class="px-2.5 py-1 rounded-full border bg-emerald-900/40 border-emerald-700 text-emerald-300">
+    {% if bt_result.strategy_id == 'cup_breakout' %}
+    Exit: <strong>{{ bt_result.exit_mode_label }}</strong>
+    {% elif bt_result.strategy_id != 'stage_v2' %}
+    Exit: <strong>Trail Supertrend</strong>
+    {% else %}
+    Target: <strong>{{ bt_result.target_rr|default:2.5 }}R</strong>
+    {% endif %}
+  </span>
+  <span class="px-2.5 py-1 rounded-full border bg-sky-900/40 border-sky-700 text-sky-300">
+    Exit: <strong>{{ bt_result.exit_mode_label|default:bt_result.exit_mode }}</strong>
+  </span>
+  <span class="px-2.5 py-1 rounded-full border bg-slate-800 border-slate-600 text-slate-300">
+    Max hold: <strong>{{ bt_result.max_hold_days|default:65 }}d</strong>
+  </span>
+  <span class="px-2.5 py-1 rounded-full border bg-violet-900/40 border-violet-700 text-violet-300">
+    Tech: <strong>{{ bt_result.tech_filter_label|default:bt_result.tech_filter|default:"—" }}</strong>
+  </span>
+  <span class="px-2.5 py-1 rounded-full border {% if bt_result.min_quality_score > 0 %}bg-emerald-900/40 border-emerald-700 text-emerald-300{% else %}bg-slate-800 border-slate-700 text-slate-400{% endif %}">
+    Quality: {% if bt_result.min_quality_score %}<strong>Q ≥ {{ bt_result.min_quality_score }}</strong>{% else %}<strong>Any</strong>{% endif %}
+  </span>
+  <span class="px-2.5 py-1 rounded-full border {% if bt_result.min_rs_rating > 0 %}bg-sky-900/40 border-sky-700 text-sky-300{% else %}bg-slate-800 border-slate-700 text-slate-400{% endif %}">
+    RS: {% if bt_result.min_rs_rating %}<strong>≥ {{ bt_result.min_rs_rating|floatformat:0 }}</strong>{% else %}<strong>Any</strong>{% endif %}
+  </span>
+  {% if bt_result.entry_filters_label and bt_result.entry_filters_label != "none" %}
+  <span class="px-2.5 py-1 rounded-full border bg-amber-900/30 border-amber-800 text-amber-200">
+    Filters: <strong>{{ bt_result.entry_filters_label }}</strong>
+  </span>
+  {% endif %}
+  {% if bt_result.market_filter %}
+  <span class="px-2.5 py-1 rounded-full border bg-sky-900/30 border-sky-800 text-sky-300">Market: Nifty Stage 1/2 only</span>
+  {% endif %}
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
   <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
     <p class="text-slate-400 text-xs">Stocks scanned</p>
     <p class="text-xl font-bold">{{ bt_result.stocks_scanned }}</p>
   </div>
-  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
-    <p class="text-slate-400 text-xs">Stage 2 signals</p>
-    <p class="text-xl font-bold">{{ bt_result.stage2_entries }}</p>
-  </div>
+  <button type="button" class="js-open-signals bg-slate-900 border border-emerald-700/70 rounded-lg p-4 text-center hover:border-emerald-400 hover:bg-emerald-950/30 cursor-pointer w-full"
+          title="Review every signal on a chart">
+    <p class="text-emerald-300 text-xs">{% if bt_result.strategy_id == 'cup_breakout' %}Cup signals{% elif bt_result.strategy_id != 'stage_v2' %}ST signals{% else %}Stage 2 signals{% endif %}</p>
+    <p class="text-xl font-bold text-emerald-300">{{ bt_result.stage2_entries }}</p>
+    <p class="text-[10px] text-slate-500 mt-1">Click to review</p>
+  </button>
   <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
     <p class="text-slate-400 text-xs">Trades</p>
     <p class="text-xl font-bold">{{ bt_result.total_trades }}</p>
   </div>
+  <button type="button" class="js-open-wl bg-slate-900 border border-emerald-700/70 rounded-lg p-4 text-center hover:border-emerald-400 hover:bg-emerald-950/30 cursor-pointer w-full"
+          data-outcome="win" title="List every winning trade">
+    <p class="text-emerald-300 text-xs">Wins</p>
+    <p class="text-xl font-bold text-emerald-300">{{ bt_result.win_count }}</p>
+    <p class="text-[10px] text-slate-500 mt-1">Click to list</p>
+  </button>
+  <button type="button" class="js-open-wl bg-slate-900 border border-red-800/70 rounded-lg p-4 text-center hover:border-red-400 hover:bg-red-950/30 cursor-pointer w-full"
+          data-outcome="loss" title="List every losing trade">
+    <p class="text-red-300 text-xs">Losses</p>
+    <p class="text-xl font-bold text-red-300">{{ bt_result.loss_count }}</p>
+    <p class="text-[10px] text-slate-500 mt-1">Click to list</p>
+  </button>
   <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
     <p class="text-slate-400 text-xs">Win rate</p>
     <p class="text-xl font-bold">{{ bt_result.win_rate }}%</p>
@@ -80,6 +983,95 @@
     <p class="text-xl font-bold">{{ bt_result.profit_factor }}</p>
   </div>
 </div>
+
+<section id="signals-review" class="hidden bg-slate-900 border border-emerald-800/60 rounded-lg mb-6">
+  <div class="flex flex-wrap justify-between items-start gap-3 p-4 border-b border-slate-800">
+    <div>
+      <h3 class="text-sm font-semibold text-emerald-300">Signal review</h3>
+      <p class="text-[11px] text-slate-500 mt-0.5">
+        Every setup this run fired. Click a row to see the daily chart, the signal day, and how the stock moved after.
+      </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <input type="search" id="sig-filter" placeholder="Filter symbol…"
+             class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs w-40 focus:border-emerald-500 focus:outline-none">
+      <span id="sig-count-label" class="text-[11px] text-slate-500"></span>
+      <button type="button" id="sig-review-close" class="text-xs text-slate-400 hover:text-white px-2 py-1">Close</button>
+    </div>
+  </div>
+  <div class="grid lg:grid-cols-2 gap-0">
+    <div class="overflow-auto max-h-[560px] border-b lg:border-b-0 lg:border-r border-slate-800">
+      <table class="w-full text-xs">
+        <thead class="text-slate-400 border-b border-slate-700 sticky top-0 bg-slate-900 z-10">
+          <tr>
+            <th class="p-2 text-left">Symbol</th>
+            <th>Signal</th>
+            <th>Entry</th>
+            <th>Entry ₹</th>
+            <th>Stop</th>
+            <th>Target</th>
+            <th>Exit</th>
+            <th>Exit ₹</th>
+            <th>P&amp;L</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="sig-review-body"></tbody>
+      </table>
+      <p id="sig-review-empty" class="hidden text-slate-500 text-sm p-4">No signals for this run.</p>
+    </div>
+    <div class="p-3">
+      <p id="sig-chart-hint" class="text-slate-500 text-sm py-16 text-center">Click a signal to load its chart.</p>
+      <p id="sig-chart-loading" class="hidden text-slate-400 text-sm py-16 text-center">Loading chart…</p>
+      <div id="sig-review-chart" class="w-full min-h-[520px]"></div>
+    </div>
+  </div>
+</section>
+
+<section id="wl-review" class="hidden bg-slate-900 border border-slate-700 rounded-lg mb-6">
+  <div class="flex flex-wrap justify-between items-start gap-3 p-4 border-b border-slate-800">
+    <div>
+      <h3 id="wl-review-title" class="text-sm font-semibold text-emerald-300">Winning trades</h3>
+      <p class="text-[11px] text-slate-500 mt-0.5">
+        Closed trades from this book. Click a row for the daily chart around entry and exit.
+      </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <input type="search" id="wl-filter" placeholder="Filter symbol…"
+             class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-xs w-40 focus:border-emerald-500 focus:outline-none">
+      <span id="wl-count-label" class="text-[11px] text-slate-500"></span>
+      <button type="button" id="wl-review-close" class="text-xs text-slate-400 hover:text-white px-2 py-1">Close</button>
+    </div>
+  </div>
+  <div class="grid lg:grid-cols-2 gap-0">
+    <div class="overflow-auto max-h-[560px] border-b lg:border-b-0 lg:border-r border-slate-800">
+      <table class="w-full text-xs">
+        <thead class="text-slate-400 border-b border-slate-700 sticky top-0 bg-slate-900 z-10">
+          <tr>
+            <th class="p-2 text-left">Symbol</th>
+            <th>Signal</th>
+            <th>Entry</th>
+            <th>Exit</th>
+            <th>Entry ₹</th>
+            <th>Exit ₹</th>
+            <th>P&amp;L ₹</th>
+            <th>P&amp;L %</th>
+            <th>R</th>
+            <th>Days</th>
+            <th>Exit reason</th>
+          </tr>
+        </thead>
+        <tbody id="wl-review-body"></tbody>
+      </table>
+      <p id="wl-review-empty" class="hidden text-slate-500 text-sm p-4">No trades in this list.</p>
+    </div>
+    <div class="p-3">
+      <p id="wl-chart-hint" class="text-slate-500 text-sm py-16 text-center">Click a trade to load its chart.</p>
+      <p id="wl-chart-loading" class="hidden text-slate-400 text-sm py-16 text-center">Loading chart…</p>
+      <div id="wl-review-chart" class="w-full min-h-[520px]"></div>
+    </div>
+  </div>
+</section>
 
 <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
   <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
@@ -104,6 +1096,29 @@
   </div>
 </div>
 
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">CAGR</p>
+    <p class="text-xl font-bold {% if bt_result.cagr_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ bt_result.cagr_pct }}%</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Sharpe</p>
+    <p class="text-xl font-bold">{{ bt_result.sharpe }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Average trade</p>
+    <p class="text-xl font-bold {% if bt_result.avg_trade >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">₹{{ bt_result.avg_trade|floatformat:0 }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Final capital</p>
+    <p class="text-xl font-bold">₹{{ bt_result.final_capital|default:bt_result.final_cash|floatformat:0 }}</p>
+  </div>
+  <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
+    <p class="text-slate-400 text-xs">Avg hold (days)</p>
+    <p class="text-xl font-bold">{{ bt_result.avg_hold_days }}</p>
+  </div>
+</div>
+
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
   <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-center">
     <p class="text-slate-400 text-xs">Starting capital</p>
@@ -123,8 +1138,12 @@
   </div>
 </div>
 <p class="text-xs text-slate-500 -mt-4 mb-6">
-  Capital model: one shared cash account · position size uses free cash only (no leverage) ·
+  {% if bt_result.shared_capital %}
+  Detailed book: <strong>shared cash</strong> · size uses free cash only (no leverage) ·
   table columns show invested / free cash / open count at each entry.
+  {% else %}
+  Detailed book: <strong>take every signal</strong> · same exits, no cash/cooldown skip · overlapping names allowed.
+  {% endif %}
 </p>
 
 {% if bt_result.exit_breakdown %}
@@ -215,7 +1234,7 @@
         <td class="text-center">{{ t.entry_price }}</td>
         <td class="text-center">{{ t.exit_price }}</td>
         <td class="text-center text-slate-400">{{ t.stop_loss }}</td>
-        <td class="text-center text-slate-400">{{ t.target }}</td>
+        <td class="text-center text-slate-400">{% if t.target %}{{ t.target }}{% else %}—{% endif %}</td>
         <td class="text-center">{{ t.quantity }}</td>
         <td class="text-center text-sky-300 font-medium">{{ t.capital_invested|floatformat:0 }}</td>
         <td class="text-center text-sky-300">{{ t.cash_available|floatformat:0 }}</td>
@@ -225,18 +1244,327 @@
         <td class="text-center font-medium {% if t.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ t.pnl|floatformat:0 }}</td>
         <td class="text-center {% if t.pnl_pct >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ t.pnl_pct }}%</td>
         <td class="text-center">{{ t.rr_achieved }}</td>
-        <td class="text-center">{{ t.quality_score }}</td>
+        <td class="text-center font-semibold {% if t.quality_score >= 90 %}text-emerald-300{% elif t.quality_score >= 75 %}text-emerald-400{% elif t.quality_score >= 50 %}text-amber-300{% else %}text-slate-400{% endif %}">{{ t.quality_score }}</td>
         <td class="text-center">{{ t.rs_rating|floatformat:0 }}</td>
         <td class="text-center">{{ t.days_held }}</td>
-        <td class="text-center text-slate-400">{{ t.exit_reason }}</td>
+        <td class="text-center {% if t.exit_reason == 'stop_loss' %}text-red-400{% elif t.exit_reason == 'trail_stop' %}text-amber-300{% elif t.exit_reason == 'st_flip' %}text-sky-300{% elif 'target' in t.exit_reason %}text-emerald-400{% else %}text-slate-400{% endif %}">{{ t.exit_reason }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+{% if bt_result.strategy_id == 'cup_breakout' %}
+<div class="overflow-x-auto bg-slate-900 border border-amber-900/40 rounded-lg mb-6">
+  <h3 class="text-sm font-semibold text-amber-300 p-4 pb-0">Cup setup quality / debug</h3>
+  <p class="text-[11px] text-slate-500 px-4 pt-1">Geometry and filters frozen at the breakout bar (no look-ahead).</p>
+  <table class="w-full text-xs mt-2">
+    <thead class="text-slate-400 border-b border-slate-700">
+      <tr>
+        <th class="p-2 text-left">Symbol</th>
+        <th>Cup high</th>
+        <th>Cup low</th>
+        <th>Depth %</th>
+        <th>Duration</th>
+        <th>Right-rim %</th>
+        <th>Handle d / depth</th>
+        <th>Breakout</th>
+        <th>Vol ×</th>
+        <th>RSI</th>
+        <th>SMA20 / 50 / 200</th>
+        <th>Entry</th>
+        <th>Stop</th>
+        <th>Target</th>
+        <th>Exit</th>
+        <th>P&amp;L</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in bt_result.trades %}
+      <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+        <td class="p-2 text-emerald-400 font-medium">{{ t.symbol }}</td>
+        <td class="text-center">{{ t.setup.cup_high|default:"—" }}</td>
+        <td class="text-center">{{ t.setup.cup_low|default:"—" }}</td>
+        <td class="text-center">{{ t.setup.cup_depth_pct|default:"—" }}</td>
+        <td class="text-center">{{ t.setup.cup_duration|default:"—" }}</td>
+        <td class="text-center">{{ t.setup.right_rim_recovery_pct|default:"—" }}</td>
+        <td class="text-center">{% if t.setup.has_handle %}{{ t.setup.handle_days }}d / {{ t.setup.handle_depth_pct }}%{% else %}—{% endif %}</td>
+        <td class="text-center">{{ t.setup.breakout_price|default:"—" }}</td>
+        <td class="text-center">{{ t.setup.volume_multiple|default:"—" }}</td>
+        <td class="text-center">{{ t.setup.rsi|default:"—" }}</td>
+        <td class="text-center text-[11px]">{{ t.setup.sma20|default:"—" }} / {{ t.setup.sma50|default:"—" }} / {{ t.setup.sma200|default:"—" }}</td>
+        <td class="text-center">{{ t.setup.entry|default:t.entry_price }}</td>
+        <td class="text-center">{{ t.setup.stop|default:t.stop_loss }}</td>
+        <td class="text-center">{% if t.setup.target %}{{ t.setup.target }}{% elif t.target %}{{ t.target }}{% else %}—{% endif %}</td>
+        <td class="text-center">{{ t.setup.exit|default:t.exit_price }}</td>
+        <td class="text-center font-medium {% if t.pnl >= 0 %}text-emerald-400{% else %}text-red-400{% endif %}">{{ t.pnl|floatformat:0 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
 {% elif run_requested %}
 <p class="text-slate-400 text-sm">No trades in this period for the selected symbols and filters.</p>
 {% endif %}
+
+{{ signal_log|json_script:"backtest-signal-log" }}
+{{ trade_log|json_script:"backtest-trade-log" }}
+<script>
+(function () {
+  const logEl = document.getElementById("backtest-signal-log");
+  const SIGNALS = logEl ? JSON.parse(logEl.textContent) : [];
+  const panel = document.getElementById("signals-review");
+  const wlPanel = document.getElementById("wl-review");
+  const body = document.getElementById("sig-review-body");
+  const emptyEl = document.getElementById("sig-review-empty");
+  const countLabel = document.getElementById("sig-count-label");
+  const filterEl = document.getElementById("sig-filter");
+  const chartEl = document.getElementById("sig-review-chart");
+  const hintEl = document.getElementById("sig-chart-hint");
+  const loadingEl = document.getElementById("sig-chart-loading");
+  const chartUrl = "{% url 'stage_analysis_v2:signal_chart_api' %}";
+  let selectedKey = "";
+
+  function fmt(n, d) {
+    if (n == null || n === "") return "—";
+    const x = Number(n);
+    if (Number.isNaN(x)) return "—";
+    return x.toLocaleString("en-IN", { maximumFractionDigits: d == null ? 2 : d });
+  }
+  function dash(v) { return (v == null || v === "") ? "—" : v; }
+  function statusBadge(row) {
+    const st = row.status || "";
+    if (st === "taken") {
+      const pnl = row.pnl;
+      const cls = pnl > 0 ? "text-emerald-400" : (pnl < 0 ? "text-red-400" : "text-slate-400");
+      return `<span class="${cls}">Taken</span>`;
+    }
+    if (st === "skipped_cash") return '<span class="text-amber-300">No cash</span>';
+    if (st === "skipped_cooldown") return '<span class="text-slate-400">Cooldown</span>';
+    if (st === "skipped_open") return '<span class="text-slate-400">Open pos</span>';
+    if (st === "skipped_risk") return '<span class="text-red-400">Bad stop</span>';
+    return `<span class="text-slate-400">${row.status_label || "Skipped"}</span>`;
+  }
+  function rowKey(row, i) {
+    return (row.symbol || "") + "|" + (row.entry_date || "") + "|" + i;
+  }
+  function renderTable(filter) {
+    const q = (filter || "").trim().toUpperCase();
+    const rows = SIGNALS.filter(r => !q || String(r.symbol || "").toUpperCase().indexOf(q) >= 0);
+    countLabel.textContent = rows.length + " of " + SIGNALS.length;
+    if (!rows.length) {
+      body.innerHTML = "";
+      emptyEl.classList.remove("hidden");
+      return;
+    }
+    emptyEl.classList.add("hidden");
+    body.innerHTML = rows.map((r, i) => {
+      const key = rowKey(r, SIGNALS.indexOf(r));
+      const pnlCls = r.pnl > 0 ? "text-emerald-400" : (r.pnl < 0 ? "text-red-400" : "text-slate-400");
+      const sel = key === selectedKey ? "bg-emerald-950/50" : "hover:bg-slate-800/70";
+      return `<tr class="border-b border-slate-800 cursor-pointer ${sel}" data-idx="${SIGNALS.indexOf(r)}" data-key="${key}">
+        <td class="p-2 text-emerald-400 font-medium">${r.symbol || ""}</td>
+        <td class="text-center">${dash(r.signal_date)}</td>
+        <td class="text-center">${dash(r.entry_date)}</td>
+        <td class="text-center">${fmt(r.entry_price)}</td>
+        <td class="text-center text-red-300">${fmt(r.stop_loss)}</td>
+        <td class="text-center text-sky-300">${fmt(r.target)}</td>
+        <td class="text-center">${dash(r.exit_date)}</td>
+        <td class="text-center">${fmt(r.exit_price)}</td>
+        <td class="text-center ${pnlCls}">${r.pnl == null ? "—" : fmt(r.pnl, 0)}</td>
+        <td class="text-center">${statusBadge(r)}</td>
+      </tr>`;
+    }).join("");
+    body.querySelectorAll("tr").forEach(tr => {
+      tr.addEventListener("click", () => {
+        const idx = Number(tr.getAttribute("data-idx"));
+        loadChart(SIGNALS[idx], tr.getAttribute("data-key"));
+      });
+    });
+  }
+  function openPanel() {
+    if (wlPanel) wlPanel.classList.add("hidden");
+    panel.classList.remove("hidden");
+    renderTable(filterEl.value);
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function loadChart(row, key) {
+    if (!row) return;
+    selectedKey = key;
+    renderTable(filterEl.value);
+    hintEl.classList.add("hidden");
+    loadingEl.classList.remove("hidden");
+    if (window.Plotly) Plotly.purge(chartEl);
+    const params = new URLSearchParams({
+      symbol: row.symbol || "",
+      signal_date: row.signal_date || row.entry_date || "",
+    });
+    if (row.entry_date) params.set("entry_date", row.entry_date);
+    if (row.exit_date) params.set("exit_date", row.exit_date);
+    if (row.stop_loss != null) params.set("stop_loss", row.stop_loss);
+    if (row.target) params.set("target", row.target);
+    if (row.entry_price != null) params.set("entry_price", row.entry_price);
+    if (row.exit_price != null) params.set("exit_price", row.exit_price);
+    fetch(chartUrl + "?" + params.toString())
+      .then(r => r.json())
+      .then(data => {
+        loadingEl.classList.add("hidden");
+        if (!data.chart) {
+          hintEl.textContent = data.error || "Could not load chart.";
+          hintEl.classList.remove("hidden");
+          return;
+        }
+        Plotly.newPlot(chartEl, data.chart.data, data.chart.layout, {responsive: true});
+      })
+      .catch(() => {
+        loadingEl.classList.add("hidden");
+        hintEl.textContent = "Chart request failed.";
+        hintEl.classList.remove("hidden");
+      });
+  }
+  document.querySelectorAll(".js-open-signals").forEach(btn => {
+    btn.addEventListener("click", openPanel);
+  });
+  const closeBtn = document.getElementById("sig-review-close");
+  if (closeBtn) closeBtn.addEventListener("click", () => panel.classList.add("hidden"));
+  if (filterEl) filterEl.addEventListener("input", () => renderTable(filterEl.value));
+})();
+</script>
+<script>
+(function () {
+  const logEl = document.getElementById("backtest-trade-log");
+  const TRADES = logEl ? JSON.parse(logEl.textContent) : [];
+  const panel = document.getElementById("wl-review");
+  const sigPanel = document.getElementById("signals-review");
+  const body = document.getElementById("wl-review-body");
+  const emptyEl = document.getElementById("wl-review-empty");
+  const countLabel = document.getElementById("wl-count-label");
+  const filterEl = document.getElementById("wl-filter");
+  const titleEl = document.getElementById("wl-review-title");
+  const chartEl = document.getElementById("wl-review-chart");
+  const hintEl = document.getElementById("wl-chart-hint");
+  const loadingEl = document.getElementById("wl-chart-loading");
+  const chartUrl = "{% url 'stage_analysis_v2:signal_chart_api' %}";
+  let outcome = "win";
+  let selectedKey = "";
+
+  function fmt(n, d) {
+    if (n == null || n === "") return "—";
+    const x = Number(n);
+    if (Number.isNaN(x)) return "—";
+    return x.toLocaleString("en-IN", { maximumFractionDigits: d == null ? 2 : d });
+  }
+  function dash(v) { return (v == null || v === "") ? "—" : v; }
+  function rowKey(row, i) {
+    return (row.symbol || "") + "|" + (row.entry_date || "") + "|" + i;
+  }
+  function subset() {
+    const list = TRADES.filter(r => (r.outcome || (r.pnl > 0 ? "win" : "loss")) === outcome);
+    if (outcome === "win") list.sort((a, b) => (b.pnl || 0) - (a.pnl || 0));
+    else list.sort((a, b) => (a.pnl || 0) - (b.pnl || 0));
+    return list;
+  }
+  function renderTable(filter) {
+    const q = (filter || "").trim().toUpperCase();
+    const all = subset();
+    const rows = all.filter(r => !q || String(r.symbol || "").toUpperCase().indexOf(q) >= 0);
+    const label = outcome === "win" ? "winners" : "losers";
+    countLabel.textContent = rows.length + " of " + all.length + " " + label;
+    if (!rows.length) {
+      body.innerHTML = "";
+      emptyEl.classList.remove("hidden");
+      return;
+    }
+    emptyEl.classList.add("hidden");
+    body.innerHTML = rows.map((r) => {
+      const idx = TRADES.indexOf(r);
+      const key = rowKey(r, idx);
+      const pnlCls = r.pnl > 0 ? "text-emerald-400" : (r.pnl < 0 ? "text-red-400" : "text-slate-400");
+      const sel = key === selectedKey ? (outcome === "win" ? "bg-emerald-950/50" : "bg-red-950/50") : "hover:bg-slate-800/70";
+      const reasonCls = r.exit_reason === "stop_loss" ? "text-red-400"
+        : (r.exit_reason === "trail_stop" ? "text-amber-300"
+        : (String(r.exit_reason || "").indexOf("target") >= 0 ? "text-emerald-400" : "text-slate-400"));
+      return `<tr class="border-b border-slate-800 cursor-pointer ${sel}" data-idx="${idx}" data-key="${key}">
+        <td class="p-2 text-emerald-400 font-medium">${r.symbol || ""}</td>
+        <td class="text-center">${dash(r.signal_date)}</td>
+        <td class="text-center">${dash(r.entry_date)}</td>
+        <td class="text-center">${dash(r.exit_date)}</td>
+        <td class="text-center">${fmt(r.entry_price)}</td>
+        <td class="text-center">${fmt(r.exit_price)}</td>
+        <td class="text-center font-medium ${pnlCls}">${r.pnl == null ? "—" : fmt(r.pnl, 0)}</td>
+        <td class="text-center ${pnlCls}">${r.pnl_pct == null ? "—" : fmt(r.pnl_pct, 1) + "%"}</td>
+        <td class="text-center">${fmt(r.rr_achieved, 2)}</td>
+        <td class="text-center">${dash(r.days_held)}</td>
+        <td class="text-center ${reasonCls}">${dash(r.exit_reason)}</td>
+      </tr>`;
+    }).join("");
+    body.querySelectorAll("tr").forEach(tr => {
+      tr.addEventListener("click", () => {
+        const idx = Number(tr.getAttribute("data-idx"));
+        loadChart(TRADES[idx], tr.getAttribute("data-key"));
+      });
+    });
+  }
+  function openPanel(nextOutcome) {
+    outcome = nextOutcome === "loss" ? "loss" : "win";
+    selectedKey = "";
+    if (sigPanel) sigPanel.classList.add("hidden");
+    panel.classList.remove("hidden");
+    panel.classList.toggle("border-emerald-800/60", outcome === "win");
+    panel.classList.toggle("border-red-800/60", outcome === "loss");
+    titleEl.textContent = outcome === "win" ? "Winning trades" : "Losing trades";
+    titleEl.className = "text-sm font-semibold " + (outcome === "win" ? "text-emerald-300" : "text-red-300");
+    if (hintEl) {
+      hintEl.textContent = "Click a trade to load its chart.";
+      hintEl.classList.remove("hidden");
+    }
+    if (loadingEl) loadingEl.classList.add("hidden");
+    if (window.Plotly && chartEl) Plotly.purge(chartEl);
+    renderTable(filterEl ? filterEl.value : "");
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function loadChart(row, key) {
+    if (!row) return;
+    selectedKey = key;
+    renderTable(filterEl ? filterEl.value : "");
+    hintEl.classList.add("hidden");
+    loadingEl.classList.remove("hidden");
+    if (window.Plotly) Plotly.purge(chartEl);
+    const params = new URLSearchParams({
+      symbol: row.symbol || "",
+      signal_date: row.signal_date || row.entry_date || "",
+    });
+    if (row.entry_date) params.set("entry_date", row.entry_date);
+    if (row.exit_date) params.set("exit_date", row.exit_date);
+    if (row.stop_loss != null) params.set("stop_loss", row.stop_loss);
+    if (row.target) params.set("target", row.target);
+    if (row.entry_price != null) params.set("entry_price", row.entry_price);
+    if (row.exit_price != null) params.set("exit_price", row.exit_price);
+    fetch(chartUrl + "?" + params.toString())
+      .then(r => r.json())
+      .then(data => {
+        loadingEl.classList.add("hidden");
+        if (!data.chart) {
+          hintEl.textContent = data.error || "Could not load chart.";
+          hintEl.classList.remove("hidden");
+          return;
+        }
+        Plotly.newPlot(chartEl, data.chart.data, data.chart.layout, {responsive: true});
+      })
+      .catch(() => {
+        loadingEl.classList.add("hidden");
+        hintEl.textContent = "Chart request failed.";
+        hintEl.classList.remove("hidden");
+      });
+  }
+  document.querySelectorAll(".js-open-wl").forEach(btn => {
+    btn.addEventListener("click", () => openPanel(btn.getAttribute("data-outcome")));
+  });
+  const closeBtn = document.getElementById("wl-review-close");
+  if (closeBtn) closeBtn.addEventListener("click", () => panel.classList.add("hidden"));
+  if (filterEl) filterEl.addEventListener("input", () => renderTable(filterEl.value));
+})();
+</script>
 
 {% if charts %}
 <script>
@@ -251,11 +1579,14 @@
 <p class="text-red-400 text-sm">Fix the form errors above and try again.</p>
 {% else %}
 <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 text-sm text-slate-400">
-  <p class="mb-2">Pick a date range and stock(s), then run the backtest.</p>
+  <p class="mb-2">Choose a <strong class="text-emerald-300">strategy</strong> in the dropdown, pick a date range and universe, then run.</p>
   <ul class="list-disc list-inside space-y-1 text-xs">
-    <li><strong>Single stock</strong> — e.g. RELIANCE, TCS.NS</li>
-    <li><strong>Custom list</strong> — comma-separated symbols</li>
-    <li><strong>Nifty 200</strong> — full universe scan</li>
+    <li><strong>Stage Analysis 2.0</strong> — weekly Stage 2 entries, tech filters, stage exits</li>
+    <li><strong>Supertrend Pullback + Quality</strong> — first ST tag, stop under pullback low, EMA+RSI+ADX</li>
+    <li><strong>Supertrend Pullback + Trend &amp; RSI</strong> — same stop/trail, without ADX</li>
+    <li><strong>Cup Breakout</strong> — rounded 15–40% cup, volume breakout, 2R / EMA20 / measured-move exits</li>
+    <li><strong>Nifty 200</strong> — full universe scan (default)</li>
+    <li><strong>Nifty Smallcap 250</strong> — small-cap universe (last 5 years of daily bars)</li>
   </ul>
 </div>
 {% endif %}

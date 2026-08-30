@@ -61,6 +61,7 @@ class Stock(models.Model):
     sector = models.CharField(max_length=100, blank=True, default="")
     is_nifty200 = models.BooleanField(default=False, db_index=True)
     is_nifty100 = models.BooleanField(default=False, db_index=True)
+    is_nifty_smallcap250 = models.BooleanField(default=False, db_index=True)
     is_active = models.BooleanField(default=True)
 
     # Fundamental metrics (placeholder / manual / future API)

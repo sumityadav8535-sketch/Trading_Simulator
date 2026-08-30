@@ -8,6 +8,7 @@
   </div>
   <div class="flex flex-wrap gap-2 text-sm">
     <a href="{% url 'stage_analysis_v2:screener' %}?run_scan=on&min_quality_score=75&min_rs_rating=60&breakout_type=clean&strong_rs_only=on" class="btn btn-primary">Strict Screener</a>
+    <a href="{% url 'stage_analysis_v2:signals' %}" class="btn btn-secondary">Signals</a>
     <a href="{% url 'stage_analysis_v2:backtest' %}" class="btn btn-secondary">Backtest</a>
     <a href="{% url 'stage_analysis_v2:watchlist' %}" class="btn btn-secondary">Watchlist ({{ watchlist_count }})</a>
   </div>

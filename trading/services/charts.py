@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 from typing import Optional
 
+import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
@@ -213,6 +214,276 @@ def build_scanner_signal_bars(daily: list[dict]) -> str:
         yaxis_title="Signal count",
         bargap=0.15,
     )
+    return fig.to_json()
+
+
+def build_stage_v2_signal_bars(daily: list[dict]) -> str:
+    """Bar chart: Stage 2.0 signal count per entry day, colored by avg quality."""
+    if not daily:
+        return json.dumps({
+            "data": [],
+            "layout": {
+                "title": "No Stage 2 signals in selected period",
+                "template": "plotly_white",
+                "height": 380,
+            },
+        })
+
+    def _color(avg_q: float) -> str:
+        if avg_q >= 75:
+            return "#059669"  # high quality
+        if avg_q >= 50:
+            return "#2563eb"  # average
+        return "#64748b"
+
+    colors = [_color(float(d.get("avg_quality") or 0)) for d in daily]
+    fig = go.Figure(data=[go.Bar(
+        x=[d["date"] for d in daily],
+        y=[d["count"] for d in daily],
+        marker_color=colors,
+        customdata=[
+            [
+                d.get("avg_quality", 0),
+                d.get("avg_rs", 0),
+                d.get("high_quality", 0),
+                d.get("symbols_preview", ""),
+                d["count"],
+            ]
+            for d in daily
+        ],
+        hovertemplate=(
+            "<b>%{x}</b><br>"
+            "Signals: %{y}<br>"
+            "Avg quality: %{customdata[0]}<br>"
+            "Avg RS: %{customdata[1]}<br>"
+            "High quality (≥75): %{customdata[2]}<br>"
+            "%{customdata[3]}<br>"
+            "<extra>Click for cards</extra>"
+        ),
+    )])
+    fig.update_layout(
+        title="Stage Analysis 2.0 signals by entry day (click a bar for stock cards)",
+        template="plotly_white",
+        height=400,
+        margin=dict(l=50, r=20, t=55, b=80),
+        xaxis_title="Entry date",
+        yaxis_title="Signal count",
+        bargap=0.2,
+        clickmode="event+select",
+    )
+    return fig.to_json()
+
+
+def _nearest_index(df, ts) -> int:
+    indexer = df.index.get_indexer([ts], method="nearest")
+    if indexer.size == 0 or indexer[0] < 0:
+        return 0
+    return int(indexer[0])
+
+
+def build_signal_review_chart(
+    symbol: str,
+    signal_date: str,
+    entry_date: Optional[str] = None,
+    exit_date: Optional[str] = None,
+    stop_loss: Optional[float] = None,
+    target: Optional[float] = None,
+    entry_price: Optional[float] = None,
+    exit_price: Optional[float] = None,
+    df=None,
+) -> str:
+    """Candlestick around a backtest signal: mark signal, entry, stop, target, exit."""
+    if df is None:
+        sig_ts = pd.Timestamp(signal_date)
+        start = (sig_ts - pd.Timedelta(days=90)).date()
+        end = (sig_ts + pd.Timedelta(days=180)).date()
+        df = load_price_dataframe(symbol, start=start, end=end)
+    if df is None or getattr(df, "empty", True):
+        return json.dumps({
+            "data": [],
+            "layout": {
+                "title": f"No price data for {symbol}",
+                "template": "plotly_dark",
+                "height": 520,
+                "paper_bgcolor": "#0f172a",
+                "plot_bgcolor": "#0f172a",
+            },
+        })
+
+    sig_ts = pd.Timestamp(str(signal_date)[:10])
+    entry_ts = pd.Timestamp(str(entry_date)[:10]) if entry_date else None
+    exit_ts = pd.Timestamp(str(exit_date)[:10]) if exit_date else None
+
+    sig_i = _nearest_index(df, sig_ts)
+    end_i = sig_i
+    for ts in (entry_ts, exit_ts):
+        if ts is not None:
+            end_i = max(end_i, _nearest_index(df, ts))
+    end_i = max(end_i, min(len(df) - 1, sig_i + 60))
+    start_i = max(0, sig_i - 40)
+    end_i = min(len(df) - 1, end_i + 15)
+    window = df.iloc[start_i : end_i + 1]
+    if window.empty:
+        window = df
+
+    actual_sig = window.index[_nearest_index(window, sig_ts)] if len(window) else sig_ts
+    last_x = window.index[-1]
+
+    fig = make_subplots(
+        rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.04,
+        row_heights=[0.74, 0.26],
+        subplot_titles=(f"{symbol} — signal {str(signal_date)[:10]}", "Volume"),
+    )
+    fig.add_trace(
+        go.Candlestick(
+            x=window.index,
+            open=window["open"],
+            high=window["high"],
+            low=window["low"],
+            close=window["close"],
+            name="OHLC",
+            increasing_line_color="#22c55e",
+            decreasing_line_color="#ef4444",
+        ),
+        row=1, col=1,
+    )
+    vol_colors = [
+        "#22c55e" if c >= o else "#ef4444"
+        for c, o in zip(window["close"], window["open"])
+    ]
+    fig.add_trace(
+        go.Bar(
+            x=window.index, y=window["volume"], name="Volume",
+            marker_color=vol_colors, opacity=0.55, showlegend=False,
+        ),
+        row=2, col=1,
+    )
+
+    # Close path after the signal so the follow-through is obvious
+    after = window.loc[window.index >= actual_sig]
+    if len(after) >= 2:
+        fig.add_trace(
+            go.Scatter(
+                x=after.index, y=after["close"],
+                mode="lines",
+                name="After signal",
+                line=dict(color="#38bdf8", width=1.5),
+            ),
+            row=1, col=1,
+        )
+
+    if actual_sig is not None:
+        sig_px = float(window.loc[actual_sig, "close"]) if actual_sig in window.index else float(window["close"].iloc[0])
+        fig.add_trace(
+            go.Scatter(
+                x=[actual_sig], y=[sig_px],
+                mode="markers+text",
+                name="Signal",
+                marker=dict(symbol="star", size=16, color="#fbbf24", line=dict(color="#0f172a", width=1)),
+                text=["Signal"],
+                textposition="top center",
+                textfont=dict(color="#fbbf24", size=11),
+            ),
+            row=1, col=1,
+        )
+
+    if entry_ts is not None and entry_price:
+        fig.add_trace(
+            go.Scatter(
+                x=[entry_ts], y=[float(entry_price)],
+                mode="markers+text",
+                name="Entry",
+                marker=dict(symbol="triangle-up", size=14, color="#22c55e"),
+                text=["Entry"],
+                textposition="bottom center",
+                textfont=dict(color="#86efac", size=11),
+            ),
+            row=1, col=1,
+        )
+    if exit_ts is not None and exit_price:
+        win = (float(entry_price) if entry_price else 0) > 0 and float(exit_price) >= float(entry_price or exit_price)
+        fig.add_trace(
+            go.Scatter(
+                x=[exit_ts], y=[float(exit_price)],
+                mode="markers+text",
+                name="Exit",
+                marker=dict(
+                    symbol="triangle-down",
+                    size=14,
+                    color="#22c55e" if win else "#ef4444",
+                ),
+                text=["Exit"],
+                textposition="top center",
+                textfont=dict(color="#fda4af" if not win else "#86efac", size=11),
+            ),
+            row=1, col=1,
+        )
+
+    shapes = [
+        dict(
+            type="rect",
+            xref="x", yref="paper",
+            x0=actual_sig, x1=last_x,
+            y0=0, y1=1,
+            fillcolor="rgba(56,189,248,0.06)",
+            line=dict(width=0),
+            layer="below",
+        ),
+        dict(
+            type="line",
+            xref="x", yref="paper",
+            x0=actual_sig, x1=actual_sig,
+            y0=0, y1=1,
+            line=dict(color="#fbbf24", width=2, dash="dot"),
+        ),
+    ]
+    annotations = [
+        dict(
+            x=actual_sig, y=1.02, xref="x", yref="paper",
+            text="Signal day", showarrow=False,
+            font=dict(color="#fbbf24", size=11),
+        ),
+    ]
+    if stop_loss:
+        fig.add_hline(
+            y=float(stop_loss), line_dash="dash", line_color="#ef4444",
+            annotation_text=f"Stop {float(stop_loss):.2f}",
+            annotation_position="bottom right",
+            annotation_font_color="#fca5a5",
+            row=1, col=1,
+        )
+    if target:
+        fig.add_hline(
+            y=float(target), line_dash="dash", line_color="#38bdf8",
+            annotation_text=f"Target {float(target):.2f}",
+            annotation_position="top right",
+            annotation_font_color="#7dd3fc",
+            row=1, col=1,
+        )
+    if entry_price:
+        fig.add_hline(
+            y=float(entry_price), line_dash="dot", line_color="#22c55e",
+            annotation_text=f"Entry {float(entry_price):.2f}",
+            annotation_position="top left",
+            annotation_font_color="#86efac",
+            row=1, col=1,
+        )
+
+    fig.update_layout(
+        template="plotly_dark",
+        height=540,
+        paper_bgcolor="#0f172a",
+        plot_bgcolor="#0f172a",
+        margin=dict(l=50, r=30, t=60, b=40),
+        xaxis_rangeslider_visible=False,
+        legend=dict(orientation="h", yanchor="bottom", y=1.04, font=dict(size=11)),
+        hovermode="x unified",
+        shapes=shapes,
+        annotations=annotations,
+    )
+    fig.update_yaxes(title_text="Price", row=1, col=1, gridcolor="#1e293b")
+    fig.update_yaxes(title_text="Vol", row=2, col=1, gridcolor="#1e293b")
+    fig.update_xaxes(gridcolor="#1e293b")
     return fig.to_json()
 
 

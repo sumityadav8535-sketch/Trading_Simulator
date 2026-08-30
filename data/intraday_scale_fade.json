@@ -1,0 +1,1568 @@
+{
+  "hit_100": true,
+  "n_hits": 189,
+  "winner": {
+    "name": "fade 1.8% ATR | lev8 d4 p6 k2",
+    "trades": 49,
+    "win_rate": 55.1,
+    "profit_factor": 1.45,
+    "net_pnl": 296533.38,
+    "total_return_pct": 296.53,
+    "max_dd_pct": 61.93,
+    "avg_daily_pnl": 9266.67,
+    "median_daily_pnl": 10433.39,
+    "days_ge_2k": 19,
+    "days_ge_5k": 19,
+    "trading_days": 32,
+    "pct_days_ge_2k": 59.4,
+    "worst_day": -174110.19,
+    "best_day": 110649.05,
+    "oos_avg_daily": 12180.5,
+    "oos_pnl": 121805.01,
+    "oos_wr": 57.14,
+    "oos_days_ge_2k": 5,
+    "oos_days": 10,
+    "avg_hold_bars": 0.0,
+    "params": {
+      "mode": "risk",
+      "risk_pct": 25.0,
+      "alloc_pct": 0.0,
+      "leverage": 8.0,
+      "max_pos": 6,
+      "top_k": 2,
+      "max_deploy": 4.0,
+      "lock": 0.0,
+      "halt": 0.0,
+      "trail": 0.0,
+      "ext_min": 0.018,
+      "adx_max": 26,
+      "target_mode": "atr",
+      "idx_abs_max": 0.008,
+      "family": "fade 1.8% ATR"
+    },
+    "months": [
+      {
+        "month": "2026-06",
+        "trades": 16,
+        "pnl": 6016.47,
+        "wr": 50.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 20,
+        "pnl": 209450.81,
+        "wr": 60.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 13,
+        "pnl": 81066.12,
+        "wr": 53.8
+      }
+    ]
+  },
+  "hits": [
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p6 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p6 k4",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 6,
+        "top_k": 4,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p6 k8",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 6,
+        "top_k": 8,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p8 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 8,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p8 k4",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 8,
+        "top_k": 4,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p8 k8",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 8,
+        "top_k": 8,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p12 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 12,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p12 k4",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 12,
+        "top_k": 4,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p12 k8",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 12,
+        "top_k": 8,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev12 d4 p6 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.28,
+      "net_pnl": 286948.15,
+      "total_return_pct": 286.95,
+      "max_dd_pct": 78.09,
+      "avg_daily_pnl": 8967.13,
+      "median_daily_pnl": 12571.55,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -326103.38,
+      "best_day": 133901.12,
+      "oos_avg_daily": 12444.71,
+      "oos_pnl": 124447.07,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 12.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": -6841.48,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 227731.07,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 66058.54,
+          "wr": 53.8
+        }
+      ]
+    }
+  ],
+  "top": [
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p6 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p6 k4",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 6,
+        "top_k": 4,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p6 k8",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 6,
+        "top_k": 8,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p8 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 8,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p8 k4",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 8,
+        "top_k": 4,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p8 k8",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 8,
+        "top_k": 8,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p12 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 12,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p12 k4",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 12,
+        "top_k": 4,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev8 d4 p12 k8",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.45,
+      "net_pnl": 296533.38,
+      "total_return_pct": 296.53,
+      "max_dd_pct": 61.93,
+      "avg_daily_pnl": 9266.67,
+      "median_daily_pnl": 10433.39,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -174110.19,
+      "best_day": 110649.05,
+      "oos_avg_daily": 12180.5,
+      "oos_pnl": 121805.01,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 8.0,
+        "max_pos": 12,
+        "top_k": 8,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": 6016.47,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 209450.81,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 81066.12,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev12 d4 p6 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.28,
+      "net_pnl": 286948.15,
+      "total_return_pct": 286.95,
+      "max_dd_pct": 78.09,
+      "avg_daily_pnl": 8967.13,
+      "median_daily_pnl": 12571.55,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -326103.38,
+      "best_day": 133901.12,
+      "oos_avg_daily": 12444.71,
+      "oos_pnl": 124447.07,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 12.0,
+        "max_pos": 6,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": -6841.48,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 227731.07,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 66058.54,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev12 d4 p6 k4",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.28,
+      "net_pnl": 286948.15,
+      "total_return_pct": 286.95,
+      "max_dd_pct": 78.09,
+      "avg_daily_pnl": 8967.13,
+      "median_daily_pnl": 12571.55,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -326103.38,
+      "best_day": 133901.12,
+      "oos_avg_daily": 12444.71,
+      "oos_pnl": 124447.07,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 12.0,
+        "max_pos": 6,
+        "top_k": 4,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": -6841.48,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 227731.07,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 66058.54,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev12 d4 p6 k8",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.28,
+      "net_pnl": 286948.15,
+      "total_return_pct": 286.95,
+      "max_dd_pct": 78.09,
+      "avg_daily_pnl": 8967.13,
+      "median_daily_pnl": 12571.55,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -326103.38,
+      "best_day": 133901.12,
+      "oos_avg_daily": 12444.71,
+      "oos_pnl": 124447.07,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 12.0,
+        "max_pos": 6,
+        "top_k": 8,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": -6841.48,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 227731.07,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 66058.54,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev12 d4 p8 k2",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.28,
+      "net_pnl": 286948.15,
+      "total_return_pct": 286.95,
+      "max_dd_pct": 78.09,
+      "avg_daily_pnl": 8967.13,
+      "median_daily_pnl": 12571.55,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -326103.38,
+      "best_day": 133901.12,
+      "oos_avg_daily": 12444.71,
+      "oos_pnl": 124447.07,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 12.0,
+        "max_pos": 8,
+        "top_k": 2,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": -6841.48,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 227731.07,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 66058.54,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev12 d4 p8 k4",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.28,
+      "net_pnl": 286948.15,
+      "total_return_pct": 286.95,
+      "max_dd_pct": 78.09,
+      "avg_daily_pnl": 8967.13,
+      "median_daily_pnl": 12571.55,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -326103.38,
+      "best_day": 133901.12,
+      "oos_avg_daily": 12444.71,
+      "oos_pnl": 124447.07,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 12.0,
+        "max_pos": 8,
+        "top_k": 4,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": -6841.48,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 227731.07,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 66058.54,
+          "wr": 53.8
+        }
+      ]
+    },
+    {
+      "name": "fade 1.8% ATR | lev12 d4 p8 k8",
+      "trades": 49,
+      "win_rate": 55.1,
+      "profit_factor": 1.28,
+      "net_pnl": 286948.15,
+      "total_return_pct": 286.95,
+      "max_dd_pct": 78.09,
+      "avg_daily_pnl": 8967.13,
+      "median_daily_pnl": 12571.55,
+      "days_ge_2k": 19,
+      "days_ge_5k": 19,
+      "trading_days": 32,
+      "pct_days_ge_2k": 59.4,
+      "worst_day": -326103.38,
+      "best_day": 133901.12,
+      "oos_avg_daily": 12444.71,
+      "oos_pnl": 124447.07,
+      "oos_wr": 57.14,
+      "oos_days_ge_2k": 5,
+      "oos_days": 10,
+      "avg_hold_bars": 0.0,
+      "params": {
+        "mode": "risk",
+        "risk_pct": 25.0,
+        "alloc_pct": 0.0,
+        "leverage": 12.0,
+        "max_pos": 8,
+        "top_k": 8,
+        "max_deploy": 4.0,
+        "lock": 0.0,
+        "halt": 0.0,
+        "trail": 0.0,
+        "ext_min": 0.018,
+        "adx_max": 26,
+        "target_mode": "atr",
+        "idx_abs_max": 0.008,
+        "family": "fade 1.8% ATR"
+      },
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 16,
+          "pnl": -6841.48,
+          "wr": 50.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 227731.07,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 13,
+          "pnl": 66058.54,
+          "wr": 53.8
+        }
+      ]
+    }
+  ]
+}
