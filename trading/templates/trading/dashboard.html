@@ -24,6 +24,21 @@
   </div>
 </div>
 
+<section class="card p-6 mb-8">
+  <div class="flex items-start justify-between gap-3 mb-3">
+    <div>
+      <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500">Today · yesterday · last signal</h3>
+      <p class="text-xs text-slate-500 mt-1">
+        Runs once when the app starts: remaining 5m bars through today, then F&amp;O Live,
+        F&amp;O Long, and Gap Open. Navigating around the app does not scan again.
+      </p>
+    </div>
+  </div>
+  <div id="startup-signal-board" class="grid gap-2 md:grid-cols-3 text-xs">
+    <p class="text-sm text-slate-500">Startup scan results appear here after the app finishes its one-time check.</p>
+  </div>
+</section>
+
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
   <section class="card p-6">
     <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500 mb-4">Quick access</h3>
@@ -46,6 +61,13 @@
         <div>
           <p class="font-semibold text-slate-900">F&amp;O Live</p>
           <p class="text-sm text-slate-500">Index futures signals &amp; charts</p>
+        </div>
+        <span class="text-blue-600 font-semibold text-sm">Open →</span>
+      </a>
+      <a href="{% url 'fundamental_swing' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
+        <div>
+          <p class="font-semibold text-slate-900">Fundamental Compounders</p>
+          <p class="text-sm text-slate-500">Momentum overlay · 21-day rotation · Nifty 200</p>
         </div>
         <span class="text-blue-600 font-semibold text-sm">Open →</span>
       </a>

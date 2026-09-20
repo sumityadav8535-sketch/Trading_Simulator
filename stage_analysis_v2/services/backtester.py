@@ -34,6 +34,11 @@ from stage_analysis_v2.services.indicators import add_daily_indicators, add_week
 from stage_analysis_v2.services.quality_score import compute_quality_score
 from stage_analysis_v2.services.relative_strength import compute_relative_strength
 from stage_analysis_v2.services.stage_engine import detect_daily_stage, detect_weekly_stage
+from stage_analysis_v2.services.quality_overlay import (
+    index_above_sma,
+    load_quality_fundamentals,
+    passes_pe_margin,
+)
 from stage_analysis_v2.services.tech_filters import (
     DEFAULT_TECH_FILTER,
     TECH_FILTER_LABELS,
@@ -123,6 +128,11 @@ class EntryFilters:
     ma_period: int = 0  # 0 = MA filter off
     ma_type: str = DEFAULT_MA_TYPE  # sma | ema
     ma_condition: str = MA_COND_NONE  # none | above | below
+    max_pct_above_ma: float = 0.0  # 15 = reject if close > MA × 1.15
+    nifty_sma_period: int = 0  # 150 = Nifty must be above SMA150
+    min_profit_margin: float = 0.0  # percent, 0 = off
+    max_pe: float = 0.0  # 50 = off if 0
+    fundamentals: dict = field(default_factory=dict)
 
     def active_summary(self) -> str:
         parts: list[str] = []
@@ -138,6 +148,14 @@ class EntryFilters:
             parts.append(
                 f"price {self.ma_condition} {self.ma_type.upper()}{self.ma_period}"
             )
+        if self.max_pct_above_ma > 0:
+            parts.append(f"≤{self.max_pct_above_ma:g}% above MA")
+        if self.nifty_sma_period > 0:
+            parts.append(f"Nifty>SMA{int(self.nifty_sma_period)}")
+        if self.max_pe > 0:
+            parts.append(f"PE≤{self.max_pe:g}")
+        if self.min_profit_margin > 0:
+            parts.append(f"margin≥{self.min_profit_margin:g}%")
         return ", ".join(parts) if parts else "none"
 
 # Exit mode ids (form / CLI / API)
@@ -321,7 +339,10 @@ def _passes_entry_filters(
     need_vol_ratio = filters.min_volume_ratio > 0
     need_ma = (
         filters.ma_period > 0
-        and filters.ma_condition in (MA_COND_ABOVE, MA_COND_BELOW)
+        and (
+            filters.ma_condition in (MA_COND_ABOVE, MA_COND_BELOW)
+            or filters.max_pct_above_ma > 0
+        )
     )
     if not need_vol_ratio and not need_ma:
         return True
@@ -354,6 +375,8 @@ def _passes_entry_filters(
         if filters.ma_condition == MA_COND_ABOVE and close < ma:
             return False
         if filters.ma_condition == MA_COND_BELOW and close > ma:
+            return False
+        if filters.max_pct_above_ma > 0 and close > ma * (1.0 + float(filters.max_pct_above_ma) / 100.0):
             return False
 
     return True
@@ -479,10 +502,12 @@ def _collect_stage2_signals(
     target_rr: float = DEFAULT_TARGET_RR,
     stop_ma_mult: float = DEFAULT_STOP_MA_MULT,
     min_rs_rating: float = 0.0,
+    nifty_daily: Optional[pd.DataFrame] = None,
 ) -> list[dict]:
     """Find stage-entry signals in the backtest window (default: Stage 2 transition)."""
     daily_ind = add_daily_indicators(daily)
     signals: list[dict] = []
+    filters = entry_filters or EntryFilters()
 
     for w_idx in range(1, len(weekly)):
         week_end = weekly.index[w_idx]
@@ -493,6 +518,17 @@ def _collect_stage2_signals(
         if market_filter and not nifty_weekly.empty:
             mkt_ok = _market_favorable_at(nifty_weekly, week_end)
         if not mkt_ok:
+            continue
+        if filters.nifty_sma_period > 0 and not index_above_sma(
+            nifty_daily, week_end, int(filters.nifty_sma_period)
+        ):
+            continue
+        if not passes_pe_margin(
+            symbol,
+            filters.fundamentals,
+            max_pe=filters.max_pe,
+            min_profit_margin=filters.min_profit_margin,
+        ):
             continue
 
         sig = _evaluate_v2_signal(
@@ -951,6 +987,8 @@ def run_stage_v2_backtest(
     entry_stage = normalize_entry_stage(entry_stage)
     entry_on = normalize_entry_on(entry_on)
     filters = entry_filters or EntryFilters()
+    if filters.max_pe > 0 or filters.min_profit_margin > 0:
+        filters.fundamentals = load_quality_fundamentals(symbols)
     try:
         target_rr = float(target_rr)
     except (TypeError, ValueError):
@@ -1053,6 +1091,7 @@ def run_stage_v2_backtest(
             target_rr=target_rr,
             stop_ma_mult=stop_ma_mult,
             min_rs_rating=min_rs_rating,
+            nifty_daily=nifty_daily,
         )
         all_signals += len(symbol_signals)
         for sig in symbol_signals:

@@ -1,0 +1,482 @@
+{% extends "trading/base.html" %}
+{% block title %}Fundamental Swing — Trading Simulator{% endblock %}
+{% block extra_head %}
+<style>
+  .fund-toolbar label span { display:block; font-size:0.68rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#64748b; margin-bottom:0.3rem; }
+  .book-pane { position:relative; overflow:hidden; }
+  .book-pane::before { content:""; position:absolute; inset:0 auto 0 0; width:4px; }
+  .book-pane.today::before { background:linear-gradient(180deg,#059669,#34d399); }
+  .book-pane.upcoming::before { background:linear-gradient(180deg,#d97706,#fbbf24); }
+  .stock-card { border:1px solid #e2e8f0; border-radius:0.9rem; padding:1rem 1.05rem; background:#fff; transition:box-shadow .15s ease, border-color .15s ease; }
+  .stock-card:hover { border-color:#bfdbfe; box-shadow:0 8px 22px rgba(15,23,42,0.06); }
+  .stock-card.stay { background:linear-gradient(180deg,#f8fffb,#ffffff); }
+  .stock-card.enter { background:linear-gradient(180deg,#fffbeb,#ffffff); border-color:#fde68a; }
+  .stock-card.exit { background:linear-gradient(180deg,#fff7f7,#ffffff); border-color:#fecaca; }
+  .score-orb { width:3.1rem; height:3.1rem; border-radius:999px; display:grid; place-items:center; font-weight:700; font-size:1.05rem; letter-spacing:-0.03em; background:conic-gradient(#2563eb, #0ea5e9); color:#fff; box-shadow:0 8px 16px rgba(37,99,235,0.22); flex-shrink:0; }
+  .metric-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.45rem; margin-top:0.85rem; }
+  .metric-grid div { background:#f8fafc; border:1px solid #eef2f7; border-radius:0.55rem; padding:0.4rem 0.45rem; }
+  .metric-grid .k { font-size:0.62rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#94a3b8; }
+  .metric-grid .v { font-size:0.85rem; font-weight:700; color:#0f172a; margin-top:0.05rem; }
+  .chip { display:inline-flex; align-items:center; border-radius:999px; padding:0.15rem 0.55rem; font-size:0.68rem; font-weight:600; background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
+  .preset-link { font-size:0.75rem; font-weight:600; padding:0.28rem 0.7rem; border-radius:999px; border:1px solid #dbe3ee; background:#fff; color:#334155; text-decoration:none; }
+  .preset-link:hover { border-color:#93c5fd; background:#eff6ff; color:#1d4ed8; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="flex flex-wrap justify-between items-start gap-3 mb-5">
+  <div>
+    <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400 mb-1">Nifty 200 · fundamentals + technicals</p>
+    <h2 class="page-title">Fundamental <span class="text-blue-600">Swing</span></h2>
+    <p class="mt-1">
+      <span class="badge badge-blue">{{ form_pack|default:params.name }}</span>
+      {% if params.rebalance and params.rebalance != "july" %}
+      <span class="badge badge-slate ml-1">{{ params.rebalance }} rebalance</span>
+      {% endif %}
+      {% if params.tech and params.tech != "none" %}
+      <span class="badge badge-slate ml-1">{{ params.tech }} · {{ params.rank_by }}</span>
+      {% endif %}
+    </p>
+    <p class="page-sub max-w-2xl">
+      Nifty 200 · {{ params.top_n }} name{{ params.top_n|pluralize }} · rebalance {{ params.rebalance|default:"july" }} ·
+      rank {{ params.rank_by|default:"score" }} · tech {{ params.tech|default:"none" }}.
+      Screen: revenue ≥{{ params.min_revenue_growth }}%, earnings ≥{{ params.min_earnings_growth }}%, ROE ≥{{ params.min_roe }}%.
+    </p>
+  </div>
+  <a href="{% url 'fundamental_swing' %}?rebuild=1" class="btn btn-secondary text-xs">Rebuild cache</a>
+</div>
+
+{% if needs_fetch %}
+<div class="card p-6 mb-6">
+  <p class="font-semibold text-slate-900">Yahoo fundamentals are not cached yet.</p>
+  <p class="text-sm text-slate-500 mt-1">
+    Run <code class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">python scripts/fundamental_swing_build.py</code>
+    once to pull statements for the Nifty 200 universe, then refresh this page.
+  </p>
+</div>
+{% else %}
+
+<section class="card p-4 md:p-5 mb-5 fund-toolbar">
+  <form method="get" action="{% url 'fundamental_swing' %}">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+      <label>
+        <span>Pack</span>
+        <select name="pack" class="input w-full">
+          {% for pack in packs %}
+          <option value="{{ pack.name }}" {% if pack.name == form_pack %}selected{% endif %}>{{ pack.name }} · {{ pack.top_n }} names</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>
+        <span>Show book as of</span>
+        <input type="date" name="asof" value="{{ form_asof }}" class="input w-full">
+      </label>
+      <button type="submit" class="btn btn-secondary w-full md:w-auto">View book</button>
+    </div>
+
+    <div class="mt-4 pt-4 border-t border-slate-100">
+      <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-2">Backtest any past window</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 items-end">
+        <label>
+          <span>Start</span>
+          <input type="date" name="start" value="{{ form_start }}" class="input w-full">
+        </label>
+        <label>
+          <span>End</span>
+          <input type="date" name="end" value="{{ form_end }}" class="input w-full">
+        </label>
+        <label>
+          <span>Capital ₹</span>
+          <input type="number" name="capital" value="{{ form_capital }}" min="10000" step="10000" class="input w-full">
+        </label>
+        <button type="submit" name="run" value="1" class="btn btn-primary w-full">Run backtest</button>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 mt-3">
+        <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Quick range</span>
+        {% for p in presets %}
+        <a class="preset-link" href="{% url 'fundamental_swing' %}?pack={{ form_pack|urlencode }}&amp;asof={{ form_asof }}&amp;start={{ p.start }}&amp;end={{ p.end }}&amp;run=1&amp;capital={{ form_capital }}">{{ p.label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </form>
+</section>
+
+{% if custom_error %}
+<div class="flash mb-5 border-red-200 bg-red-50 text-red-800">{{ custom_error }}</div>
+{% endif %}
+
+{% if not asof_is_today %}
+<div class="mb-4 px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 text-sm text-amber-900">
+  Viewing the book as of <strong>{{ asof_label }}</strong>, not today.
+  <a class="underline font-semibold ml-1" href="{% url 'fundamental_swing' %}?pack={{ form_pack|urlencode }}">Back to today</a>
+</div>
+{% endif %}
+
+<div class="flex flex-wrap items-center gap-2 text-xs text-slate-500 mb-4">
+  <span class="chip">{{ book_diff.stay_count|default:0 }} staying</span>
+  <span class="chip" style="background:#fffbeb;border-color:#fde68a;color:#b45309;">{{ book_diff.enter_count|default:0 }} entering next July</span>
+  <span class="chip" style="background:#fef2f2;border-color:#fecaca;color:#b91c1c;">{{ book_diff.leave_count|default:0 }} leaving</span>
+  <span class="text-slate-400">·</span>
+  <span>{{ coverage.passed }}/{{ coverage.universe }} names passed filters</span>
+  <span class="text-slate-400">·</span>
+  <span>Snapshot {{ coverage.fetched_at|default:"—" }}</span>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-5 mb-8">
+  <section class="card book-pane today p-5">
+    <div class="flex items-start justify-between gap-3 mb-4">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-700">Held now</p>
+        <h3 class="text-xl font-bold text-slate-900 mt-0.5">{{ today_title|default:"Today’s book" }}</h3>
+        <p class="text-xs text-slate-500 mt-1">{{ today_sub }}</p>
+      </div>
+      <span class="badge badge-green">{{ today_book|length }} of {{ params.top_n }}</span>
+    </div>
+
+    {% if today_book %}
+    <div class="space-y-3">
+      {% for p in today_book %}
+      <article class="stock-card {{ p.status }}">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">#{{ forloop.counter }} · {{ p.sector|default:"—" }}</p>
+            <h4 class="text-2xl font-bold tracking-tight text-slate-900 leading-none mt-1">{{ p.symbol }}</h4>
+            <p class="text-xs text-slate-500 mt-1 truncate">{{ p.name }}</p>
+          </div>
+          <div class="text-right">
+            <div class="score-orb">{{ p.score }}</div>
+            <p class="text-[10px] uppercase tracking-wide text-slate-400 mt-1">score</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 mt-3">
+          {% if p.status == "stay" %}<span class="badge badge-green">{{ p.status_label }}</span>
+          {% elif p.status == "exit" %}<span class="badge badge-red">{{ p.status_label }}</span>
+          {% else %}<span class="badge badge-slate">{{ p.status_label }}</span>{% endif %}
+          {% if p.since_entry_pct != None %}
+          <span class="text-sm font-semibold {% if p.since_entry_pct >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">
+            {% if p.since_entry_pct > 0 %}+{% endif %}{{ p.since_entry_pct }}% since entry
+          </span>
+          {% endif %}
+          {% if p.price %}<span class="text-xs text-slate-500">₹{{ p.price }}</span>{% endif %}
+        </div>
+        <div class="metric-grid">
+          <div><p class="k">ROE</p><p class="v">{% if p.roe %}{{ p.roe }}%{% else %}—{% endif %}</p></div>
+          <div><p class="k">Earn g</p><p class="v">{% if p.earnings_growth %}{{ p.earnings_growth }}%{% else %}—{% endif %}</p></div>
+          <div><p class="k">3m mom</p><p class="v">{% if p.mom3 != None %}{{ p.mom3 }}%{% else %}—{% endif %}</p></div>
+          <div><p class="k">PE</p><p class="v">{% if p.pe %}{{ p.pe }}{% else %}—{% endif %}</p></div>
+        </div>
+        {% if p.reasons or p.above_sma150 or p.rsi %}
+        <div class="flex flex-wrap gap-1.5 mt-3">
+          {% if p.above_sma150 %}<span class="chip">Above SMA150</span>{% endif %}
+          {% if p.rsi %}<span class="chip">RSI {{ p.rsi }}</span>{% endif %}
+          {% for r in p.reasons %}<span class="chip">{{ r }}</span>{% endfor %}
+        </div>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+      <p class="font-semibold text-slate-700">Cash</p>
+      <p class="text-sm text-slate-500 mt-1">No names cleared the filters at the last rebalance.</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="card book-pane upcoming p-5">
+    <div class="flex items-start justify-between gap-3 mb-4">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-700">Next rebalance</p>
+        <h3 class="text-xl font-bold text-slate-900 mt-0.5">{{ upcoming_title|default:"Upcoming" }}</h3>
+        <p class="text-xs text-slate-500 mt-1">{{ upcoming_sub }}</p>
+      </div>
+      <span class="badge badge-amber">{{ upcoming_book|length }} of {{ params.top_n }}</span>
+    </div>
+
+    {% if upcoming_book %}
+    <div class="space-y-3">
+      {% for p in upcoming_book %}
+      <article class="stock-card {{ p.status }}">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">#{{ forloop.counter }} · {{ p.sector|default:"—" }}</p>
+            <h4 class="text-2xl font-bold tracking-tight text-slate-900 leading-none mt-1">{{ p.symbol }}</h4>
+            <p class="text-xs text-slate-500 mt-1 truncate">{{ p.name }}</p>
+          </div>
+          <div class="text-right">
+            <div class="score-orb">{{ p.score }}</div>
+            <p class="text-[10px] uppercase tracking-wide text-slate-400 mt-1">score</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 mt-3">
+          {% if p.status == "enter" %}<span class="badge badge-amber">{{ p.status_label }}</span>
+          {% elif p.status == "stay" %}<span class="badge badge-green">{{ p.status_label }}</span>
+          {% else %}<span class="badge badge-slate">{{ p.status_label }}</span>{% endif %}
+          {% if p.price %}<span class="text-xs text-slate-500">₹{{ p.price }}</span>{% endif %}
+          {% if p.target_upside_pct %}<span class="text-xs {% if p.target_upside_pct > 0 %}text-emerald-600{% else %}text-red-600{% endif %}">Target {{ p.target_upside_pct }}%</span>{% endif %}
+        </div>
+        <div class="metric-grid">
+          <div><p class="k">ROE</p><p class="v">{% if p.roe %}{{ p.roe }}%{% else %}—{% endif %}</p></div>
+          <div><p class="k">Earn g</p><p class="v">{% if p.earnings_growth %}{{ p.earnings_growth }}%{% else %}—{% endif %}</p></div>
+          <div><p class="k">3m mom</p><p class="v">{% if p.mom3 != None %}{{ p.mom3 }}%{% else %}—{% endif %}</p></div>
+          <div><p class="k">PE</p><p class="v">{% if p.pe %}{{ p.pe }}{% else %}—{% endif %}</p></div>
+        </div>
+        {% if p.reasons or p.above_sma150 or p.rsi %}
+        <div class="flex flex-wrap gap-1.5 mt-3">
+          {% if p.above_sma150 %}<span class="chip">Above SMA150</span>{% endif %}
+          {% if p.rsi %}<span class="chip">RSI {{ p.rsi }}</span>{% endif %}
+          {% for r in p.reasons %}<span class="chip">{{ r }}</span>{% endfor %}
+        </div>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+      <p class="font-semibold text-slate-700">No upcoming names</p>
+      <p class="text-sm text-slate-500 mt-1">Nothing currently passes the growth-quality screen.</p>
+    </div>
+    {% endif %}
+
+    {% if upcoming_bench %}
+    <div class="mt-5 pt-4 border-t border-slate-100">
+      <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-2">On deck · passed filters, not in the next {{ params.top_n }}</p>
+      <div class="flex flex-wrap gap-2">
+        {% for p in upcoming_bench %}
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-xs">
+          <span class="font-semibold text-slate-800">{{ p.symbol }}</span>
+          <span class="text-slate-400">{{ p.score }}</span>
+        </span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </section>
+</div>
+
+{% if custom and not custom_error %}
+<section class="mb-8">
+  <div class="flex items-end justify-between gap-3 mb-3">
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-blue-600">Custom window</p>
+      <h3 class="text-lg font-bold text-slate-900">Backtest {{ custom.title }}</h3>
+      <p class="text-xs text-slate-500 mt-1">{{ custom.params_name }} · equal-weight · 1 July rebalance · point-in-time statements only</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+    <div class="stat-card">
+      <p class="label">Return</p>
+      <p class="value {% if custom.total_return_pct >= 100 %}text-emerald-600{% elif custom.total_return_pct >= 0 %}{% else %}text-red-600{% endif %}">
+        {% if custom.total_return_pct != None %}{{ custom.total_return_pct }}%{% else %}—{% endif %}
+      </p>
+    </div>
+    <div class="stat-card">
+      <p class="label">CAGR</p>
+      <p class="value">{% if custom.cagr_pct != None %}{{ custom.cagr_pct }}%{% else %}—{% endif %}</p>
+    </div>
+    <div class="stat-card">
+      <p class="label">Max drawdown</p>
+      <p class="value">{% if custom.max_drawdown_pct != None %}{{ custom.max_drawdown_pct }}%{% else %}—{% endif %}</p>
+    </div>
+    <div class="stat-card">
+      <p class="label">Nifty 50</p>
+      <p class="value">{% if custom.benchmark_pct != None %}{{ custom.benchmark_pct }}%{% else %}—{% endif %}</p>
+    </div>
+    <div class="stat-card">
+      <p class="label">Win rate</p>
+      <p class="value">{% if custom.win_rate != None %}{{ custom.win_rate }}%{% else %}—{% endif %}</p>
+    </div>
+  </div>
+  <p class="text-xs mb-4">
+    {% if custom.hit_100 %}<span class="badge badge-green">Hit 100%</span>{% else %}<span class="badge badge-slate">Did not double</span>{% endif %}
+    {% if custom.beat_benchmark %}<span class="badge badge-blue ml-1">Beat Nifty</span>{% endif %}
+    {% if custom.doublers %}<span class="badge badge-amber ml-1">{{ custom.doublers }} stock doubles</span>{% endif %}
+    <span class="text-slate-400 ml-2">{{ custom.trades|default:0 }} holds · final ₹{{ custom.final_equity|default:"—" }}</span>
+  </p>
+  {% if charts.custom_equity %}
+  <div class="card p-4 mb-4">
+    <div id="fund-custom-equity" class="w-full" style="height:360px"></div>
+  </div>
+  {% endif %}
+  {% if custom.rebalances %}
+  <div class="space-y-3 mb-4">
+    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Holdings by rebalance</p>
+    {% for reb in custom.rebalances %}
+    <div class="card p-4">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ reb.date }} · {{ reb.count }} names</p>
+      <p class="text-sm mt-2">
+        {% for p in reb.picks %}
+          <span class="chip mr-1 mb-1">{{ p.symbol }} <span class="text-slate-400">{{ p.score }}</span></span>
+        {% empty %}
+          <span class="text-slate-500 text-sm">Cash</span>
+        {% endfor %}
+      </p>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if custom.holdings_history %}
+  <div class="card overflow-x-auto">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Stock</th>
+          <th>Held</th>
+          <th class="text-right">Entry</th>
+          <th class="text-right">Exit</th>
+          <th class="text-right">Return</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in custom.holdings_history %}
+        <tr>
+          <td class="font-semibold">{{ t.symbol }}</td>
+          <td class="text-xs">{{ t.entry_date }} → {{ t.exit_date }}</td>
+          <td class="text-right">{{ t.entry_px }}</td>
+          <td class="text-right">{{ t.exit_px }}</td>
+          <td class="text-right font-semibold {% if t.return_pct >= 100 %}text-emerald-700{% elif t.return_pct >= 0 %}{% else %}text-red-600{% endif %}">
+            {% if t.return_pct != None %}{{ t.return_pct }}%{% else %}—{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+<section class="card p-5 mb-6">
+  <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500 mb-2">How a name gets in</h3>
+  <p class="text-sm text-slate-600 mb-3">{{ blurb }}</p>
+  <div class="grid md:grid-cols-6 gap-3 text-xs">
+    <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+      <p class="font-semibold text-slate-800">Growth · 30</p>
+      <p class="text-slate-500 mt-1">Earnings and revenue growth (YoY)</p>
+    </div>
+    <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+      <p class="font-semibold text-slate-800">Quality · 30</p>
+      <p class="text-slate-500 mt-1">ROE, profit margin, operating margin</p>
+    </div>
+    <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+      <p class="font-semibold text-slate-800">Balance sheet · 15</p>
+      <p class="text-slate-500 mt-1">Debt/equity, current ratio (skipped for banks)</p>
+    </div>
+    <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+      <p class="font-semibold text-slate-800">Valuation · 15</p>
+      <p class="text-slate-500 mt-1">PE band and PEG (GARP, not deep value)</p>
+    </div>
+    <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+      <p class="font-semibold text-slate-800">Ownership · 10</p>
+      <p class="text-slate-500 mt-1">Insider and institutional holdings</p>
+    </div>
+    <div class="rounded-lg bg-blue-50 border border-blue-200 p-3">
+      <p class="font-semibold text-slate-800">Technicals</p>
+      <p class="text-slate-500 mt-1">{{ params.tech }} · rank {{ params.rank_by }} · {{ params.rebalance }}</p>
+    </div>
+  </div>
+  <p class="text-xs text-slate-500 mt-3">
+    Hard filters ({{ params.name }}): ROE ≥ {{ params.min_roe }}%, profit margin ≥ {{ params.min_profit_margin }}%,
+    revenue growth ≥ {{ params.min_revenue_growth }}%, earnings growth ≥ {{ params.min_earnings_growth }}%,
+    PE ≤ {{ params.max_pe }}, D/E ≤ {{ params.max_de }}, score ≥ {{ params.min_score }}.
+    Missing numbers skip that filter instead of rejecting the stock.
+  </p>
+  <p class="text-xs text-amber-800 mt-3 leading-relaxed">{{ disclaimer }}</p>
+</section>
+
+<section class="mb-6">
+  <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500 mb-2">Saved multi-year windows</h3>
+  <p class="text-xs text-slate-500 mb-3">
+    Precomputed through {{ asof|default:"" }}. Use the date form above to test any other range.
+  </p>
+  <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+    {% for w in windows %}
+    <article class="card p-5 {% if w.hit_100 %}ring-2 ring-emerald-400 bg-emerald-50/40{% endif %}">
+      <p class="text-xs uppercase tracking-wide font-semibold text-slate-500">{{ w.title }}</p>
+      <p class="text-3xl font-bold mt-1 {% if w.total_return_pct >= 100 %}text-emerald-700{% elif w.total_return_pct >= 0 %}text-slate-900{% else %}text-red-600{% endif %}">
+        {% if w.total_return_pct != None %}{{ w.total_return_pct }}%{% else %}—{% endif %}
+      </p>
+      <p class="text-xs text-slate-500 mt-1">{{ w.start }} → {{ w.end }}</p>
+      <div class="grid grid-cols-2 gap-2 text-xs mt-3">
+        <div><p class="text-slate-500">CAGR</p><p class="font-semibold">{% if w.cagr_pct != None %}{{ w.cagr_pct }}%{% else %}—{% endif %}</p></div>
+        <div><p class="text-slate-500">Max DD</p><p class="font-semibold">{% if w.max_drawdown_pct != None %}{{ w.max_drawdown_pct }}%{% else %}—{% endif %}</p></div>
+        <div><p class="text-slate-500">Win rate</p><p class="font-semibold">{% if w.win_rate != None %}{{ w.win_rate }}%{% else %}—{% endif %}</p></div>
+        <div><p class="text-slate-500">Nifty 50</p><p class="font-semibold">{% if w.benchmark_pct != None %}{{ w.benchmark_pct }}%{% else %}—{% endif %}</p></div>
+      </div>
+      <p class="text-[11px] mt-3">
+        {% if w.hit_100 %}<span class="badge badge-green">Hit 100%</span>
+        {% else %}<span class="badge badge-slate">Did not double</span>{% endif %}
+        {% if w.beat_benchmark %}<span class="badge badge-blue ml-1">Beat Nifty</span>{% endif %}
+        {% if w.doublers %}<span class="badge badge-amber ml-1">{{ w.doublers }} stock doubles</span>{% endif %}
+      </p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+{% if charts.equity %}
+<section class="card p-4 mb-6">
+  <div id="fund-equity" class="w-full" style="height:380px"></div>
+</section>
+{% endif %}
+
+<section class="mb-6">
+  <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500 mb-3">One-year slices</h3>
+  <div class="card overflow-x-auto">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Window</th>
+          <th class="text-right">Portfolio</th>
+          <th class="text-right">Nifty 50</th>
+          <th class="text-right">Max DD</th>
+          <th class="text-right">Win rate</th>
+          <th class="text-right">Doublers</th>
+          <th>100%?</th>
+          <th>Best holding</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for y in year_rows %}
+        <tr>
+          <td class="text-xs">{{ y.label }}</td>
+          <td class="text-right font-semibold {% if y.return_pct >= 100 %}text-emerald-700{% elif y.return_pct >= 0 %}text-slate-800{% else %}text-red-600{% endif %}">
+            {% if y.return_pct != None %}{{ y.return_pct }}%{% else %}—{% endif %}
+          </td>
+          <td class="text-right text-slate-500">{% if y.benchmark_pct != None %}{{ y.benchmark_pct }}%{% else %}—{% endif %}</td>
+          <td class="text-right">{% if y.max_drawdown_pct != None %}{{ y.max_drawdown_pct }}%{% else %}—{% endif %}</td>
+          <td class="text-right">{% if y.win_rate != None %}{{ y.win_rate }}%{% else %}—{% endif %}</td>
+          <td class="text-right">{{ y.doublers|default:0 }}</td>
+          <td>
+            {% if y.hit_100 %}<span class="badge badge-green">Yes</span>
+            {% else %}<span class="badge badge-slate">No</span>{% endif %}
+          </td>
+          <td class="text-xs">
+            {% if y.best_stock_year %}
+              {{ y.best_stock_year.symbol }}
+              {% if y.best_stock_year.return_pct != None %}({{ y.best_stock_year.return_pct }}%){% endif %}
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-slate-500">No yearly slices.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% endif %}
+
+{% if charts.custom_equity %}
+<script>
+  const customEq = {{ charts.custom_equity|safe }};
+  Plotly.newPlot('fund-custom-equity', customEq.data, customEq.layout, {responsive: true, displayModeBar: false});
+</script>
+{% endif %}
+{% if charts.equity %}
+<script>
+  const eq = {{ charts.equity|safe }};
+  Plotly.newPlot('fund-equity', eq.data, eq.layout, {responsive: true, displayModeBar: false});
+</script>
+{% endif %}
+{% endblock %}

@@ -105,7 +105,7 @@
       </button>
       <button type="button" id="rs70-pack-btn"
               class="bg-sky-900/50 hover:bg-sky-800/60 border border-sky-600 rounded px-4 py-2 font-medium text-sky-200"
-              title="Stage 2.0 last-1y pack: RS ≥ 70 and price above SMA150. Nifty 200: WR 49%→59%, return 12%→20%, smaller drawdown.">
+              title="Stage 2.0 last-1y pack: RS ≥ 70, price above SMA150, plus quality overlay (Nifty>SMA150, ≤15% extension, PE≤50, margin≥8%).">
         Load RS 70 pack
       </button>
     </div>
@@ -381,6 +381,39 @@
           {% endfor %}
         </select>
       </label>
+    </div>
+    <div class="mt-3 p-3 rounded-lg border border-emerald-900/40 bg-emerald-950/15">
+      <label class="inline-flex items-center gap-2 text-xs font-semibold text-emerald-300">
+        <input type="checkbox" name="quality_overlay" {% if form.quality_overlay.value %}checked{% endif %}
+               class="rounded bg-slate-800 border-slate-600" id="quality-overlay">
+        Quality overlay (RS 70 pack)
+      </label>
+      <p class="text-[11px] text-slate-500 mt-1 mb-2">
+        Skip new buys when Nifty is below SMA150, the stock is stretched more than 15% above SMA150,
+        trailing PE is above 50, or net margin is below 8%. PE / margin use the latest Yahoo snapshot, not the signal date.
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <label class="block text-xs">Max % above MA
+          <input type="number" name="max_pct_above_ma" step="1" min="0" max="100"
+                 value="{{ form.max_pct_above_ma.value|default_if_none:0 }}"
+                 class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+        </label>
+        <label class="block text-xs">Nifty above SMA
+          <input type="number" name="nifty_sma_period" min="0" max="400"
+                 value="{{ form.nifty_sma_period.value|default_if_none:0 }}"
+                 class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+        </label>
+        <label class="block text-xs">Min profit margin %
+          <input type="number" name="min_profit_margin" step="0.5" min="0" max="100"
+                 value="{{ form.min_profit_margin.value|default_if_none:0 }}"
+                 class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+        </label>
+        <label class="block text-xs">Max PE
+          <input type="number" name="max_pe" step="1" min="0" max="500"
+                 value="{{ form.max_pe.value|default_if_none:0 }}"
+                 class="block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+        </label>
+      </div>
     </div>
     <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">
       Filters use the stock’s last daily bar on the signal week-end.
@@ -703,6 +736,11 @@
     setInput('min_quality_score', src.min_quality_score);
     setInput('min_rs_rating', src.min_rs_rating);
     setInput('max_pos_pct', src.max_pos_pct);
+    setInput('quality_overlay', src.quality_overlay);
+    setInput('max_pct_above_ma', src.max_pct_above_ma);
+    setInput('nifty_sma_period', src.nifty_sma_period);
+    setInput('min_profit_margin', src.min_profit_margin);
+    setInput('max_pe', src.max_pe);
     highlight(src.min_quality_score);
     highlightRs(src.min_rs_rating);
     highlightRr(src.target_rr);

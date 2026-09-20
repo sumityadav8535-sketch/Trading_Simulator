@@ -69,6 +69,7 @@ def check_today_long_trades(
     instrument: str = "NIFTY",
     session: Optional[date] = None,
     force_fetch: bool = True,
+    bars=None,
 ) -> dict:
     instrument = instrument.upper()
     inst = INSTRUMENTS.get(instrument, INSTRUMENTS["NIFTY"])
@@ -76,9 +77,19 @@ def check_today_long_trades(
     target_r = float(strategy.get("target_r", LONG_TARGET_R))
     session = session or datetime.now(IST).date()
 
-    df = enrich_features(fetch_instrument_bars(instrument, force=force_fetch))
+    if bars is not None:
+        df = enrich_features(bars)
+    else:
+        df = enrich_features(fetch_instrument_bars(instrument, force=force_fetch))
     if df.empty:
-        return {"ok": False, "error": "No bar data", "instrument": instrument}
+        return {
+            "ok": False,
+            "error": "No bar data",
+            "instrument": instrument,
+            "session": session.isoformat(),
+            "session_date": session.isoformat(),
+            "trade_count": 0,
+        }
 
     day = df[df.index.date == session]
     if day.empty:
@@ -86,7 +97,9 @@ def check_today_long_trades(
             "ok": True,
             "instrument": instrument,
             "session": session.isoformat(),
+            "session_date": session.isoformat(),
             "trades": [],
+            "trade_count": 0,
             "message": f"No 5m bars for {session.isoformat()}",
             "net_pnl": 0,
             "wins": 0,
@@ -172,8 +185,10 @@ def check_today_long_trades(
         "ok": True,
         "instrument": instrument,
         "session": session.isoformat(),
+        "session_date": session.isoformat(),
         "strategy": strategy.get("name", "Elite ML Long v1"),
         "trades": trades,
+        "trade_count": len(trades),
         "wins": wins,
         "losses": losses,
         "net_pnl": round(net, 2),

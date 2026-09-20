@@ -153,7 +153,7 @@
     .btn-success { background: #059669; color: white; }
     .btn-danger { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
     .btn-danger:hover { background: #fecaca; }
-    .input, select.input, input[type="text"], input[type="number"], input[type="search"], select, textarea {
+    .input, select.input, input[type="text"], input[type="number"], input[type="search"], input[type="date"], select, textarea {
       background: #fff !important;
       border: 1px solid #d7dee8 !important;
       color: #0f172a !important;
@@ -229,6 +229,30 @@
     .ring-emerald-600, .ring-emerald-700 { --tw-ring-color: #6ee7b7 !important; }
     .text-red-200 { color: #b91c1c !important; }
     .js-scroll { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+    .auto-refresh-banner {
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      border-radius: 0.9rem;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .auto-refresh-banner[data-phase="fetching"],
+    .auto-refresh-banner[data-phase="scanning"],
+    .auto-refresh-banner[data-phase="queued"] {
+      border-color: #fde68a;
+      background: #fffbeb;
+    }
+    .auto-refresh-banner[data-phase="done"] { border-color: #bbf7d0; background: #f0fdf4; }
+    .auto-refresh-banner[data-phase="error"] { border-color: #fecaca; background: #fef2f2; }
+    .auto-refresh-banner .sig-pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.5rem;
+      border-radius: 999px; background: #f1f5f9; color: #334155;
+    }
+    .auto-refresh-banner .sig-pill.traded { background: #dcfce7; color: #166534; }
+    .auto-refresh-banner .sig-pill.loss { background: #fee2e2; color: #991b1b; }
+    .auto-refresh-banner .sig-pill.open { background: #fef3c7; color: #92400e; }
   </style>
   {% block extra_head %}{% endblock %}
 </head>
@@ -268,6 +292,9 @@
         <a href="{% url 'intraday_gap' %}" class="nav-link {% if request.resolver_match.url_name == 'intraday_gap' %}active{% endif %}">
           <span class="nav-dot"></span> Gap Open
         </a>
+        <a href="{% url 'fundamental_swing' %}" class="nav-link {% if request.resolver_match.url_name == 'fundamental_swing' %}active{% endif %}">
+          <span class="nav-dot"></span> Fundamental Swing
+        </a>
         <a href="{% url 'paper_trading' %}" class="nav-link {% if request.resolver_match.url_name == 'paper_trading' %}active{% endif %}">
           <span class="nav-dot"></span> Paper Trading
         </a>
@@ -296,6 +323,16 @@
       </header>
 
       <main class="content js-scroll flex-1 overflow-auto">
+        <div id="auto-refresh-banner" class="auto-refresh-banner hidden" data-phase="idle">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0 flex-1">
+              <p id="auto-refresh-title" class="text-sm font-semibold text-slate-800">Updating 5m history…</p>
+              <p id="auto-refresh-msg" class="text-xs text-slate-600 mt-0.5">Fetching remaining bars through today</p>
+              <div id="auto-refresh-signals" class="hidden mt-2 grid gap-2 md:grid-cols-3 text-xs"></div>
+            </div>
+            <button type="button" id="auto-refresh-dismiss" class="text-slate-400 hover:text-slate-700 text-lg leading-none px-1" title="Hide">×</button>
+          </div>
+        </div>
         {% if messages %}
         <div class="mb-4">
           {% for message in messages %}
@@ -307,5 +344,138 @@
       </main>
     </div>
   </div>
+  <script>
+    (function () {
+      const statusUrl = "{% url 'localhost_auto_refresh_status_api' %}";
+      const banner = document.getElementById("auto-refresh-banner");
+      const titleEl = document.getElementById("auto-refresh-title");
+      const msgEl = document.getElementById("auto-refresh-msg");
+      const sigEl = document.getElementById("auto-refresh-signals");
+      const board = document.getElementById("startup-signal-board");
+      if (!banner) return;
+
+      const links = {
+        fno_short: { href: "{% url 'fno_live' %}", name: "F&O Live" },
+        fno_long: { href: "{% url 'fno_long_live' %}", name: "F&O Long" },
+        gap: { href: "{% url 'intraday_gap' %}", name: "Gap Open" },
+      };
+
+      document.getElementById("auto-refresh-dismiss")?.addEventListener("click", () => {
+        banner.classList.add("hidden");
+        sessionStorage.setItem("autoRefreshBannerHidden", "1");
+      });
+
+      function fmtPnl(n) {
+        const v = Number(n || 0);
+        const sign = v > 0 ? "+" : "";
+        return "₹" + sign + v.toLocaleString("en-IN", { maximumFractionDigits: 0 });
+      }
+
+      function dayLine(day, fallback) {
+        if (!day) return fallback || "—";
+        const n = day.trade_count || 0;
+        if (!n) return (day.label || "—") + ": no signal";
+        const pnl = fmtPnl(day.net_pnl);
+        const names = (day.trades || []).map(t => t.symbol || t.instrument).filter(Boolean).slice(0, 3).join(", ");
+        return (day.label || "—") + ": " + n + " · " + (day.wins || 0) + "W/" + (day.losses || 0) + "L · " + pnl
+          + (names ? " (" + names + ")" : "");
+      }
+
+      function pillClass(day) {
+        if (!day || !(day.trade_count)) return "";
+        if ((day.open_count || 0) > 0) return "open";
+        if ((day.net_pnl || 0) < 0) return "loss";
+        return "traded";
+      }
+
+      function strategyCard(key, block, asOf) {
+        const meta = links[key];
+        const today = block && block.today;
+        const yest = block && block.yesterday;
+        const other = block && block.other;
+        const last = block && block.last_signal;
+        const cls = pillClass(today) || pillClass(yest) || pillClass(last);
+        return (
+          '<a href="' + meta.href + '" class="rounded-lg border border-slate-200 bg-white/80 p-3 hover:border-blue-300">' +
+            '<p class="font-semibold text-slate-800 mb-1">' + meta.name + '</p>' +
+            '<p class="text-slate-600">' + dayLine(today, "Today: —") + '</p>' +
+            '<p class="text-slate-600">' + dayLine(yest, "Yesterday: —") + '</p>' +
+            '<p class="text-slate-500 mt-1">' +
+              (last && last.date && last.date !== (today && today.date) && last.date !== (yest && yest.date)
+                ? "Last signal " + dayLine(last)
+                : (other ? "Also " + dayLine(other) : "No earlier signal in lookback")) +
+            '</p>' +
+            (cls ? '<span class="sig-pill ' + cls + ' mt-2">checked ' + (asOf || "") + '</span>' : '') +
+          '</a>'
+        );
+      }
+
+      function render(data) {
+        if (!data || data.enabled === false) {
+          banner.classList.add("hidden");
+          return;
+        }
+        const phase = data.phase || "idle";
+        banner.dataset.phase = phase;
+        const inFlight = phase === "queued" || phase === "fetching" || phase === "scanning";
+        if (inFlight) {
+          banner.classList.remove("hidden");
+        } else {
+          banner.classList.add("hidden");
+        }
+        const titles = {
+          idle: "Local 5m data",
+          queued: "Starting history fetch…",
+          fetching: "Fetching remaining 5m data…",
+          scanning: "Checking signals…",
+          done: "History stored · signal check",
+          error: "History / signal check failed",
+        };
+        titleEl.textContent = titles[phase] || "Local 5m data";
+        msgEl.textContent = data.message || "";
+        const fetch = data.fetch || {};
+        if (fetch.running && fetch.progress) {
+          const p = fetch.progress;
+          if (p.total) msgEl.textContent = (fetch.message || data.message || "") + " · " + p.done + "/" + p.total;
+        }
+        const sig = data.signals || {};
+        if (sig.fno_short || sig.fno_long || sig.gap) {
+          sigEl.classList.remove("hidden");
+          sigEl.innerHTML = ["fno_short", "fno_long", "gap"]
+            .map(k => strategyCard(k, sig[k] || {}, sig.as_of))
+            .join("");
+        } else {
+          sigEl.classList.add("hidden");
+          sigEl.innerHTML = "";
+        }
+        if (board) {
+          if (sig.fno_short || sig.fno_long || sig.gap) {
+            board.innerHTML = sigEl.innerHTML;
+            board.classList.remove("hidden");
+          } else {
+            board.innerHTML = '<p class="text-sm text-slate-500">' + (data.message || "Checking remaining 5m data and signals…") + '</p>';
+          }
+        }
+      }
+
+      let timer = null;
+      function poll() {
+        fetch(statusUrl, { credentials: "same-origin" })
+          .then(r => r.json())
+          .then(data => {
+            render(data);
+            const running = data.running || data.phase === "fetching" || data.phase === "scanning" || data.phase === "queued";
+            if (running) {
+              if (!timer) timer = setInterval(poll, 2000);
+            } else if (timer) {
+              clearInterval(timer);
+              timer = null;
+            }
+          })
+          .catch(() => {});
+      }
+      poll();
+    })();
+  </script>
 </body>
 </html>

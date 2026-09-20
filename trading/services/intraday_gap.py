@@ -31,16 +31,18 @@ GAP_MIN = 0.02
 GAP_MAX = 0.06
 RSI_LO = 45.0
 RSI_HI = 70.0
-SL_ATR = 0.6
+SL_ATR = 1.5
 RISK_PCT = 8.0
-MAX_POS = 4
-TOP_K = 4
+MAX_POS = 0  # 0 = take every name that passes
+TOP_K = 0
 MAX_DEPLOY = 0.50
 MIN_PRICE = 60.0
 FORCE_EXIT = time(15, 15)
-# Bounce target, not yesterday's close (full fills rarely print).
-TP_KIND = "pct1.0"
+# Small bounce target — 1% rarely fills on real overnight gaps.
+TP_KIND = "pct0.5"
 ENTRY_HHMM = "09:30"
+# Last regular 5m close before the 15:15 auction (the 667.50 DLF print, not 691).
+PRIOR_CLOSE_HHMM = "15:10"
 REQUIRE_BOUNCE = True  # 9:30 open must hold ≥ 9:15 close
 REASON_LABELS = {
     "sl": "Stop",
@@ -68,19 +70,20 @@ STRATEGY = {
     "capital": CAPITAL,
     "tp_kind": TP_KIND,
     "entry_hhmm": ENTRY_HHMM,
+    "prior_close_hhmm": PRIOR_CLOSE_HHMM,
     "require_bounce": REQUIRE_BOUNCE,
     "entry": [
-        "Yesterday’s official close vs today’s 9:15 open",
+        "Yesterday’s 15:10 5m close vs today’s 9:15 open (skip closing-auction bars)",
         "Gap down ≥ 2% and ≤ 6% (skip crash gaps >6%)",
         "Yesterday’s daily RSI(14) between 45 and 70",
         "Price > ₹60",
         "Wait for the 9:30 open",
         "9:30 open must be ≥ 9:15 close (bounce confirmation — skip if still falling)",
-        "If several names qualify, take the 4 largest gaps",
+        "Take every name that passes (no top-4 cap)",
     ],
     "exit": [
-        "Target: 1.0% above the 9:30 entry",
-        "Stop: 0.6 × 5-minute ATR below the 9:30 entry",
+        "Target: 0.5% above the 9:30 entry",
+        "Stop: 1.5 × 5-minute ATR below the 9:30 entry",
         "Flatten 15:15 IST if not filled",
         "8% equity risk, 5× MIS cap, 50% of buying power per name",
     ],
@@ -261,7 +264,11 @@ def select_trades(
     max_pos: int = MAX_POS,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     ranked = sorted(candidates, key=lambda c: -abs(float(c.get("gap") or 0)))
-    take_n = max(min(int(top_k), int(max_pos)), 0)
+    take_n = len(ranked)
+    if top_k is not None and int(top_k) > 0:
+        take_n = min(take_n, int(top_k))
+    if max_pos is not None and int(max_pos) > 0:
+        take_n = min(take_n, int(max_pos))
     taken = ranked[:take_n]
     watch = ranked[take_n:]
     for i, row in enumerate(taken, 1):
@@ -433,6 +440,64 @@ def _hhmm_time(val: str | None = None) -> time:
     raw = (val or ENTRY_HHMM or "09:15").strip()
     parts = raw.split(":")
     return time(int(parts[0]), int(parts[1]) if len(parts) > 1 else 0)
+
+
+def _bar_is_closing_auction(row) -> bool:
+    """Yahoo often prints the close-auction spike as a 15:10 bar with close = high."""
+    try:
+        high = float(row["high"])
+        low = float(row["low"])
+        close = float(row["close"])
+    except (TypeError, ValueError, KeyError):
+        return False
+    if close <= 0 or high < low:
+        return False
+    rng = (high - low) / close
+    return rng >= 0.012 and close >= high * 0.997
+
+
+def _close_at_or_before(day: pd.DataFrame, hhmm: str = PRIOR_CLOSE_HHMM) -> Optional[float]:
+    """Close of the hhmm bar, else the last bar at or before that time. Never later.
+
+    Skips closing-auction candles (wide bar, close at the high) so names like
+    MANKIND/TCS do not look like 2% gap-downs after a 15:10 spike.
+    """
+    if day is None or day.empty:
+        return None
+    want = _hhmm_time(hhmm)
+    last_before: Optional[float] = None
+    for ts, row in day.iterrows():
+        bt = _bar_time(ts)
+        hm = (bt.hour, bt.minute)
+        if hm > (want.hour, want.minute):
+            continue
+        if _bar_is_closing_auction(row):
+            continue
+        try:
+            px = float(row["close"])
+        except (TypeError, ValueError, KeyError):
+            continue
+        if np.isnan(px):
+            continue
+        if hm == (want.hour, want.minute):
+            return px
+        last_before = px
+    return last_before
+
+
+def prior_close_from_5m(
+    df: Optional[pd.DataFrame],
+    session: date,
+    hhmm: str = PRIOR_CLOSE_HHMM,
+) -> Optional[float]:
+    """Previous session's 15:10 close from 5m bars (skips 15:15 auction)."""
+    if df is None or df.empty:
+        return None
+    known = _session_dates(df)
+    prior = previous_session(session, known or None)
+    if prior not in known:
+        return None
+    return _close_at_or_before(_session_bars(df, prior), hhmm)
 
 
 def _session_open(df: pd.DataFrame, session: date) -> Optional[dict[str, Any]]:
@@ -746,7 +811,7 @@ def recent_gap_days(
         and session is None
         and now_arg is None
     )
-    cache_key = f"gap:recent:{today.isoformat()}"
+    cache_key = f"gap:recent:{today.isoformat()}:pdc{PRIOR_CLOSE_HHMM.replace(':', '')}:all"
     if use_cache:
         cached = cache.get(cache_key)
         if cached is not None:
@@ -775,10 +840,12 @@ def recent_gap_days(
     today_opens = _opens_from_frames(frames, today)
     yest_opens = _opens_from_frames(frames, yesterday)
     today_scan = scan_gap_setups(
-        session=today, equity=CAPITAL, symbols=symbols, daily=daily, opens=today_opens,
+        session=today, equity=CAPITAL, symbols=symbols, daily=daily,
+        opens=today_opens, frames=frames,
     )
     yest_scan = scan_gap_setups(
-        session=yesterday, equity=CAPITAL, symbols=symbols, daily=daily, opens=yest_opens,
+        session=yesterday, equity=CAPITAL, symbols=symbols, daily=daily,
+        opens=yest_opens, frames=frames,
     )
 
     last_sess = max(known_sessions) if known_sessions else today
@@ -793,6 +860,7 @@ def recent_gap_days(
             symbols=symbols,
             daily=daily,
             opens=_opens_from_frames(frames, last_sess),
+            frames=frames,
         )
 
     today_day = _summarize_gap_day("Today", today, today_scan, frames, market, now)
@@ -816,15 +884,20 @@ def scan_gap_setups(
     symbols: Optional[list[str]] = None,
     daily: Optional[dict[str, pd.DataFrame]] = None,
     opens: Optional[dict[str, dict[str, Any]]] = None,
+    frames: Optional[dict[str, pd.DataFrame]] = None,
 ) -> dict[str, Any]:
     """
     Find today's (or last cached session's) gap-down bounce trades.
 
     `opens` maps symbol -> {session, open, atr} for tests / live inject.
+    Gap uses previous session's 13:10 5m close when 5m history is available.
     """
     market = get_market_status()
-    use_cache = daily is None and opens is None and session is None and symbols is None
-    cache_key = f"gap:live:{date.today().isoformat()}"
+    use_cache = (
+        daily is None and opens is None and session is None
+        and symbols is None and frames is None
+    )
+    cache_key = f"gap:live:{date.today().isoformat()}:pdc{PRIOR_CLOSE_HHMM.replace(':', '')}:all"
     if use_cache:
         cached = cache.get(cache_key)
         if cached is not None:
@@ -840,12 +913,16 @@ def scan_gap_setups(
 
     symbols = symbols or nifty200_symbols()
     daily = daily if daily is not None else _daily_frames(symbols)
+    pickle_map: dict[str, pd.DataFrame] = dict(frames or {})
 
     pickle_session: Optional[date] = None
     if opens is None:
         open_rows: dict[str, dict[str, Any]] = {}
         for sym in symbols:
-            df = _load_pickle(sym)
+            df = pickle_map.get(sym)
+            if df is None or getattr(df, "empty", True):
+                df = _load_pickle(sym)
+                pickle_map[sym] = df
             first = _first_bar(df)
             if first is None:
                 continue
@@ -883,7 +960,19 @@ def scan_gap_setups(
             continue
         scanned += 1
         rsi = prior.get("rsi14")
-        pdc = float(prior["close"])
+        official_close = float(prior["close"])
+        df5 = pickle_map.get(sym)
+        if df5 is None or getattr(df5, "empty", True):
+            df5 = _load_pickle(sym)
+            if df5 is not None and not getattr(df5, "empty", True):
+                pickle_map[sym] = df5
+        pdc_5m = prior_close_from_5m(df5, session)
+        if pdc_5m is not None:
+            pdc = float(pdc_5m)
+            pdc_source = f"5m_{PRIOR_CLOSE_HHMM}"
+        else:
+            pdc = official_close
+            pdc_source = "daily"
         if passes_rsi_band(rsi):
             rsi_ok += 1
         row = open_rows.get(sym)
@@ -912,6 +1001,8 @@ def scan_gap_setups(
             entry_time=str(row.get("entry_time") or ENTRY_HHMM),
         )
         if setup:
+            setup["pdc_source"] = pdc_source
+            setup["pdc_official"] = round(official_close, 2)
             candidates.append(setup)
 
     taken, watch = select_trades(candidates)
@@ -939,11 +1030,48 @@ def scan_gap_setups(
         "pickle_session": str(pickle_session) if pickle_session else None,
         "strategy": STRATEGY,
         "entry_hhmm": ENTRY_HHMM,
+        "prior_close_hhmm": PRIOR_CLOSE_HHMM,
         "tp_kind": TP_KIND,
     }
     if use_cache:
         cache.set(cache_key, payload, 120)
     return payload
+
+
+def known_gap_sessions(symbols: Optional[list[str]] = None) -> list[date]:
+    """Sorted session dates present in stored 5m equity pickles."""
+    symbols = symbols or nifty200_symbols()
+    _, sessions = _load_symbol_frames(symbols)
+    return sorted(sessions)
+
+
+def summarize_gap_session(
+    session: date,
+    *,
+    symbols: Optional[list[str]] = None,
+    daily: Optional[dict[str, pd.DataFrame]] = None,
+    frames: Optional[dict[str, pd.DataFrame]] = None,
+    now: Optional[datetime] = None,
+    title: str = "",
+) -> dict[str, Any]:
+    """Evaluate Gap Open trades for one session from stored 5m + daily data."""
+    now = now or _now_ist()
+    market = get_market_status(now=now)
+    symbols = symbols or nifty200_symbols()
+    daily = daily if daily is not None else _daily_frames(symbols)
+    if frames is None:
+        frames, _ = _load_symbol_frames(symbols)
+    opens = _opens_from_frames(frames, session)
+    scan = scan_gap_setups(
+        session=session,
+        equity=CAPITAL,
+        symbols=symbols,
+        daily=daily,
+        opens=opens,
+        frames=frames,
+    )
+    label = title or session.strftime("%a %d %b")
+    return _summarize_gap_day(label, session, scan, frames, market, now)
 
 
 def load_tp_search() -> dict[str, Any]:

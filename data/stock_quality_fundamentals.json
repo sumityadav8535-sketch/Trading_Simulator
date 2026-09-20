@@ -1,0 +1,818 @@
+{
+  "AXISBANK": {
+    "pe": 14.1682625,
+    "profit_margin": 36.03
+  },
+  "JSWSTEEL": {
+    "pe": 12.96004,
+    "profit_margin": 13.06
+  },
+  "NYKAA": {
+    "pe": 371.978,
+    "profit_margin": 2.4
+  },
+  "COROMANDEL": {
+    "pe": 30.949621,
+    "profit_margin": 5.62
+  },
+  "APLAPOLLO": {
+    "pe": 50.485874,
+    "profit_margin": 5.23
+  },
+  "ADANIPORTS": {
+    "pe": 28.099949,
+    "profit_margin": 32.43
+  },
+  "ONGC": {
+    "pe": 6.8318405,
+    "profit_margin": 6.18
+  },
+  "BIOCON": {
+    "pe": 117.266075,
+    "profit_margin": 2.86
+  },
+  "BAJAJFINSV": {
+    "pe": 31.172937,
+    "profit_margin": 6.47
+  },
+  "EXIDEIND": {
+    "pe": 39.803833,
+    "profit_margin": 4.95
+  },
+  "YESBANK": {
+    "pe": 18.416666,
+    "profit_margin": 23.18
+  },
+  "SBIN": {
+    "pe": 11.065355,
+    "profit_margin": 22.38
+  },
+  "EICHERMOT": {
+    "pe": 37.891033,
+    "profit_margin": 23.21
+  },
+  "ASHOKLEY": {
+    "pe": 28.805742,
+    "profit_margin": 6.02
+  },
+  "CHOLAFIN": {
+    "pe": 26.840704,
+    "profit_margin": 40.55
+  },
+  "360ONE": {
+    "pe": 38.75,
+    "profit_margin": 26.455997999999997
+  },
+  "ABB": {
+    "pe": 98.79775,
+    "profit_margin": 21.349001
+  },
+  "ABCAPITAL": {
+    "pe": 25.481268,
+    "profit_margin": 11.9449995
+  },
+  "ADANIENSOL": {
+    "pe": 57.013203,
+    "profit_margin": 9.5769994
+  },
+  "ADANIENT": {
+    "pe": 49.832954,
+    "profit_margin": 6.546
+  },
+  "ADANIGREEN": {
+    "pe": 121.052635,
+    "profit_margin": 13.095
+  },
+  "ADANIPOWER": {
+    "pe": 27.653587,
+    "profit_margin": 24.148001
+  },
+  "ALKEM": {
+    "pe": 29.335253,
+    "profit_margin": 14.306
+  },
+  "AMBUJACEM": {
+    "pe": 22.532213,
+    "profit_margin": 11.128
+  },
+  "APOLLOHOSP": {
+    "pe": 60.358498,
+    "profit_margin": 7.906000000000001
+  },
+  "ASIANPAINT": {
+    "pe": 51.904476,
+    "profit_margin": 12.812999999999999
+  },
+  "ASTRAL": {
+    "pe": 70.22368,
+    "profit_margin": 8.4809996
+  },
+  "ATGL": {
+    "pe": 106.16782,
+    "profit_margin": 10.083999500000001
+  },
+  "AUBANK": {
+    "pe": 28.633589,
+    "profit_margin": 21.372999
+  },
+  "AUROPHARMA": {
+    "pe": 26.285135,
+    "profit_margin": 10.627
+  },
+  "BAJAJ-AUTO": {
+    "pe": 29.367323,
+    "profit_margin": 16.250999999999998
+  },
+  "BAJAJHLDNG": {
+    "pe": 14.221228,
+    "profit_margin": 734.641
+  },
+  "BAJFINANCE": {
+    "pe": 32.367935,
+    "profit_margin": 43.495
+  },
+  "BANKBARODA": {
+    "pe": 6.7682233,
+    "profit_margin": 27.392
+  },
+  "BANKINDIA": {
+    "pe": 5.2722225,
+    "profit_margin": 34.992000000000004
+  },
+  "BDL": {
+    "pe": 88.339226,
+    "profit_margin": 18.826999999999998
+  },
+  "BEL": {
+    "pe": 48.894176,
+    "profit_margin": 21.403
+  },
+  "BHARATFORG": {
+    "pe": 139.32112,
+    "profit_margin": 4.0260002
+  },
+  "BHARTIARTL": {
+    "pe": 39.247334,
+    "profit_margin": 13.139999999999999
+  },
+  "BHEL": {
+    "pe": 61.022892,
+    "profit_margin": 6.758
+  },
+  "BLUESTARCO": {
+    "pe": 60.262733,
+    "profit_margin": 3.979
+  },
+  "BOSCHLTD": {
+    "pe": 60.6875,
+    "profit_margin": 11.328000000000001
+  },
+  "BPCL": {
+    "pe": 7.925399,
+    "profit_margin": 3.4679998
+  },
+  "BRITANNIA": {
+    "pe": 47.961163,
+    "profit_margin": 13.376
+  },
+  "BSE": {
+    "pe": 47.26637,
+    "profit_margin": 48.918
+  },
+  "CANBK": {
+    "pe": 5.73516,
+    "profit_margin": 43.126
+  },
+  "CGPOWER": {
+    "pe": 111.10414,
+    "profit_margin": 9.75
+  },
+  "CIPLA": {
+    "pe": 34.11652,
+    "profit_margin": 12.009
+  },
+  "COALINDIA": {
+    "pe": 7.9461813,
+    "profit_margin": 18.138
+  },
+  "COCHINSHIP": {
+    "pe": 57.161118,
+    "profit_margin": 13.479
+  },
+  "COFORGE": {
+    "pe": 40.722767,
+    "profit_margin": 9.64
+  },
+  "COLPAL": {
+    "pe": 37.54896,
+    "profit_margin": 21.722999
+  },
+  "CONCOR": {
+    "pe": 31.379732,
+    "profit_margin": 13.670999
+  },
+  "CUMMINSIND": {
+    "pe": 59.882698,
+    "profit_margin": 18.694
+  },
+  "DABUR": {
+    "pe": 34.62579,
+    "profit_margin": 14.551
+  },
+  "DIVISLAB": {
+    "pe": 94.915085,
+    "profit_margin": 26.046000000000003
+  },
+  "DIXON": {
+    "pe": 42.339336,
+    "profit_margin": 3.639
+  },
+  "DLF": {
+    "pe": 37.570953,
+    "profit_margin": 65.791
+  },
+  "DMART": {
+    "pe": 81.709404,
+    "profit_margin": 4.2919997
+  },
+  "DRREDDY": {
+    "pe": 29.488794,
+    "profit_margin": 9.995999999999999
+  },
+  "ENRIN": {
+    "pe": 76.15218,
+    "profit_margin": 15.769
+  },
+  "ETERNAL": {
+    "pe": 712.5,
+    "profit_margin": 0.642
+  },
+  "FEDERALBNK": {
+    "pe": 18.686462,
+    "profit_margin": 30.720999999999997
+  },
+  "FORTIS": {
+    "pe": 65.92219,
+    "profit_margin": 11.023
+  },
+  "GAIL": {
+    "pe": 11.489688,
+    "profit_margin": 6.6979999999999995
+  },
+  "GLENMARK": {
+    "pe": 38.75745,
+    "profit_margin": 10.137
+  },
+  "GMRAIRPORT": {
+    "pe": 235.3,
+    "profit_margin": 3.0720001
+  },
+  "GODFRYPHLP": {
+    "pe": 23.695133,
+    "profit_margin": 22.389999
+  },
+  "GODREJCP": {
+    "pe": 48.499466,
+    "profit_margin": 12.086
+  },
+  "GODREJPROP": {
+    "pe": 37.187443,
+    "profit_margin": 30.754998
+  },
+  "GRASIM": {
+    "pe": 39.37336,
+    "profit_margin": 3.093
+  },
+  "GROWW": {
+    "pe": 48.073605,
+    "profit_margin": 45.354
+  },
+  "GVT&D": {
+    "pe": 84.58529,
+    "profit_margin": 19.442
+  },
+  "HAL": {
+    "pe": 34.460613,
+    "profit_margin": 27.590999999999998
+  },
+  "HAVELLS": {
+    "pe": 47.03077,
+    "profit_margin": 6.923
+  },
+  "HCLTECH": {
+    "pe": 21.017107,
+    "profit_margin": 12.966
+  },
+  "HDFCAMC": {
+    "pe": 37.18439,
+    "profit_margin": 61.625
+  },
+  "HDFCBANK": {
+    "pe": 15.567462,
+    "profit_margin": 26.787
+  },
+  "HDFCLIFE": {
+    "pe": 59.17853,
+    "profit_margin": 1.9
+  },
+  "HEROMOTOCO": {
+    "pe": 20.425798,
+    "profit_margin": 10.724
+  },
+  "HINDALCO": {
+    "pe": 13.760174,
+    "profit_margin": 5.5489999999999995
+  },
+  "HINDPETRO": {
+    "pe": 46.19593,
+    "profit_margin": 0.356
+  },
+  "HINDUNILVR": {
+    "pe": 44.27969,
+    "profit_margin": 22.644000000000002
+  },
+  "HINDZINC": {
+    "pe": 14.78821,
+    "profit_margin": 38.068000000000005
+  },
+  "HUDCO": {
+    "pe": 8.403765,
+    "profit_margin": 90.679
+  },
+  "HYUNDAI": {
+    "pe": 35.816628,
+    "profit_margin": 7.0040000000000004
+  },
+  "ICICIAMC": {
+    "pe": 43.09362,
+    "profit_margin": 55.504
+  },
+  "ICICIBANK": {
+    "pe": 18.590822,
+    "profit_margin": 27.531
+  },
+  "ICICIGI": {
+    "pe": 32.360596,
+    "profit_margin": 8.764
+  },
+  "IDEA": {
+    "pe": 4.0286536,
+    "profit_margin": 82.27799999999999
+  },
+  "IDFCFIRSTB": {
+    "pe": 32.779926,
+    "profit_margin": 32.775003000000005
+  },
+  "INDHOTEL": {
+    "pe": 47.70764,
+    "profit_margin": 20.868999
+  },
+  "INDIANB": {
+    "pe": 9.2903805,
+    "profit_margin": 36.413000000000004
+  },
+  "INDIGO": {
+    "pe": null,
+    "profit_margin": 3.7929999999999997
+  },
+  "INDUSINDBK": {
+    "pe": 58.45701,
+    "profit_margin": 7.6469995
+  },
+  "INDUSTOWER": {
+    "pe": 13.817245,
+    "profit_margin": 21.776
+  },
+  "INFY": {
+    "pe": 14.972154,
+    "profit_margin": 16.370001000000002
+  },
+  "IOC": {
+    "pe": 5.5840487,
+    "profit_margin": 3.92
+  },
+  "IRCTC": {
+    "pe": 27.632032,
+    "profit_margin": 25.677
+  },
+  "IREDA": {
+    "pe": 16.267805,
+    "profit_margin": 45.951
+  },
+  "IRFC": {
+    "pe": 15.027323,
+    "profit_margin": 97.271
+  },
+  "ITC": {
+    "pe": 16.830809,
+    "profit_margin": 25.937998
+  },
+  "JINDALSTEL": {
+    "pe": 43.413174,
+    "profit_margin": 4.818
+  },
+  "JIOFIN": {
+    "pe": 73.47352,
+    "profit_margin": 55.00600300000001
+  },
+  "JSWENERGY": {
+    "pe": 40.627453,
+    "profit_margin": 10.373000000000001
+  },
+  "JUBLFOOD": {
+    "pe": 85.73451,
+    "profit_margin": 4.415
+  },
+  "KALYANKJIL": {
+    "pe": 41.28242,
+    "profit_margin": 3.6730002999999996
+  },
+  "KEI": {
+    "pe": 51.19173,
+    "profit_margin": 8.076
+  },
+  "KOTAKBANK": {
+    "pe": 20.853779,
+    "profit_margin": 28.467
+  },
+  "KPITTECH": {
+    "pe": 27.71254,
+    "profit_margin": 8.839
+  },
+  "LAURUSLABS": {
+    "pe": 91.70444,
+    "profit_margin": 15.040000000000001
+  },
+  "LENSKART": {
+    "pe": 175.59525,
+    "profit_margin": 6.802999999999999
+  },
+  "LGEINDIA": {
+    "pe": 62.07976,
+    "profit_margin": 7.135
+  },
+  "LICHSGFIN": {
+    "pe": 5.1265097,
+    "profit_margin": 65.17699999999999
+  },
+  "LICI": {
+    "pe": 8.680497,
+    "profit_margin": 6.515
+  },
+  "LODHA": {
+    "pe": 28.957071,
+    "profit_margin": 22.692
+  },
+  "LT": {
+    "pe": 33.018917,
+    "profit_margin": 5.588
+  },
+  "LTF": {
+    "pe": 24.373026,
+    "profit_margin": 33.076
+  },
+  "LTM": {
+    "pe": 26.256033,
+    "profit_margin": 11.866999400000001
+  },
+  "LUPIN": {
+    "pe": 17.822847,
+    "profit_margin": 18.450001
+  },
+  "M&M": {
+    "pe": 19.819984,
+    "profit_margin": 8.609
+  },
+  "M&MFIN": {
+    "pe": 15.532823,
+    "profit_margin": 30.886999999999997
+  },
+  "MANKIND": {
+    "pe": 47.750763,
+    "profit_margin": 13.859999
+  },
+  "MARICO": {
+    "pe": 57.760162,
+    "profit_margin": 13.159999
+  },
+  "MARUTI": {
+    "pe": 28.366154,
+    "profit_margin": 7.269
+  },
+  "MAXHEALTH": {
+    "pe": 67.31544,
+    "profit_margin": 16.723
+  },
+  "MAZDOCK": {
+    "pe": 37.39091,
+    "profit_margin": 20.120001000000002
+  },
+  "MCX": {
+    "pe": 54.577,
+    "profit_margin": 55.559999999999995
+  },
+  "MFSL": {
+    "pe": 487.20633,
+    "profit_margin": 0.22100000000000003
+  },
+  "MOTHERSON": {
+    "pe": 39.807693,
+    "profit_margin": 3.3570003
+  },
+  "MOTILALOFS": {
+    "pe": 31.523426,
+    "profit_margin": 22.963
+  },
+  "MPHASIS": {
+    "pe": 25.052494,
+    "profit_margin": 11.5559995
+  },
+  "MRF": {
+    "pe": 23.172314,
+    "profit_margin": 7.5840004
+  },
+  "MUTHOOTFIN": {
+    "pe": 10.257044,
+    "profit_margin": 55.501999999999995
+  },
+  "NATIONALUM": {
+    "pe": 10.114193,
+    "profit_margin": 34.908
+  },
+  "NAUKRI": {
+    "pe": 54.94327,
+    "profit_margin": 47.402
+  },
+  "NESTLEIND": {
+    "pe": 72.82025,
+    "profit_margin": 15.623000000000001
+  },
+  "NHPC": {
+    "pe": 27.948719,
+    "profit_margin": 31.094998
+  },
+  "NMDC": {
+    "pe": 10.104954,
+    "profit_margin": 23.216998999999998
+  },
+  "NTPC": {
+    "pe": 10.012229,
+    "profit_margin": 14.530999999999999
+  },
+  "OBEROIRLTY": {
+    "pe": 26.016045,
+    "profit_margin": 41.592997
+  },
+  "OFSS": {
+    "pe": 31.148882,
+    "profit_margin": 38.153999999999996
+  },
+  "OIL": {
+    "pe": 9.540499,
+    "profit_margin": 21.685
+  },
+  "PAGEIND": {
+    "pe": 52.72531,
+    "profit_margin": 14.126
+  },
+  "PATANJALI": {
+    "pe": 19.094421,
+    "profit_margin": 4.6090003
+  },
+  "PAYTM": {
+    "pe": 161.2537,
+    "profit_margin": 7.249
+  },
+  "PERSISTENT": {
+    "pe": 47.556576,
+    "profit_margin": 12.235999999999999
+  },
+  "PFC": {
+    "pe": 4.381097,
+    "profit_margin": 54.484004
+  },
+  "PHOENIXLTD": {
+    "pe": 51.611675,
+    "profit_margin": 28.164
+  },
+  "PIDILITIND": {
+    "pe": 63.23586,
+    "profit_margin": 17.202
+  },
+  "PIIND": {
+    "pe": 31.216305,
+    "profit_margin": 17.879998999999998
+  },
+  "PNB": {
+    "pe": 5.994797,
+    "profit_margin": 38.147
+  },
+  "POLICYBZR": {
+    "pe": 113.403595,
+    "profit_margin": 10.2019995
+  },
+  "POLYCAB": {
+    "pe": 46.85788,
+    "profit_margin": 9.184000000000001
+  },
+  "POWERGRID": {
+    "pe": 12.949094,
+    "profit_margin": 33.797002
+  },
+  "POWERINDIA": {
+    "pe": 127.21179,
+    "profit_margin": 12.555
+  },
+  "PREMIERENE": {
+    "pe": 27.228495,
+    "profit_margin": 19.667
+  },
+  "PRESTIGE": {
+    "pe": 59.200603,
+    "profit_margin": 8.725
+  },
+  "RADICO": {
+    "pe": 85.27348,
+    "profit_margin": 8.838
+  },
+  "RECLTD": {
+    "pe": 5.1669955,
+    "profit_margin": 68.89
+  },
+  "RELIANCE": {
+    "pe": 23.726664,
+    "profit_margin": 6.614999500000001
+  },
+  "RVNL": {
+    "pe": 48.34803,
+    "profit_margin": 4.32
+  },
+  "SAIL": {
+    "pe": 18.647343,
+    "profit_margin": 3.8440000000000003
+  },
+  "SBICARD": {
+    "pe": 26.438128,
+    "profit_margin": 18.199
+  },
+  "SBILIFE": {
+    "pe": 67.076744,
+    "profit_margin": 2.1389998
+  },
+  "SHREECEM": {
+    "pe": 51.923077,
+    "profit_margin": 14.530000000000001
+  },
+  "SHRIRAMFIN": {
+    "pe": 18.712015,
+    "profit_margin": 50.009996
+  },
+  "SIEMENS": {
+    "pe": 84.75289,
+    "profit_margin": 19.017
+  },
+  "SJVN": {
+    "pe": 36.886364,
+    "profit_margin": 12.770999999999999
+  },
+  "SOLARINDS": {
+    "pe": 91.52295,
+    "profit_margin": 17.543
+  },
+  "SRF": {
+    "pe": 35.521446,
+    "profit_margin": 12.715000000000002
+  },
+  "SUNPHARMA": {
+    "pe": 38.266216,
+    "profit_margin": 20.188999
+  },
+  "SUPREMEIND": {
+    "pe": 44.423904,
+    "profit_margin": 9.115
+  },
+  "SUZLON": {
+    "pe": 20.305677,
+    "profit_margin": 18.090001
+  },
+  "SWIGGY": {
+    "pe": null,
+    "profit_margin": -15.049999999999999
+  },
+  "TATACAP": {
+    "pe": 28.738281,
+    "profit_margin": 39.678000000000004
+  },
+  "TATACOMM": {
+    "pe": 52.396496,
+    "profit_margin": 3.7199999999999998
+  },
+  "TATACONSUM": {
+    "pe": 62.454544,
+    "profit_margin": 7.837999599999999
+  },
+  "TATAELXSI": {
+    "pe": 34.57846,
+    "profit_margin": 16.74
+  },
+  "TATAINVEST": {
+    "pe": 74.1979,
+    "profit_margin": 105.248
+  },
+  "TATAMOTORS": {
+    "pe": null,
+    "profit_margin": 22.814
+  },
+  "TATAPOWER": {
+    "pe": 29.01904,
+    "profit_margin": 6.0890004
+  },
+  "TATASTEEL": {
+    "pe": 20.79887,
+    "profit_margin": 4.601999999999999
+  },
+  "TCS": {
+    "pe": 17.201569,
+    "profit_margin": 18.052
+  },
+  "TECHM": {
+    "pe": 28.344004,
+    "profit_margin": 8.6780004
+  },
+  "TIINDIA": {
+    "pe": 88.73475,
+    "profit_margin": 2.8169999
+  },
+  "TITAN": {
+    "pe": 77.9321,
+    "profit_margin": 6.2319998000000005
+  },
+  "TMCV": {
+    "pe": 40.732456,
+    "profit_margin": 4.809
+  },
+  "TMPV": {
+    "pe": null,
+    "profit_margin": 22.814
+  },
+  "TORNTPHARM": {
+    "pe": 79.0433,
+    "profit_margin": 13.874
+  },
+  "TRENT": {
+    "pe": 84.02001,
+    "profit_margin": 8.637
+  },
+  "TVSMOTOR": {
+    "pe": 58.318302,
+    "profit_margin": 5.691
+  },
+  "ULTRACEMCO": {
+    "pe": 39.35241,
+    "profit_margin": 9.2930004
+  },
+  "UNIONBANK": {
+    "pe": 6.840547,
+    "profit_margin": 40.460998
+  },
+  "UNITDSPR": {
+    "pe": 61.66107,
+    "profit_margin": 14.917
+  },
+  "UPL": {
+    "pe": 23.241802,
+    "profit_margin": 3.8249999999999997
+  },
+  "VBL": {
+    "pe": 40.544456,
+    "profit_margin": 14.035
+  },
+  "VEDL": {
+    "pe": 12.038664,
+    "profit_margin": 23.205000000000002
+  },
+  "VMM": {
+    "pe": 56.07895,
+    "profit_margin": 6.61
+  },
+  "VOLTAS": {
+    "pe": 88.47283,
+    "profit_margin": 2.999
+  },
+  "WAAREEENER": {
+    "pe": 19.518818,
+    "profit_margin": 12.703000000000001
+  },
+  "WIPRO": {
+    "pe": 14.432089,
+    "profit_margin": 13.919
+  },
+  "ZOMATO": {
+    "pe": 712.5,
+    "profit_margin": 0.642
+  },
+  "ZYDUSLIFE": {
+    "pe": 26.04952,
+    "profit_margin": 15.784
+  }
+}

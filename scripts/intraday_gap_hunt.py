@@ -97,25 +97,87 @@ def session_first_rows(df: pd.DataFrame) -> pd.DataFrame:
     return df.groupby("session", sort=True).head(1)
 
 
-def collect_events(stocks: dict[str, pd.DataFrame]) -> pd.DataFrame:
+def session_prior_close_at(df: pd.DataFrame, hour: int = 13, minute: int = 10) -> pd.Series:
+    """Previous session close at hh:mm (else last bar at or before that time).
+
+    Drops closing-auction 5m bars (wide range, close at the high).
+    """
+    if df is None or df.empty or "session" not in df.columns:
+        return pd.Series(dtype=float)
+    work = df
+    close = work["close"].replace(0, np.nan)
+    rng = (work["high"] - work["low"]) / close
+    auction = (rng >= 0.012) & (work["close"] >= work["high"] * 0.997)
+    work = work.loc[~auction.fillna(False)]
+    if work.empty:
+        return pd.Series(dtype=float)
+    times = work.index
+    if getattr(times, "tz", None) is not None:
+        times = times.tz_convert("Asia/Kolkata")
+    hm = np.asarray(times.hour) * 60 + np.asarray(times.minute)
+    cutoff = hour * 60 + minute
+    exact = work.loc[hm == cutoff].groupby("session", sort=True)["close"].last()
+    before = work.loc[hm <= cutoff].groupby("session", sort=True)["close"].last()
+    closes = exact.combine_first(before).sort_index()
+    return closes.shift(1)
+
+
+def session_prior_1310_close(df: pd.DataFrame, hour: int = 13, minute: int = 10) -> pd.Series:
+    """Previous session close at 13:10 (else last bar at or before 13:10). Ignores the auction."""
+    return session_prior_close_at(df, hour, minute)
+
+
+def collect_events(stocks: dict[str, pd.DataFrame], pdc_mode: str = "13:10") -> pd.DataFrame:
+    """
+    pdc_mode: 'official' uses yesterday's daily close; otherwise a 5m clock like '13:10'.
+    """
     rows = []
+    use_official = str(pdc_mode).lower() in {"official", "daily", "eod"}
+    hhmm = None if use_official else str(pdc_mode)
+    hour = minute = 13
+    if hhmm:
+        parts = hhmm.split(":")
+        hour, minute = int(parts[0]), int(parts[1]) if len(parts) > 1 else 0
     for sym, df in stocks.items():
+        prior_close = None if use_official else session_prior_close_at(df, hour, minute)
         first = session_first_rows(df)
         for ts, row in first.iterrows():
-            pdc = float(row.get("pdc") or 0)
+            sess = row["session"]
+            if use_official:
+                raw_pdc = row.get("pdc")
+            else:
+                raw_pdc = prior_close.get(sess) if prior_close is not None and len(prior_close) else None
+            try:
+                pdc = float(raw_pdc) if raw_pdc is not None and pd.notna(raw_pdc) else 0.0
+            except (TypeError, ValueError):
+                pdc = 0.0
             o = float(row["open"])
             if pdc <= 0 or o <= 0 or o < 60:
                 continue
-            atr = float(row.get("atr") or 0)
+            # Same ATR as live: last 5m ATR of the previous session, not today's 9:15 bar.
+            prev = df[df["session"] < sess]
+            atr = 0.0
+            if not prev.empty and "atr" in prev.columns:
+                try:
+                    atr = float(prev["atr"].iloc[-1])
+                except (TypeError, ValueError):
+                    atr = 0.0
+            if atr <= 0:
+                atr = float(row.get("atr") or 0)
             if atr <= 0:
                 atr = o * 0.008
             gap = o / pdc - 1.0
+            try:
+                pdh = float(row.get("pdh") or 0)
+            except (TypeError, ValueError):
+                pdh = 0.0
             rows.append({
                 "symbol": sym,
                 "ts": ts,
                 "session": row["session"],
                 "open": o,
                 "pdc": pdc,
+                "pdh": pdh,
                 "gap": gap,
                 "atr": atr,
                 "high": float(row["high"]),
@@ -272,6 +334,7 @@ def simulate_open(
     max_deploy: float = 0.35,
     leverage: float = LEVERAGE,
     book: dict | None = None,
+    cost: float | None = None,
 ) -> tuple[SimResult, pd.DataFrame]:
     if signals is None or signals.empty:
         return SimResult(name=name), pd.DataFrame()
@@ -279,13 +342,15 @@ def simulate_open(
     sigs = signals.copy()
     sigs["day"] = pd.to_datetime(sigs["ts"]).dt.date
     sigs["rank"] = sigs.groupby("day")["score"].rank(method="first", ascending=False)
-    sigs = sigs[sigs["rank"] <= top_k]
+    if top_k is not None and int(top_k) > 0:
+        sigs = sigs[sigs["rank"] <= int(top_k)]
 
     packed = book or build_sim_book(stocks)
     ohlc = packed["ohlc"]
     calendar = packed["calendar"]
     last_bar = packed["last_bar"]
     sess_bars = packed["sess_bars"]
+    fee = COST if cost is None else float(cost)
 
     equity = CAPITAL
     peak = CAPITAL
@@ -301,7 +366,7 @@ def simulate_open(
 
     def close_pos(pos, ts, raw, reason):
         nonlocal equity, peak, max_dd
-        exit_p = raw * (1 - COST) if pos["side"] == "long" else raw * (1 + COST)
+        exit_p = raw * (1 - fee) if pos["side"] == "long" else raw * (1 + fee)
         if pos["side"] == "long":
             pnl = (exit_p - pos["entry"]) * pos["qty"]
         else:
@@ -367,7 +432,7 @@ def simulate_open(
         for rec in recs:
             if rec.ts != ts:
                 continue
-            if len(open_pos) >= max_pos:
+            if max_pos is not None and int(max_pos) > 0 and len(open_pos) >= int(max_pos):
                 break
             if rec.symbol in held:
                 continue
@@ -378,7 +443,7 @@ def simulate_open(
                 continue
             raw_open = rec.entry
             side = rec.side
-            entry = raw_open * (1 + COST) if side == "long" else raw_open * (1 - COST)
+            entry = raw_open * (1 + fee) if side == "long" else raw_open * (1 - fee)
             stop = float(rec.stop)
             target = float(rec.target)
             if side == "long" and not (target > entry > stop):

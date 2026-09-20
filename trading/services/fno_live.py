@@ -58,6 +58,23 @@ def _now_ist() -> datetime:
     return datetime.now(IST)
 
 
+def load_stored_instrument_bars(key: str) -> pd.DataFrame:
+    """Read stored 5m pickle only — no Yahoo download."""
+    key = key.upper()
+    if key not in INSTRUMENTS:
+        return pd.DataFrame()
+    path = DATA_DIR / f"{key}.pkl"
+    if not path.exists():
+        return pd.DataFrame()
+    try:
+        hist = pd.read_pickle(path)
+    except Exception:
+        return pd.DataFrame()
+    if hist is None or not isinstance(hist, pd.DataFrame):
+        return pd.DataFrame()
+    return hist
+
+
 def fetch_instrument_bars(key: str, force: bool = False) -> pd.DataFrame:
     key = key.upper()
     if key not in INSTRUMENTS:

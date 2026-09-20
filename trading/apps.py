@@ -13,8 +13,10 @@ class TradingConfig(AppConfig):
         if self._should_skip_auto_sync():
             return
         from trading.services.nse_price_sync import schedule_auto_sync
+        from trading.services.localhost_auto_refresh import schedule_localhost_auto_refresh
 
         schedule_auto_sync()
+        schedule_localhost_auto_refresh()
 
     @staticmethod
     def _should_skip_auto_sync() -> bool:

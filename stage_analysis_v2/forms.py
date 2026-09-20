@@ -364,6 +364,67 @@ class StageV2BacktestForm(forms.Form):
             "class": "block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2",
         }),
     )
+    quality_overlay = forms.BooleanField(
+        required=False,
+        initial=False,
+        label="Quality overlay",
+        help_text="Nifty > SMA150, stock ≤15% above SMA150, PE ≤ 50, profit margin ≥ 8%. PE/margin use latest snapshot.",
+    )
+    max_pct_above_ma = forms.FloatField(
+        initial=0,
+        min_value=0,
+        max_value=100,
+        required=False,
+        label="Max % above MA",
+        help_text="0 = off. 15 = skip if close is more than 15% above the MA above.",
+        widget=forms.NumberInput(attrs={
+            "class": "block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2",
+            "step": "1",
+            "min": "0",
+            "max": "100",
+        }),
+    )
+    nifty_sma_period = forms.IntegerField(
+        initial=0,
+        min_value=0,
+        max_value=400,
+        required=False,
+        label="Nifty above SMA",
+        help_text="0 = off. 150 = skip new buys when Nifty close ≤ SMA150.",
+        widget=forms.NumberInput(attrs={
+            "class": "block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2",
+            "min": "0",
+            "max": "400",
+        }),
+    )
+    min_profit_margin = forms.FloatField(
+        initial=0,
+        min_value=0,
+        max_value=100,
+        required=False,
+        label="Min profit margin %",
+        help_text="0 = off. 8 = skip names with net margin below 8% (latest snapshot).",
+        widget=forms.NumberInput(attrs={
+            "class": "block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2",
+            "step": "0.5",
+            "min": "0",
+            "max": "100",
+        }),
+    )
+    max_pe = forms.FloatField(
+        initial=0,
+        min_value=0,
+        max_value=500,
+        required=False,
+        label="Max PE",
+        help_text="0 = off. 50 = skip trailing PE above 50 (latest snapshot).",
+        widget=forms.NumberInput(attrs={
+            "class": "block w-full mt-1 bg-slate-800 border border-slate-700 rounded px-3 py-2",
+            "step": "1",
+            "min": "0",
+            "max": "500",
+        }),
+    )
     max_pos_pct = forms.FloatField(
         initial=DEFAULT_STAGE_MAX_POS_PCT,
         min_value=5,
@@ -549,6 +610,19 @@ class StageV2BacktestForm(forms.Form):
         ma_period = cleaned.get("ma_period") or 0
         if ma_cond != MA_COND_NONE and ma_period <= 0:
             cleaned["ma_period"] = DEFAULT_MA_PERIOD
+        if cleaned.get("quality_overlay"):
+            if not cleaned.get("max_pct_above_ma"):
+                cleaned["max_pct_above_ma"] = 15
+            if not cleaned.get("nifty_sma_period"):
+                cleaned["nifty_sma_period"] = 150
+            if not cleaned.get("min_profit_margin"):
+                cleaned["min_profit_margin"] = 8
+            if not cleaned.get("max_pe"):
+                cleaned["max_pe"] = 50
+            if ma_cond == MA_COND_NONE:
+                cleaned["ma_condition"] = "above"
+                if not cleaned.get("ma_period"):
+                    cleaned["ma_period"] = 150
         cup_min = cleaned.get("cup_min_days") or 30
         cup_max = cleaned.get("cup_max_days") or 150
         if cup_max < cup_min:

@@ -23,6 +23,58 @@ class SupertrendMathTests(SimpleTestCase):
         self.assertEqual(len(pack.first_touch), n)
         self.assertTrue(pack.first_touch.dtype == bool or pack.first_touch.dtype == np.bool_)
 
+
+class QualityOverlayTests(SimpleTestCase):
+    def test_pe_and_margin_reject_expensive_thin_names(self):
+        from stage_analysis_v2.services.quality_overlay import passes_pe_margin
+
+        fund = {
+            "NYKAA": {"pe": 372.0, "profit_margin": 2.4},
+            "SBIN": {"pe": 11.1, "profit_margin": 22.4},
+            "UNKNOWN": {},
+        }
+        self.assertFalse(passes_pe_margin("NYKAA", fund, max_pe=50, min_profit_margin=8))
+        self.assertTrue(passes_pe_margin("SBIN", fund, max_pe=50, min_profit_margin=8))
+        self.assertTrue(passes_pe_margin("UNKNOWN", fund, max_pe=50, min_profit_margin=8))
+
+    def test_extension_filter_blocks_stretched_sma150(self):
+        import pandas as pd
+        from stage_analysis_v2.services.backtester import (
+            EntryFilters,
+            MA_COND_ABOVE,
+            _passes_entry_filters,
+        )
+
+        idx = pd.bdate_range("2025-01-01", periods=160)
+        close = pd.Series(100.0, index=idx)
+        df = pd.DataFrame({
+            "open": close, "high": close, "low": close, "close": close,
+            "volume": 1_000_000,
+        }, index=idx)
+        filt = EntryFilters(
+            ma_period=150, ma_type="sma", ma_condition=MA_COND_ABOVE, max_pct_above_ma=15,
+        )
+        stretched = df.copy()
+        stretched.loc[idx[-1], "close"] = 130.0
+        self.assertFalse(_passes_entry_filters(stretched, idx[-1], filt))
+        mild = df.copy()
+        mild.loc[idx[-1], "close"] = 108.0
+        self.assertTrue(_passes_entry_filters(mild, idx[-1], filt))
+
+    def test_nifty_sma_gate(self):
+        import pandas as pd
+        from stage_analysis_v2.services.quality_overlay import index_above_sma
+
+        idx = pd.bdate_range("2025-01-01", periods=160)
+        close = pd.Series(100.0, index=idx)
+        df = pd.DataFrame({"close": close}, index=idx)
+        self.assertTrue(index_above_sma(df, idx[-1], 150))
+        weak = df.copy()
+        weak.loc[idx[-1], "close"] = 90.0
+        self.assertFalse(index_above_sma(weak, idx[-1], 150))
+
+
+class SupertrendDirectionTests(SimpleTestCase):
     def test_uptrend_turns_bullish(self):
         from stage_analysis_v2.services.supertrend_swing import supertrend_np
 
@@ -266,6 +318,14 @@ class BacktestPageTests(TestCase):
         self.assertEqual(pack["ma_type"], "sma")
         self.assertEqual(pack["strategy"], "stage_v2")
         self.assertEqual(pack["universe"], "nifty200")
+        self.assertTrue(pack["quality_overlay"])
+        self.assertEqual(str(pack["max_pct_above_ma"]), "15")
+        self.assertEqual(str(pack["nifty_sma_period"]), "150")
+        self.assertEqual(str(pack["min_profit_margin"]), "8")
+        self.assertEqual(str(pack["max_pe"]), "50")
+        self.assertContains(resp, "Quality overlay")
+        self.assertContains(resp, 'name="quality_overlay"')
+        self.assertContains(resp, 'name="max_pe"')
 
     def test_results_include_win_loss_buttons_and_trade_log(self):
         from datetime import date

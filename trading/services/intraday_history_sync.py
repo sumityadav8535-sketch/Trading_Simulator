@@ -1,6 +1,6 @@
 """
-Backfill / refresh stored 5m intraday pickle history for Nifty 100 equities
-and F&O index proxies (NIFTY / BANKNIFTY) up through the click day (IST).
+Backfill / refresh stored 5m intraday pickle history for Nifty 100 / Nifty 200
+equities and F&O index proxies (NIFTY / BANKNIFTY) up through the click day (IST).
 """
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from django.utils import timezone
 
 from trading.constants import NIFTY100_INDEX_TICKER
 from trading.services.fno_engine import INSTRUMENTS, normalize_df
-from trading.services.nifty100 import ensure_nifty100_marked
+from trading.services.nifty100 import ensure_nifty100_marked, get_nifty100_symbols
 from trading.services.nse_price_sync import yfinance_ticker
 
 logger = logging.getLogger(__name__)
@@ -217,6 +217,42 @@ def _extract_from_batch(raw: pd.DataFrame, ticker: str) -> pd.DataFrame:
     return _normalize_equity_frame(raw, ticker)
 
 
+def equity_symbols_for_sync() -> list[str]:
+    """
+    Equities to backfill: Nifty 100 + Nifty 200 (Gap Open) + any existing 5m pickles.
+    """
+    symbols: set[str] = set()
+    try:
+        symbols.update(ensure_nifty100_marked())
+    except Exception as exc:
+        logger.warning("Nifty 100 refresh failed, using DB list: %s", exc)
+        try:
+            symbols.update(get_nifty100_symbols())
+        except Exception:
+            pass
+    try:
+        from trading.models import Stock
+
+        n200 = Stock.objects.filter(is_active=True, is_nifty200=True).values_list(
+            "symbol", flat=True
+        )
+        symbols.update(n200)
+    except Exception as exc:
+        logger.warning("Nifty 200 symbol load failed: %s", exc)
+    EQUITY_DIR.mkdir(parents=True, exist_ok=True)
+    existing = {p.stem for p in EQUITY_DIR.glob("*.pkl") if not p.stem.startswith("_")}
+    return sorted(symbols | existing)
+
+
+def history_needs_update(target: Optional[date] = None) -> bool:
+    """True when stored 5m equities or F&O pickles are short of `target` (today IST)."""
+    cov = get_history_coverage()
+    want = (target or _target_date()).isoformat()
+    if cov.get("target_date") != want:
+        return True
+    return bool(cov.get("equities", {}).get("stale") or cov.get("fno", {}).get("stale"))
+
+
 def get_history_coverage() -> dict:
     """Snapshot of stored history date ranges (no network)."""
     EQUITY_DIR.mkdir(parents=True, exist_ok=True)
@@ -268,10 +304,7 @@ def get_history_coverage() -> dict:
 
 def _sync_equities(target: date, progress_base: int, progress_total: int) -> dict:
     EQUITY_DIR.mkdir(parents=True, exist_ok=True)
-    symbols = ensure_nifty100_marked()
-    # Prefer symbols that already have pickles; still fetch missing universe members
-    existing = {p.stem for p in EQUITY_DIR.glob("*.pkl") if not p.stem.startswith("_")}
-    ordered = sorted(set(symbols) | existing)
+    ordered = equity_symbols_for_sync()
 
     stats = {
         "checked": 0,
@@ -460,9 +493,7 @@ def _sync_fno(target: date, progress_done: int, progress_total: int) -> dict:
 
 def _execute_sync(target: date) -> dict:
     """Core sync body. Caller must hold `_sync_lock`."""
-    symbols = ensure_nifty100_marked()
-    existing = {p.stem for p in EQUITY_DIR.glob("*.pkl") if not p.stem.startswith("_")}
-    equity_count = len(set(symbols) | existing)
+    equity_count = len(equity_symbols_for_sync())
     total = equity_count + 1 + len(INSTRUMENTS)
 
     _set_status(

@@ -153,11 +153,13 @@ def check_today_trades(
     instrument: str = "NIFTY",
     session: Optional[date] = None,
     force_fetch: bool = True,
+    bars: Optional[pd.DataFrame] = None,
 ) -> dict:
     """
     Fetch latest 5m bars and replay the live strategy for one session day.
 
     Returns a summary + trade list. Safe to call after market close once.
+    Pass `bars` to skip Yahoo and replay stored history.
     """
     key = (instrument or "NIFTY").upper()
     if key not in INSTRUMENTS:
@@ -170,7 +172,10 @@ def check_today_trades(
     threshold = float(strategy.get("ml_threshold", 0.58))
 
     try:
-        df = enrich_features(fetch_instrument_bars(key, force=force_fetch))
+        if bars is not None:
+            df = enrich_features(bars)
+        else:
+            df = enrich_features(fetch_instrument_bars(key, force=force_fetch))
     except Exception as exc:
         logger.exception("Day check fetch failed for %s", key)
         return {

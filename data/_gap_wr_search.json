@@ -1,0 +1,3462 @@
+{
+  "goal": "WR >= 70, PF >= 1, n >= 15",
+  "size": {
+    "risk_pct": 8.0,
+    "max_pos": 4,
+    "top_k": 4,
+    "max_deploy": 0.5
+  },
+  "hits": [
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 87.5,
+      "profit_factor": 3.07,
+      "net_pnl": 12590.22,
+      "total_return_pct": 12.59,
+      "max_dd_pct": 2.09,
+      "oos_pnl": 3712.09,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 917.81,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1186.04,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 10476.09,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 928.11,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 87.5,
+      "profit_factor": 2.95,
+      "net_pnl": 8566.66,
+      "total_return_pct": 8.57,
+      "max_dd_pct": 1.53,
+      "oos_pnl": 2474.96,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 631.93,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 797.51,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 7201.64,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 567.51,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 87.5,
+      "profit_factor": 2.17,
+      "net_pnl": 6950.03,
+      "total_return_pct": 6.95,
+      "max_dd_pct": 2.1,
+      "oos_pnl": 1974.59,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 625.14,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 218.8,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6643.38,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 87.84,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 86.67,
+      "profit_factor": 2.02,
+      "net_pnl": 8162.56,
+      "total_return_pct": 8.16,
+      "max_dd_pct": 2.93,
+      "oos_pnl": 1912.73,
+      "oos_wr": 81.82,
+      "median_daily_pnl": 626.16,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 845.46,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6675.03,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 731.03,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -88.98,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 85.0,
+      "profit_factor": 2.47,
+      "net_pnl": 8851.34,
+      "total_return_pct": 8.85,
+      "max_dd_pct": 2.09,
+      "oos_pnl": 1786.12,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 895.43,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1186.04,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 7696.81,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -31.5,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 85.0,
+      "profit_factor": 2.39,
+      "net_pnl": 6025.14,
+      "total_return_pct": 6.03,
+      "max_dd_pct": 1.53,
+      "oos_pnl": 1176.99,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 621.78,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 797.51,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 5308.1,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -80.46,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 85.0,
+      "profit_factor": 1.76,
+      "net_pnl": 4433.52,
+      "total_return_pct": 4.43,
+      "max_dd_pct": 2.1,
+      "oos_pnl": 699.88,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 615.12,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 218.8,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4757.07,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -542.35,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 25,
+      "win_rate": 84.0,
+      "profit_factor": 1.64,
+      "net_pnl": 5021.48,
+      "total_return_pct": 5.02,
+      "max_dd_pct": 2.94,
+      "oos_pnl": 640.37,
+      "oos_wr": 77.78,
+      "median_daily_pnl": 613.53,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 845.46,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4788.02,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -545.81,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -66.2,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 83.33,
+      "profit_factor": 4.28,
+      "net_pnl": 13699.36,
+      "total_return_pct": 13.7,
+      "max_dd_pct": 1.08,
+      "oos_pnl": 4604.66,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 919.31,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 2236.54,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 9642.16,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1820.68,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 83.33,
+      "profit_factor": 3.06,
+      "net_pnl": 11949.6,
+      "total_return_pct": 11.95,
+      "max_dd_pct": 1.81,
+      "oos_pnl": 4149.06,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 908.19,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1769.65,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 8777.81,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1402.16,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 83.33,
+      "profit_factor": 3.0,
+      "net_pnl": 8220.1,
+      "total_return_pct": 8.22,
+      "max_dd_pct": 1.08,
+      "oos_pnl": 2821.56,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 627.41,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1260.48,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6035.39,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 924.26,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.6",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 83.33,
+      "profit_factor": 2.14,
+      "net_pnl": 12516.61,
+      "total_return_pct": 12.52,
+      "max_dd_pct": 5.14,
+      "oos_pnl": 1560.06,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 1201.92,
+      "trading_days": 13,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 5516.31,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 5242.13,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1758.17,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 83.33,
+      "profit_factor": 2.02,
+      "net_pnl": 11446.9,
+      "total_return_pct": 11.45,
+      "max_dd_pct": 3.51,
+      "oos_pnl": 683.17,
+      "oos_wr": 72.73,
+      "median_daily_pnl": 919.23,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 2072.41,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 10568.36,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 1886.64,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -3080.51,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 83.33,
+      "profit_factor": 1.91,
+      "net_pnl": 7454.4,
+      "total_return_pct": 7.45,
+      "max_dd_pct": 4.05,
+      "oos_pnl": 35.5,
+      "oos_wr": 72.73,
+      "median_daily_pnl": 632.75,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 1426.63,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 7273.78,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 1213.38,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -2459.38,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 28,
+      "win_rate": 82.14,
+      "profit_factor": 1.35,
+      "net_pnl": 3540.78,
+      "total_return_pct": 3.54,
+      "max_dd_pct": 4.41,
+      "oos_pnl": 1907.35,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 601.48,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": -3545.76,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6393.13,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 693.42,
+          "wr": 80.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 33,
+      "win_rate": 81.82,
+      "profit_factor": 1.37,
+      "net_pnl": 4441.28,
+      "total_return_pct": 4.44,
+      "max_dd_pct": 3.91,
+      "oos_pnl": 442.25,
+      "oos_wr": 77.78,
+      "median_daily_pnl": 611.26,
+      "trading_days": 18,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 10,
+          "pnl": -1895.8,
+          "wr": 70.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 7142.13,
+          "wr": 93.8
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": -2036.15,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1231.09,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 37,
+      "win_rate": 81.08,
+      "profit_factor": 1.69,
+      "net_pnl": 10970.79,
+      "total_return_pct": 10.97,
+      "max_dd_pct": 3.91,
+      "oos_pnl": 203.47,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 918.71,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 9,
+          "pnl": 1947.39,
+          "wr": 77.8
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 7778.72,
+          "wr": 85.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 6,
+          "pnl": -595.65,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1840.34,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 80.0,
+      "profit_factor": 3.4,
+      "net_pnl": 9921.28,
+      "total_return_pct": 9.92,
+      "max_dd_pct": 1.18,
+      "oos_pnl": 2656.21,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 897.48,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 2236.54,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 6853.34,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 831.4,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 80.0,
+      "profit_factor": 2.46,
+      "net_pnl": 8285.9,
+      "total_return_pct": 8.29,
+      "max_dd_pct": 1.78,
+      "oos_pnl": 2255.24,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 886.65,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1769.65,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 6064.24,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 452.0,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 80.0,
+      "profit_factor": 2.42,
+      "net_pnl": 5720.46,
+      "total_return_pct": 5.72,
+      "max_dd_pct": 1.4,
+      "oos_pnl": 1532.58,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 617.77,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1260.48,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4174.72,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 285.27,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 80.0,
+      "profit_factor": 2.23,
+      "net_pnl": 8259.47,
+      "total_return_pct": 8.26,
+      "max_dd_pct": 2.68,
+      "oos_pnl": 1553.13,
+      "oos_wr": 72.73,
+      "median_daily_pnl": 628.36,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 1891.55,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6088.14,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 1587.16,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -1307.39,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.6",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 80.0,
+      "profit_factor": 1.71,
+      "net_pnl": 7674.27,
+      "total_return_pct": 7.67,
+      "max_dd_pct": 5.14,
+      "oos_pnl": 282.89,
+      "oos_wr": 71.43,
+      "median_daily_pnl": 1154.79,
+      "trading_days": 11,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 5516.31,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 1648.27,
+          "wr": 75.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 509.68,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 80.0,
+      "profit_factor": 1.6,
+      "net_pnl": 7894.33,
+      "total_return_pct": 7.89,
+      "max_dd_pct": 3.91,
+      "oos_pnl": 765.61,
+      "oos_wr": 77.78,
+      "median_daily_pnl": 887.69,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": 1104.89,
+          "wr": 75.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 17,
+          "pnl": 5009.31,
+          "wr": 82.4
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -12.2,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1792.33,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 2.89,
+      "net_pnl": 11003.78,
+      "total_return_pct": 11.0,
+      "max_dd_pct": 1.63,
+      "oos_pnl": 2737.79,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 902.18,
+      "trading_days": 13,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 2305.71,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6935.7,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1762.39,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 2.04,
+      "net_pnl": 5928.92,
+      "total_return_pct": 5.93,
+      "max_dd_pct": 1.63,
+      "oos_pnl": 1075.24,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 614.38,
+      "trading_days": 13,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1325.23,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 3697.94,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 905.75,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 2.03,
+      "net_pnl": 8466.5,
+      "total_return_pct": 8.47,
+      "max_dd_pct": 2.45,
+      "oos_pnl": 1451.38,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 883.13,
+      "trading_days": 13,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1879.11,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 5235.6,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1351.8,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.6",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 1.86,
+      "net_pnl": 10041.91,
+      "total_return_pct": 10.04,
+      "max_dd_pct": 5.07,
+      "oos_pnl": 5185.12,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 1163.95,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 2153.25,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6168.29,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1720.34,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 1.11,
+      "net_pnl": 1127.18,
+      "total_return_pct": 1.13,
+      "max_dd_pct": 4.41,
+      "oos_pnl": 1284.33,
+      "oos_wr": 83.33,
+      "median_daily_pnl": 592.21,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": -3545.76,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4585.44,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 87.49,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 28,
+      "win_rate": 78.57,
+      "profit_factor": 1.45,
+      "net_pnl": 4095.67,
+      "total_return_pct": 4.1,
+      "max_dd_pct": 3.2,
+      "oos_pnl": 84.66,
+      "oos_wr": 71.43,
+      "median_daily_pnl": 613.0,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": -1789.37,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 7041.26,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": -1156.24,
+          "wr": 60.0
+        }
+      ]
+    },
+    {
+      "pdc": "13:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 51,
+      "win_rate": 78.43,
+      "profit_factor": 1.08,
+      "net_pnl": 1644.12,
+      "total_return_pct": 1.64,
+      "max_dd_pct": 10.57,
+      "oos_pnl": 4706.88,
+      "oos_wr": 86.67,
+      "median_daily_pnl": 579.35,
+      "trading_days": 28,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 13,
+          "pnl": 336.23,
+          "wr": 76.9
+        },
+        {
+          "month": "2026-07",
+          "trades": 26,
+          "pnl": -1664.6,
+          "wr": 76.9
+        },
+        {
+          "month": "2026-08",
+          "trades": 12,
+          "pnl": 2972.48,
+          "wr": 83.3
+        }
+      ]
+    },
+    {
+      "pdc": "13:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 50,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 32,
+      "win_rate": 78.12,
+      "profit_factor": 1.18,
+      "net_pnl": 2233.51,
+      "total_return_pct": 2.23,
+      "max_dd_pct": 8.21,
+      "oos_pnl": 1902.56,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 590.51,
+      "trading_days": 20,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 3604.24,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 19,
+          "pnl": -3273.29,
+          "wr": 68.4
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1902.56,
+          "wr": 85.7
+        }
+      ]
+    },
+    {
+      "pdc": "13:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 45,
+      "win_rate": 77.78,
+      "profit_factor": 1.17,
+      "net_pnl": 3069.43,
+      "total_return_pct": 3.07,
+      "max_dd_pct": 6.59,
+      "oos_pnl": 2430.29,
+      "oos_wr": 81.82,
+      "median_daily_pnl": 589.08,
+      "trading_days": 26,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 13,
+          "pnl": 336.23,
+          "wr": 76.9
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 302.94,
+          "wr": 76.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 11,
+          "pnl": 2430.29,
+          "wr": 81.8
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 40,
+      "win_rate": 77.5,
+      "profit_factor": 1.51,
+      "net_pnl": 9158.94,
+      "total_return_pct": 9.16,
+      "max_dd_pct": 4.18,
+      "oos_pnl": 1723.1,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 882.91,
+      "trading_days": 20,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 11,
+          "pnl": -1946.25,
+          "wr": 63.6
+        },
+        {
+          "month": "2026-07",
+          "trades": 19,
+          "pnl": 11197.83,
+          "wr": 89.5
+        },
+        {
+          "month": "2026-08",
+          "trades": 8,
+          "pnl": -1900.97,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1808.33,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 76.67,
+      "profit_factor": 2.49,
+      "net_pnl": 12480.2,
+      "total_return_pct": 12.48,
+      "max_dd_pct": 2.81,
+      "oos_pnl": 1489.78,
+      "oos_wr": 63.64,
+      "median_daily_pnl": 921.26,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 3131.74,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 9735.71,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 2777.55,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -3164.81,
+          "wr": 25.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 76.67,
+      "profit_factor": 1.72,
+      "net_pnl": 5925.79,
+      "total_return_pct": 5.93,
+      "max_dd_pct": 2.68,
+      "oos_pnl": 453.78,
+      "oos_wr": 69.23,
+      "median_daily_pnl": 616.9,
+      "trading_days": 15,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 1920.76,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 3722.1,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 1547.26,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -1264.3,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 25,
+      "win_rate": 76.0,
+      "profit_factor": 1.79,
+      "net_pnl": 5149.39,
+      "total_return_pct": 5.15,
+      "max_dd_pct": 2.68,
+      "oos_pnl": 296.83,
+      "oos_wr": 66.67,
+      "median_daily_pnl": 617.26,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 1891.55,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4218.43,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 289.54,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -1250.16,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 33,
+      "win_rate": 75.76,
+      "profit_factor": 1.4,
+      "net_pnl": 6144.11,
+      "total_return_pct": 6.14,
+      "max_dd_pct": 3.95,
+      "oos_pnl": 2246.06,
+      "oos_wr": 77.78,
+      "median_daily_pnl": 861.43,
+      "trading_days": 18,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 10,
+          "pnl": -2755.6,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 8417.52,
+          "wr": 87.5
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": -1278.15,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1760.32,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.6",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 37,
+      "win_rate": 75.68,
+      "profit_factor": 1.65,
+      "net_pnl": 13041.48,
+      "total_return_pct": 13.04,
+      "max_dd_pct": 5.23,
+      "oos_pnl": 846.38,
+      "oos_wr": 66.67,
+      "median_daily_pnl": 1093.42,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 9,
+          "pnl": 3753.98,
+          "wr": 77.8
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 8223.28,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 6,
+          "pnl": 508.02,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 556.21,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "13:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 49,
+      "win_rate": 75.51,
+      "profit_factor": 1.0,
+      "net_pnl": -36.7,
+      "total_return_pct": -0.04,
+      "max_dd_pct": 8.59,
+      "oos_pnl": 2944.31,
+      "oos_wr": 83.33,
+      "median_daily_pnl": 572.2,
+      "trading_days": 28,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 15,
+          "pnl": -3872.06,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-07",
+          "trades": 22,
+          "pnl": 891.06,
+          "wr": 77.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 12,
+          "pnl": 2944.31,
+          "wr": 83.3
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.6",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 75.0,
+      "profit_factor": 2.98,
+      "net_pnl": 13880.67,
+      "total_return_pct": 13.88,
+      "max_dd_pct": 2.52,
+      "oos_pnl": 6202.23,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 1186.18,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 3212.58,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 8030.99,
+          "wr": 73.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 2637.08,
+          "wr": 75.0
+        }
+      ]
+    }
+  ],
+  "top": [
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 87.5,
+      "profit_factor": 3.07,
+      "net_pnl": 12590.22,
+      "total_return_pct": 12.59,
+      "max_dd_pct": 2.09,
+      "oos_pnl": 3712.09,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 917.81,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1186.04,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 10476.09,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 928.11,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 87.5,
+      "profit_factor": 2.95,
+      "net_pnl": 8566.66,
+      "total_return_pct": 8.57,
+      "max_dd_pct": 1.53,
+      "oos_pnl": 2474.96,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 631.93,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 797.51,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 7201.64,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 567.51,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 87.5,
+      "profit_factor": 2.17,
+      "net_pnl": 6950.03,
+      "total_return_pct": 6.95,
+      "max_dd_pct": 2.1,
+      "oos_pnl": 1974.59,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 625.14,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 218.8,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6643.38,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 87.84,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 86.67,
+      "profit_factor": 2.02,
+      "net_pnl": 8162.56,
+      "total_return_pct": 8.16,
+      "max_dd_pct": 2.93,
+      "oos_pnl": 1912.73,
+      "oos_wr": 81.82,
+      "median_daily_pnl": 626.16,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 845.46,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6675.03,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 731.03,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -88.98,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 85.0,
+      "profit_factor": 2.47,
+      "net_pnl": 8851.34,
+      "total_return_pct": 8.85,
+      "max_dd_pct": 2.09,
+      "oos_pnl": 1786.12,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 895.43,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1186.04,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 7696.81,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -31.5,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 85.0,
+      "profit_factor": 2.39,
+      "net_pnl": 6025.14,
+      "total_return_pct": 6.03,
+      "max_dd_pct": 1.53,
+      "oos_pnl": 1176.99,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 621.78,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 797.51,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 5308.1,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -80.46,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 85.0,
+      "profit_factor": 1.76,
+      "net_pnl": 4433.52,
+      "total_return_pct": 4.43,
+      "max_dd_pct": 2.1,
+      "oos_pnl": 699.88,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 615.12,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 218.8,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4757.07,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -542.35,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 25,
+      "win_rate": 84.0,
+      "profit_factor": 1.64,
+      "net_pnl": 5021.48,
+      "total_return_pct": 5.02,
+      "max_dd_pct": 2.94,
+      "oos_pnl": 640.37,
+      "oos_wr": 77.78,
+      "median_daily_pnl": 613.53,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 845.46,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4788.02,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -545.81,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -66.2,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 83.33,
+      "profit_factor": 4.28,
+      "net_pnl": 13699.36,
+      "total_return_pct": 13.7,
+      "max_dd_pct": 1.08,
+      "oos_pnl": 4604.66,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 919.31,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 2236.54,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 9642.16,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1820.68,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 83.33,
+      "profit_factor": 3.06,
+      "net_pnl": 11949.6,
+      "total_return_pct": 11.95,
+      "max_dd_pct": 1.81,
+      "oos_pnl": 4149.06,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 908.19,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1769.65,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 8777.81,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1402.16,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 83.33,
+      "profit_factor": 3.0,
+      "net_pnl": 8220.1,
+      "total_return_pct": 8.22,
+      "max_dd_pct": 1.08,
+      "oos_pnl": 2821.56,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 627.41,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1260.48,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6035.39,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 924.26,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.6",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 83.33,
+      "profit_factor": 2.14,
+      "net_pnl": 12516.61,
+      "total_return_pct": 12.52,
+      "max_dd_pct": 5.14,
+      "oos_pnl": 1560.06,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 1201.92,
+      "trading_days": 13,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 5516.31,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 5242.13,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1758.17,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 83.33,
+      "profit_factor": 2.02,
+      "net_pnl": 11446.9,
+      "total_return_pct": 11.45,
+      "max_dd_pct": 3.51,
+      "oos_pnl": 683.17,
+      "oos_wr": 72.73,
+      "median_daily_pnl": 919.23,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 2072.41,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 10568.36,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 1886.64,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -3080.51,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 83.33,
+      "profit_factor": 1.91,
+      "net_pnl": 7454.4,
+      "total_return_pct": 7.45,
+      "max_dd_pct": 4.05,
+      "oos_pnl": 35.5,
+      "oos_wr": 72.73,
+      "median_daily_pnl": 632.75,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 1426.63,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 7273.78,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 1213.38,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -2459.38,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 28,
+      "win_rate": 82.14,
+      "profit_factor": 1.35,
+      "net_pnl": 3540.78,
+      "total_return_pct": 3.54,
+      "max_dd_pct": 4.41,
+      "oos_pnl": 1907.35,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 601.48,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": -3545.76,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6393.13,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 693.42,
+          "wr": 80.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 33,
+      "win_rate": 81.82,
+      "profit_factor": 1.37,
+      "net_pnl": 4441.28,
+      "total_return_pct": 4.44,
+      "max_dd_pct": 3.91,
+      "oos_pnl": 442.25,
+      "oos_wr": 77.78,
+      "median_daily_pnl": 611.26,
+      "trading_days": 18,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 10,
+          "pnl": -1895.8,
+          "wr": 70.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 7142.13,
+          "wr": 93.8
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": -2036.15,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1231.09,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 37,
+      "win_rate": 81.08,
+      "profit_factor": 1.69,
+      "net_pnl": 10970.79,
+      "total_return_pct": 10.97,
+      "max_dd_pct": 3.91,
+      "oos_pnl": 203.47,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 918.71,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 9,
+          "pnl": 1947.39,
+          "wr": 77.8
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 7778.72,
+          "wr": 85.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 6,
+          "pnl": -595.65,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1840.34,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 80.0,
+      "profit_factor": 3.4,
+      "net_pnl": 9921.28,
+      "total_return_pct": 9.92,
+      "max_dd_pct": 1.18,
+      "oos_pnl": 2656.21,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 897.48,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 2236.54,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 6853.34,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 831.4,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 80.0,
+      "profit_factor": 2.46,
+      "net_pnl": 8285.9,
+      "total_return_pct": 8.29,
+      "max_dd_pct": 1.78,
+      "oos_pnl": 2255.24,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 886.65,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1769.65,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 6064.24,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 452.0,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 80.0,
+      "profit_factor": 2.42,
+      "net_pnl": 5720.46,
+      "total_return_pct": 5.72,
+      "max_dd_pct": 1.4,
+      "oos_pnl": 1532.58,
+      "oos_wr": 80.0,
+      "median_daily_pnl": 617.77,
+      "trading_days": 12,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1260.48,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4174.72,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 285.27,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 80.0,
+      "profit_factor": 2.23,
+      "net_pnl": 8259.47,
+      "total_return_pct": 8.26,
+      "max_dd_pct": 2.68,
+      "oos_pnl": 1553.13,
+      "oos_wr": 72.73,
+      "median_daily_pnl": 628.36,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 1891.55,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6088.14,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 1587.16,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -1307.39,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.6",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 20,
+      "win_rate": 80.0,
+      "profit_factor": 1.71,
+      "net_pnl": 7674.27,
+      "total_return_pct": 7.67,
+      "max_dd_pct": 5.14,
+      "oos_pnl": 282.89,
+      "oos_wr": 71.43,
+      "median_daily_pnl": 1154.79,
+      "trading_days": 11,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 5516.31,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 1648.27,
+          "wr": 75.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 509.68,
+          "wr": 66.7
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 80.0,
+      "profit_factor": 1.6,
+      "net_pnl": 7894.33,
+      "total_return_pct": 7.89,
+      "max_dd_pct": 3.91,
+      "oos_pnl": 765.61,
+      "oos_wr": 77.78,
+      "median_daily_pnl": 887.69,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": 1104.89,
+          "wr": 75.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 17,
+          "pnl": 5009.31,
+          "wr": 82.4
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": -12.2,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1792.33,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 2.89,
+      "net_pnl": 11003.78,
+      "total_return_pct": 11.0,
+      "max_dd_pct": 1.63,
+      "oos_pnl": 2737.79,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 902.18,
+      "trading_days": 13,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 2305.71,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6935.7,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1762.39,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 2.04,
+      "net_pnl": 5928.92,
+      "total_return_pct": 5.93,
+      "max_dd_pct": 1.63,
+      "oos_pnl": 1075.24,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 614.38,
+      "trading_days": 13,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1325.23,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 3697.94,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 905.75,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 2.03,
+      "net_pnl": 8466.5,
+      "total_return_pct": 8.47,
+      "max_dd_pct": 2.45,
+      "oos_pnl": 1451.38,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 883.13,
+      "trading_days": 13,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 1879.11,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 5235.6,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1351.8,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.6",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 1.86,
+      "net_pnl": 10041.91,
+      "total_return_pct": 10.04,
+      "max_dd_pct": 5.07,
+      "oos_pnl": 5185.12,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 1163.95,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 2153.25,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 6168.29,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 1720.34,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 79.17,
+      "profit_factor": 1.11,
+      "net_pnl": 1127.18,
+      "total_return_pct": 1.13,
+      "max_dd_pct": 4.41,
+      "oos_pnl": 1284.33,
+      "oos_wr": 83.33,
+      "median_daily_pnl": 592.21,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": -3545.76,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4585.44,
+          "wr": 91.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 87.49,
+          "wr": 75.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.0,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 28,
+      "win_rate": 78.57,
+      "profit_factor": 1.45,
+      "net_pnl": 4095.67,
+      "total_return_pct": 4.1,
+      "max_dd_pct": 3.2,
+      "oos_pnl": 84.66,
+      "oos_wr": 71.43,
+      "median_daily_pnl": 613.0,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 8,
+          "pnl": -1789.37,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 7041.26,
+          "wr": 93.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": -1156.24,
+          "wr": 60.0
+        }
+      ]
+    },
+    {
+      "pdc": "13:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 51,
+      "win_rate": 78.43,
+      "profit_factor": 1.08,
+      "net_pnl": 1644.12,
+      "total_return_pct": 1.64,
+      "max_dd_pct": 10.57,
+      "oos_pnl": 4706.88,
+      "oos_wr": 86.67,
+      "median_daily_pnl": 579.35,
+      "trading_days": 28,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 13,
+          "pnl": 336.23,
+          "wr": 76.9
+        },
+        {
+          "month": "2026-07",
+          "trades": 26,
+          "pnl": -1664.6,
+          "wr": 76.9
+        },
+        {
+          "month": "2026-08",
+          "trades": 12,
+          "pnl": 2972.48,
+          "wr": 83.3
+        }
+      ]
+    },
+    {
+      "pdc": "13:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 50,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 32,
+      "win_rate": 78.12,
+      "profit_factor": 1.18,
+      "net_pnl": 2233.51,
+      "total_return_pct": 2.23,
+      "max_dd_pct": 8.21,
+      "oos_pnl": 1902.56,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 590.51,
+      "trading_days": 20,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 3604.24,
+          "wr": 100.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 19,
+          "pnl": -3273.29,
+          "wr": 68.4
+        },
+        {
+          "month": "2026-08",
+          "trades": 7,
+          "pnl": 1902.56,
+          "wr": 85.7
+        }
+      ]
+    },
+    {
+      "pdc": "13:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 45,
+      "win_rate": 77.78,
+      "profit_factor": 1.17,
+      "net_pnl": 3069.43,
+      "total_return_pct": 3.07,
+      "max_dd_pct": 6.59,
+      "oos_pnl": 2430.29,
+      "oos_wr": 81.82,
+      "median_daily_pnl": 589.08,
+      "trading_days": 26,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 13,
+          "pnl": 336.23,
+          "wr": 76.9
+        },
+        {
+          "month": "2026-07",
+          "trades": 21,
+          "pnl": 302.94,
+          "wr": 76.2
+        },
+        {
+          "month": "2026-08",
+          "trades": 11,
+          "pnl": 2430.29,
+          "wr": 81.8
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 40,
+      "win_rate": 77.5,
+      "profit_factor": 1.51,
+      "net_pnl": 9158.94,
+      "total_return_pct": 9.16,
+      "max_dd_pct": 4.18,
+      "oos_pnl": 1723.1,
+      "oos_wr": 75.0,
+      "median_daily_pnl": 882.91,
+      "trading_days": 20,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 11,
+          "pnl": -1946.25,
+          "wr": 63.6
+        },
+        {
+          "month": "2026-07",
+          "trades": 19,
+          "pnl": 11197.83,
+          "wr": 89.5
+        },
+        {
+          "month": "2026-08",
+          "trades": 8,
+          "pnl": -1900.97,
+          "wr": 62.5
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1808.33,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.5",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 76.67,
+      "profit_factor": 2.49,
+      "net_pnl": 12480.2,
+      "total_return_pct": 12.48,
+      "max_dd_pct": 2.81,
+      "oos_pnl": 1489.78,
+      "oos_wr": 63.64,
+      "median_daily_pnl": 921.26,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 3131.74,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 9735.71,
+          "wr": 86.7
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 2777.55,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -3164.81,
+          "wr": 25.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 30,
+      "win_rate": 76.67,
+      "profit_factor": 1.72,
+      "net_pnl": 5925.79,
+      "total_return_pct": 5.93,
+      "max_dd_pct": 2.68,
+      "oos_pnl": 453.78,
+      "oos_wr": 69.23,
+      "median_daily_pnl": 616.9,
+      "trading_days": 15,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 1920.76,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 3722.1,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": 1547.26,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -1264.3,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.4",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 25,
+      "win_rate": 76.0,
+      "profit_factor": 1.79,
+      "net_pnl": 5149.39,
+      "total_return_pct": 5.15,
+      "max_dd_pct": 2.68,
+      "oos_pnl": 296.83,
+      "oos_wr": 66.67,
+      "median_daily_pnl": 617.26,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 6,
+          "pnl": 1891.55,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-07",
+          "trades": 12,
+          "pnl": 4218.43,
+          "wr": 83.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 3,
+          "pnl": 289.54,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 4,
+          "pnl": -1250.16,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.5",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 33,
+      "win_rate": 75.76,
+      "profit_factor": 1.4,
+      "net_pnl": 6144.11,
+      "total_return_pct": 6.14,
+      "max_dd_pct": 3.95,
+      "oos_pnl": 2246.06,
+      "oos_wr": 77.78,
+      "median_daily_pnl": 861.43,
+      "trading_days": 18,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 10,
+          "pnl": -2755.6,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 16,
+          "pnl": 8417.52,
+          "wr": 87.5
+        },
+        {
+          "month": "2026-08",
+          "trades": 5,
+          "pnl": -1278.15,
+          "wr": 60.0
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 1760.32,
+          "wr": 100.0
+        }
+      ]
+    },
+    {
+      "pdc": "15:10",
+      "tp": "pct0.6",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "skip_auction_high": false,
+      "bounce": true,
+      "trades": 37,
+      "win_rate": 75.68,
+      "profit_factor": 1.65,
+      "net_pnl": 13041.48,
+      "total_return_pct": 13.04,
+      "max_dd_pct": 5.23,
+      "oos_pnl": 846.38,
+      "oos_wr": 66.67,
+      "median_daily_pnl": 1093.42,
+      "trading_days": 16,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 9,
+          "pnl": 3753.98,
+          "wr": 77.8
+        },
+        {
+          "month": "2026-07",
+          "trades": 20,
+          "pnl": 8223.28,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-08",
+          "trades": 6,
+          "pnl": 508.02,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-09",
+          "trades": 2,
+          "pnl": 556.21,
+          "wr": 50.0
+        }
+      ]
+    },
+    {
+      "pdc": "13:10",
+      "tp": "pct0.4",
+      "sl_atr": 1.5,
+      "gap_min": 0.02,
+      "gap_max": 0.04,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 49,
+      "win_rate": 75.51,
+      "profit_factor": 1.0,
+      "net_pnl": -36.7,
+      "total_return_pct": -0.04,
+      "max_dd_pct": 8.59,
+      "oos_pnl": 2944.31,
+      "oos_wr": 83.33,
+      "median_daily_pnl": 572.2,
+      "trading_days": 28,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 15,
+          "pnl": -3872.06,
+          "wr": 66.7
+        },
+        {
+          "month": "2026-07",
+          "trades": 22,
+          "pnl": 891.06,
+          "wr": 77.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 12,
+          "pnl": 2944.31,
+          "wr": 83.3
+        }
+      ]
+    },
+    {
+      "pdc": "official",
+      "tp": "pct0.6",
+      "sl_atr": 0.6,
+      "gap_min": 0.02,
+      "gap_max": 0.06,
+      "rsi_lo": 40,
+      "rsi_hi": 65,
+      "skip_auction_high": true,
+      "bounce": true,
+      "trades": 24,
+      "win_rate": 75.0,
+      "profit_factor": 2.98,
+      "net_pnl": 13880.67,
+      "total_return_pct": 13.88,
+      "max_dd_pct": 2.52,
+      "oos_pnl": 6202.23,
+      "oos_wr": 85.71,
+      "median_daily_pnl": 1186.18,
+      "trading_days": 14,
+      "months": [
+        {
+          "month": "2026-06",
+          "trades": 5,
+          "pnl": 3212.58,
+          "wr": 80.0
+        },
+        {
+          "month": "2026-07",
+          "trades": 15,
+          "pnl": 8030.99,
+          "wr": 73.3
+        },
+        {
+          "month": "2026-08",
+          "trades": 4,
+          "pnl": 2637.08,
+          "wr": 75.0
+        }
+      ]
+    }
+  ],
+  "n_tested": 1080
+}

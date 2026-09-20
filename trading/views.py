@@ -75,6 +75,10 @@ from trading.services.intraday_history_sync import (
     get_history_coverage,
     start_intraday_history_sync_async,
 )
+from trading.services.localhost_auto_refresh import (
+    get_auto_refresh_status,
+    start_localhost_auto_refresh,
+)
 from trading.services.fno_backtest_runner import (
     get_backtest_status,
     start_fno_backtest_async,
@@ -678,6 +682,21 @@ def intraday_history_sync_api(request: HttpRequest) -> JsonResponse:
 
 
 @require_GET
+def localhost_auto_refresh_status_api(request: HttpRequest) -> JsonResponse:
+    """Read-only status of the once-per-process startup scan. Does not start a job."""
+    return JsonResponse(get_auto_refresh_status())
+
+
+@require_POST
+def localhost_auto_refresh_run_api(request: HttpRequest) -> JsonResponse:
+    """Start remaining 5m fetch + signal scan (localhost / DEBUG only)."""
+    force = request.GET.get("force") == "1"
+    result = start_localhost_auto_refresh(force=force)
+    status = 200 if result.get("ok") or result.get("started") else 403
+    return JsonResponse(result, status=status)
+
+
+@require_GET
 def fno_backtest_status_api(request: HttpRequest) -> JsonResponse:
     """Status of the one-click F&O backtest job."""
     return JsonResponse(get_backtest_status())
@@ -1090,3 +1109,85 @@ def intraday_15m_fade(request: HttpRequest) -> HttpResponse:
         "pack100": pack100,
         "mis5x": (pack100.get("mis5x_compare") or {}),
     })
+
+
+def _fundamental_presets(today: date) -> list[dict]:
+    rows: list[tuple[str, date, date]] = [
+        ("1 year", today - timedelta(days=365), today),
+        ("2 years", today - timedelta(days=365 * 2), today),
+        ("3 years", today - timedelta(days=365 * 3), today),
+        ("5 years", today - timedelta(days=365 * 5), today),
+    ]
+    for year in (today.year, today.year - 1, today.year - 2):
+        start = date(year, 1, 1)
+        end = min(date(year, 12, 31), today)
+        if end > start:
+            rows.append((str(year), start, end))
+    return [{"label": label, "start": start.isoformat(), "end": end.isoformat()} for label, start, end in rows]
+
+
+@require_GET
+def fundamental_swing(request: HttpRequest) -> HttpResponse:
+    from trading.services.charts import build_equity_curve
+    from trading.services.fundamental_swing import (
+        DEFAULT_CAPITAL,
+        DEFAULT_PACKS,
+        load_page,
+        params_by_name,
+        params_to_dict,
+        parse_iso_date,
+        run_custom_backtest,
+    )
+
+    rebuild = request.GET.get("rebuild") in {"1", "true", "yes"}
+    today = date.today()
+    params = params_by_name(request.GET.get("pack"))
+    asof = parse_iso_date(request.GET.get("asof")) or today
+    if asof > today:
+        asof = today
+
+    page = load_page(rebuild=rebuild, asof=asof, params=params)
+
+    start = parse_iso_date(request.GET.get("start"))
+    end = parse_iso_date(request.GET.get("end"))
+    run = request.GET.get("run") in {"1", "true", "yes"}
+    try:
+        capital = float(request.GET.get("capital") or DEFAULT_CAPITAL)
+        if capital <= 0:
+            capital = DEFAULT_CAPITAL
+    except (TypeError, ValueError):
+        capital = DEFAULT_CAPITAL
+
+    custom = None
+    custom_error = None
+    if run:
+        if not start or not end:
+            custom_error = "Pick a start and end date to run a backtest."
+        elif start >= end:
+            custom_error = "End date must be after the start date."
+        else:
+            custom = run_custom_backtest(start, end, params=params, capital=capital)
+            if custom.get("error"):
+                custom_error = custom.get("error")
+
+    charts = {}
+    custom_curve = (custom or {}).get("equity_curve") or []
+    if custom_curve:
+        charts["custom_equity"] = build_equity_curve(custom_curve)
+    windows = page.get("windows") or []
+    hist_curve = (windows[-1].get("equity_curve") if windows else None) or []
+    if hist_curve:
+        charts["equity"] = build_equity_curve(hist_curve)
+
+    page["charts"] = charts
+    page["custom"] = custom
+    page["custom_error"] = custom_error
+    page["form_start"] = (start or (today - timedelta(days=365))).isoformat()
+    page["form_end"] = (end or today).isoformat()
+    page["form_asof"] = asof.isoformat()
+    page["form_capital"] = int(capital)
+    page["form_pack"] = params.name
+    page["packs"] = [params_to_dict(p) for p in DEFAULT_PACKS]
+    page["presets"] = _fundamental_presets(today)
+    page["ran_custom"] = bool(run)
+    return render(request, "trading/fundamental_swing.html", page)

@@ -124,6 +124,14 @@ NSE_LEGACY_DB_PATH = BASE_DIR / "data" / "nse_data.sqlite"
 NSE_AUTO_SYNC_ENABLED = _env_bool("NSE_AUTO_SYNC_ENABLED", DEBUG)
 NSE_SYNC_BATCH_SIZE = int(os.environ.get("NSE_SYNC_BATCH_SIZE", "25"))
 
+# When the local Django server is opened (DEBUG), fetch remaining 5m bars
+# through today and scan F&O Live / F&O Long / Gap Open for recent signals.
+# Stays off on PythonAnywhere (DEBUG=0).
+INTRADAY_AUTO_REFRESH_ON_LOCALHOST = _env_bool(
+    "INTRADAY_AUTO_REFRESH_ON_LOCALHOST", DEBUG
+)
+INTRADAY_AUTO_REFRESH_FORCE = _env_bool("INTRADAY_AUTO_REFRESH_FORCE", False)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

@@ -498,6 +498,10 @@ def backtest(request: HttpRequest) -> HttpResponse:
         data.setdefault("ma_condition", MA_COND_NONE)
         data.setdefault("ma_period", str(DEFAULT_MA_PERIOD))
         data.setdefault("ma_type", DEFAULT_MA_TYPE)
+        data.setdefault("max_pct_above_ma", "0")
+        data.setdefault("nifty_sma_period", "0")
+        data.setdefault("min_profit_margin", "0")
+        data.setdefault("max_pe", "0")
         data.setdefault("max_pos_pct", str(int(DEFAULT_STAGE_MAX_POS_PCT)))
         if not data.get("start_date"):
             data["start_date"] = default_start.isoformat()
@@ -557,6 +561,11 @@ def backtest(request: HttpRequest) -> HttpResponse:
                 "ma_condition": MA_COND_NONE,
                 "ma_period": DEFAULT_MA_PERIOD,
                 "ma_type": DEFAULT_MA_TYPE,
+                "quality_overlay": False,
+                "max_pct_above_ma": 0,
+                "nifty_sma_period": 0,
+                "min_profit_margin": 0,
+                "max_pe": 0,
                 "max_pos_pct": DEFAULT_STAGE_MAX_POS_PCT,
             },
         )
@@ -588,6 +597,10 @@ def backtest(request: HttpRequest) -> HttpResponse:
                 ma_period=int(cd.get("ma_period") or 0),
                 ma_type=(cd.get("ma_type") or DEFAULT_MA_TYPE),
                 ma_condition=(cd.get("ma_condition") or MA_COND_NONE),
+                max_pct_above_ma=float(cd.get("max_pct_above_ma") or 0),
+                nifty_sma_period=int(cd.get("nifty_sma_period") or 0),
+                min_profit_margin=float(cd.get("min_profit_margin") or 0),
+                max_pe=float(cd.get("max_pe") or 0),
             )
             if is_cup_strategy(strategy_id):
                 cup_defs = strategy_defaults(strategy_id)
@@ -762,6 +775,11 @@ def backtest(request: HttpRequest) -> HttpResponse:
         "min_rs_rating": "0",
         "shared_capital": True,
         "max_pos_pct": str(int(DEFAULT_STAGE_MAX_POS_PCT)),
+        "quality_overlay": False,
+        "max_pct_above_ma": "0",
+        "nifty_sma_period": "0",
+        "min_profit_margin": "0",
+        "max_pe": "0",
     }
     strategy_presets = {
         sid: strategy_defaults(sid) for sid, _ in BACKTEST_STRATEGY_CHOICES
@@ -789,7 +807,8 @@ def backtest(request: HttpRequest) -> HttpResponse:
         "end_date": CUP_100_END,
         "capital": "1000000",
     }
-    # Last-1y Nifty 200: RS≥70 + price > SMA150 → WR 49%→59%, return 12%→20%, DD 8%→5%.
+    # Last-1y Nifty 200: RS≥70 + price > SMA150, plus quality overlay
+    # (Nifty>SMA150, ≤15% extension, PE≤50, margin≥8%).
     rs70_pack_defaults = {
         **form_defaults,
         "strategy": DEFAULT_STRATEGY,
@@ -800,6 +819,11 @@ def backtest(request: HttpRequest) -> HttpResponse:
         "ma_type": "sma",
         "min_quality_score": "0",
         "tech_filter": DEFAULT_TECH_FILTER,
+        "quality_overlay": True,
+        "max_pct_above_ma": "15",
+        "nifty_sma_period": "150",
+        "min_profit_margin": "8",
+        "max_pe": "50",
     }
 
     return render(request, "stage_analysis_v2/backtest.html", {

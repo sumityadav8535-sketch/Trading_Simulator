@@ -28,6 +28,7 @@ from scripts.intraday_gap_hunt import (  # noqa: E402
     attach_rsi,
     build_sim_book,
     collect_events,
+    fill_stats,
     months_from_trades,
     prepare,
     simulate_open,
@@ -38,6 +39,7 @@ from trading.services.intraday_gap import (  # noqa: E402
     GAP_MIN,
     MAX_DEPLOY,
     MAX_POS,
+    PRIOR_CLOSE_HHMM,
     REQUIRE_BOUNCE,
     RISK_PCT,
     RSI_HI,
@@ -56,7 +58,7 @@ def main():
     cache = load_frames(symbols)
     stocks = prepare(cache)
     sample = next(iter(stocks.values()))
-    events = collect_events(stocks)
+    events = collect_events(stocks, pdc_mode=PRIOR_CLOSE_HHMM)
     print(f"events {len(events)}  attaching daily RSI…", flush=True)
     events = attach_rsi(events)
     rows = enrich_events(events, stocks)
@@ -74,13 +76,16 @@ def main():
 
     sigs = make_entry_signals(rows, entry_mode, TP_KIND)
     name = f"down_bounce {entry_mode} {TP_KIND} g{GAP_MIN:.0%}-{GAP_MAX:.0%} sl{SL_ATR}"
-    res, tdf = simulate_open(stocks, sigs, name, book=build_sim_book(stocks), **size)
+    res, tdf = simulate_open(
+        stocks, sigs, name, book=build_sim_book(stocks), cost=0.0, **size,
+    )
     months = months_from_trades(tdf)
     res.params = dict(
         mode="down_bounce",
         target=TP_KIND,
         entry=ENTRY_HHMM,
         bounce=REQUIRE_BOUNCE,
+        prior_close=PRIOR_CLOSE_HHMM,
         gap_min=GAP_MIN,
         gap_max=GAP_MAX,
         rsi_lo=RSI_LO,
@@ -105,20 +110,25 @@ def main():
             "stocks": len(stocks),
         },
         "idea": (
-            f"Qualify 9:15 gap-downs {GAP_MIN:.0%}-{GAP_MAX:.0%} with RSI 45–70, "
-            f"buy {ENTRY_HHMM} only if it holds the 9:15 close, target {tp_kind_label()}."
+            f"Qualify 9:15 vs yesterday {PRIOR_CLOSE_HHMM} close, gap-down {GAP_MIN:.0%}-{GAP_MAX:.0%} "
+            f"with RSI 45–70, buy {ENTRY_HHMM} only if it holds the 9:15 close, "
+            f"target {tp_kind_label()}."
         ),
         "strategy": STRATEGY,
-        "fill_stats": prev.get("fill_stats") or [],
+        "fill_stats": fill_stats(events, stocks),
         "story": {**asdict(res), "months": months},
         "result": {**asdict(res), "months": months},
         "winner": prev.get("winner") or {},
     }
     OUT.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
-    if tdf is not None and not tdf.empty:
+    if tdf is None or tdf.empty:
+        TRADES.write_text("[]", encoding="utf-8")
+        n_trades = 0
+    else:
         tdf.to_json(TRADES, orient="records", date_format="iso")
+        n_trades = len(tdf)
     print("Wrote", OUT)
-    print("Wrote", TRADES, f"({0 if tdf is None else len(tdf)} trades)")
+    print("Wrote", TRADES, f"({n_trades} trades)")
 
     live = scan_gap_setups()
     print(
