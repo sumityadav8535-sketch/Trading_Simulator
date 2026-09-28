@@ -53,6 +53,39 @@ class Smallcap250UniverseTests(TestCase):
         self.assertEqual(get_universe_symbols(nifty200_only=True), ["RELIANCE"])
         self.assertEqual(resolve_universe_symbols("smallcap250"), ["AARTIIND", "AAVAS"])
         self.assertEqual(resolve_universe_symbols("nifty_smallcap250"), ["AARTIIND", "AAVAS"])
+
+
+class Nifty500ParseTests(SimpleTestCase):
+    def test_parse_constituents_csv(self):
+        from trading.services.nifty500 import parse_constituents_csv
+
+        rows = parse_constituents_csv(SAMPLE_CSV)
+        self.assertEqual([r.symbol for r in rows], ["AARTIIND", "AAVAS"])
+        self.assertEqual(rows[0].name, "Aarti Industries Ltd.")
+
+
+class Nifty500UniverseTests(TestCase):
+    def test_mark_and_resolve_universe(self):
+        from trading.services.nifty500 import Nifty500Constituent, ensure_nifty500_marked
+
+        Stock.objects.create(symbol="RELIANCE", name="Reliance", is_nifty200=True, is_active=True)
+        constituents = [
+            Nifty500Constituent("RELIANCE", "Reliance Industries", "Oil"),
+            Nifty500Constituent("AAVAS", "Aavas Financiers Ltd.", "Financial Services"),
+        ]
+        with patch(
+            "trading.services.nifty500.fetch_nifty500_constituents",
+            return_value=constituents,
+        ):
+            symbols = ensure_nifty500_marked()
+
+        self.assertEqual(sorted(symbols), ["AAVAS", "RELIANCE"])
+        self.assertTrue(Stock.objects.get(pk="RELIANCE").is_nifty500)
+        aavas = Stock.objects.get(pk="AAVAS")
+        self.assertTrue(aavas.is_nifty500)
+        self.assertEqual(aavas.name, "Aavas Financiers Ltd.")
+        self.assertEqual(get_universe_symbols(nifty500_only=True), ["AAVAS", "RELIANCE"])
+        self.assertEqual(resolve_universe_symbols("nifty500"), ["AAVAS", "RELIANCE"])
         self.assertEqual(resolve_universe_symbols("nifty200"), ["RELIANCE"])
 
 
@@ -100,8 +133,8 @@ class GapRsiStrategyTests(SimpleTestCase):
         self.assertIsNotNone(ok)
         self.assertEqual(ok["side"], "long")
         self.assertEqual(ok["entry"], 97.0)
-        self.assertEqual(ok["target"], 97.48)  # 0.5% from entry, not prior close
-        self.assertEqual(ok["stop"], round(97.0 - 1.5 * 0.8, 2))
+        self.assertEqual(ok["target"], 97.97)  # 1% from entry, not prior close
+        self.assertEqual(ok["stop"], round(97.0 - 2.0 * 0.8, 2))
         self.assertGreater(ok["qty"], 0)
         self.assertEqual(ok["entry_time"], "09:30")
 
@@ -240,16 +273,16 @@ class GapRsiStrategyTests(SimpleTestCase):
             opens=opens,
         )
         taken_syms = [t["symbol"] for t in live["taken"]]
-        self.assertIn("AAA", taken_syms)
-        self.assertIn("CCC", taken_syms)
+        self.assertEqual(taken_syms, ["CCC"])  # larger gap; only one name is traded
         self.assertNotIn("BBB", taken_syms)
-        trade = next(t for t in live["taken"] if t["symbol"] == "AAA")
-        self.assertEqual(trade["entry"], 97.0)
-        self.assertEqual(trade["target"], 97.48)
-        self.assertEqual(trade["stop"], 95.8)
+        self.assertEqual([w["symbol"] for w in live["watch"]], ["AAA"])
+        trade = live["taken"][0]
+        self.assertEqual(trade["entry"], 77.5)
+        self.assertEqual(trade["target"], round(77.5 * 1.01, 2))
+        self.assertEqual(trade["stop"], round(77.5 - 2.0 * 0.5, 2))
         self.assertGreater(trade["qty"], 0)
         self.assertEqual(live["counts"]["qualified"], 2)
-        self.assertEqual(live["counts"]["trades"], 2)
+        self.assertEqual(live["counts"]["trades"], 1)
 
         falling = dict(opens)
         falling["AAA"] = {
@@ -748,6 +781,25 @@ class FundamentalSwingTests(SimpleTestCase):
         self.assertFalse(blocked)
         self.assertTrue(any("Financial" in r for r in blocked_reasons))
 
+    def test_momentum_swing_requires_positive_free_cash_flow(self):
+        from trading.services.fundamental_swing import AGGRESSIVE_GROWTH, MOMENTUM_SWING, passes_filters
+
+        base = {
+            "roe": 20, "profit_margin": 12, "revenue_growth": 25, "earnings_growth": 30,
+            "pe": 20, "peg": 1.2, "de_ratio": 0.4, "current_ratio": 1.5,
+            "sector": "Industrials", "market_cap": 50_000_000_000,
+        }
+        blocked, reasons = passes_filters({**base, "fcf_yield": -2.0}, MOMENTUM_SWING)
+        self.assertFalse(blocked)
+        self.assertTrue(any("cash flow" in r.lower() for r in reasons))
+        missing, _ = passes_filters(base, MOMENTUM_SWING)
+        self.assertFalse(missing)
+        ok, ok_reasons = passes_filters({**base, "fcf_yield": 1.5}, MOMENTUM_SWING)
+        self.assertTrue(ok)
+        self.assertEqual(ok_reasons, [])
+        annual_ok, _ = passes_filters({**base, "fcf_yield": -2.0}, AGGRESSIVE_GROWTH)
+        self.assertTrue(annual_ok)
+
     def test_point_in_time_ignores_future_statements(self):
         from datetime import date
 
@@ -1177,4 +1229,153 @@ class FundamentalSwingViewTests(TestCase):
             resp = self.client.get("/fundamentals/?start=2026-09-16&end=2025-01-01&run=1")
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, "End date must be after the start date")
+
+
+class ShortSwingTests(SimpleTestCase):
+    def test_ema20_pullback_needs_tag_and_close_back_above(self):
+        import pandas as pd
+        from trading.services.short_swing import BarPack, is_ema20_pullback
+
+        n = 40
+        close = [100.0] * 20 + [102, 101, 100.5, 99.8, 101.2]
+        close = ([100.0] * (n - len(close))) + close
+        idx = pd.bdate_range("2024-01-01", periods=n)
+        df = pd.DataFrame({
+            "open": close,
+            "high": [c + 1 for c in close],
+            "low": [c - 1 for c in close],
+            "close": close,
+            "volume": [1e6] * n,
+        }, index=idx)
+        pack = BarPack("TEST", df)
+        pack.ema20 = pack.ema20.copy()
+        pack.l = pack.l.copy()
+        pack.c = pack.c.copy()
+        pack.o = pack.o.copy()
+        pack.ema20[:] = 100.0
+        i = n - 1
+        pack.l[i] = 99.5
+        pack.c[i] = 101.0
+        pack.o[i] = 100.2
+        pack.c[i - 1] = 100.8
+        pack.ema20[i - 1] = 100.0
+        self.assertTrue(is_ema20_pullback(pack, i))
+        pack.c[i] = 99.0
+        self.assertFalse(is_ema20_pullback(pack, i))
+
+    def test_params_alias(self):
+        from trading.services.short_swing import BALANCED, F_QULLA, F_RS63, LEADERS, params_by_name
+
+        self.assertEqual(params_by_name(None).name, LEADERS.name)
+        self.assertEqual(params_by_name("balanced").max_open, BALANCED.max_open)
+        self.assertEqual(params_by_name("Leaders Pullback").risk_pct, 8.0)
+        self.assertEqual(LEADERS.target_rr, 1.5)
+        self.assertEqual(LEADERS.flags, F_QULLA | F_RS63)
+
+    def test_session_pair_and_signal_row(self):
+        from datetime import date
+
+        import pandas as pd
+
+        from trading.services.short_swing import _session_label, _session_pair, _signal_row
+
+        cal = [pd.Timestamp("2026-09-16"), pd.Timestamp("2026-09-17"), pd.Timestamp("2026-09-18")]
+        last, prev = _session_pair(cal, date(2026, 9, 20))
+        self.assertEqual(last, date(2026, 9, 18))
+        self.assertEqual(prev, date(2026, 9, 17))
+        self.assertIn("18", _session_label(last))
+        row = _signal_row({
+            "symbol": "BHEL",
+            "sig_ts": pd.Timestamp("2026-09-18"),
+            "entry_ts": pd.Timestamp("2026-09-19"),
+            "close": 440.0,
+            "ema20": 430.0,
+            "rsi": 55.0,
+            "adx": 22.0,
+            "ret63": 0.12,
+            "stop_ref": 406.0,
+            "sig_low": 406.0,
+            "atr": 8.0,
+            "score": 0.12,
+        })
+        self.assertEqual(row["symbol"], "BHEL")
+        self.assertEqual(row["signal_date"], "2026-09-18")
+        self.assertEqual(row["ret63_pct"], 12.0)
+        self.assertEqual(row["entry"], 440.0)
+        self.assertFalse(row["entry_known"])
+        self.assertEqual(row["stop"], 406.0)
+        self.assertEqual(row["target"], 491.0)
+        self.assertEqual(row["target_rr"], 1.5)
+
+    def test_plan_trade_uses_1p5r(self):
+        from trading.services.short_swing import SwingParams, plan_trade
+
+        out = plan_trade(100.0, 96.0, 96.0, 1.0, SwingParams(target_rr=1.5))
+        self.assertIsNotNone(out)
+        self.assertEqual(out["stop"], 96.0)
+        self.assertEqual(out["target"], 106.0)
+        self.assertEqual(out["risk_pct"], 4.0)
+        self.assertEqual(out["reward_pct"], 6.0)
+
+    def test_rank_best_per_day_keeps_top_n_and_cooldown(self):
+        from trading.services.short_swing import rank_best_per_day
+
+        rows = [
+            {"symbol": "AAA", "signal_date": "2026-09-18", "score": 40},
+            {"symbol": "BBB", "signal_date": "2026-09-18", "score": 30},
+            {"symbol": "CCC", "signal_date": "2026-09-18", "score": 20},
+            {"symbol": "DDD", "signal_date": "2026-09-18", "score": 10},
+            {"symbol": "AAA", "signal_date": "2026-09-19", "score": 50},
+            {"symbol": "EEE", "signal_date": "2026-09-19", "score": 15},
+        ]
+        kept = rank_best_per_day(rows, max_new=3, cooldown_days=5)
+        self.assertEqual([r["symbol"] for r in kept if r["signal_date"] == "2026-09-18"], ["AAA", "BBB", "CCC"])
+        self.assertEqual([r["symbol"] for r in kept if r["signal_date"] == "2026-09-19"], ["EEE"])
+
+
+class ShortSwingViewTests(TestCase):
+    def test_page_renders_saved_windows(self):
+        payload = {
+            "strategy": "RS Pullback Swing",
+            "needs_fetch": False,
+            "params": {"name": "Leaders Pullback", "max_hold": 15, "risk_pct": 8.0, "max_open": 4, "max_new": 3, "max_pos_pct": 0.7, "target_rr": 1.5},
+            "packs": [{"name": "Leaders Pullback", "max_open": 4, "risk_pct": 8.0}],
+            "windows": [{
+                "title": "Last 1 year", "years": 1, "start": "2025-09-20", "end": "2026-09-20",
+                "total_return_pct": 100.9, "cagr_pct": 100.9, "max_drawdown_pct": -5.8,
+                "win_rate": 43.6, "profit_factor": 3.24, "trades": 94, "avg_hold": 8.1,
+                "benchmark_pct": -7.36, "beat_benchmark": True, "equity_curve": [],
+                "holdings_history": [],
+            }],
+            "pack_runs": {},
+            "picks": [],
+            "open_book": [],
+            "blurb": "test blurb",
+            "disclaimer": "test disclaimer",
+            "coverage": {"universe": 200, "days": 250},
+        }
+        board = {
+            "today_title": "Today",
+            "yesterday_title": "Yesterday",
+            "today_label": "Fri 18 Sep",
+            "yesterday_label": "Thu 17 Sep",
+            "today": [{"symbol": "BHEL", "close": 440, "entry": 440, "stop": 406, "target": 491, "target_rr": 1.5, "risk_pct": 7.7, "reward_pct": 11.6, "entry_label": "Next open (est.)", "entry_known": False, "signal_date": "2026-09-18", "entry_date": "2026-09-19", "ret63_pct": 12.5, "score": 12.5, "max_hold": 15}],
+            "yesterday": [{"symbol": "KALYANKJIL", "close": 582, "entry": 582, "stop": 564, "target": 609, "target_rr": 1.5, "risk_pct": 3.1, "reward_pct": 4.6, "entry_label": "Next open (est.)", "entry_known": False, "signal_date": "2026-09-17", "entry_date": "2026-09-18", "ret63_pct": 8.1, "score": 8.1, "max_hold": 15}],
+            "daily_6m": [{"date": "2026-09-18", "count": 1, "symbols": "BHEL"}],
+            "daily_1y": [{"date": "2026-09-18", "count": 1, "symbols": "BHEL"}],
+            "by_date": {"2026-09-18": [{"symbol": "BHEL", "close": 440, "entry": 440, "stop": 406, "target": 491, "ret63_pct": 12.5}]},
+        }
+        with patch("trading.services.short_swing.load_page", return_value=payload), \
+             patch("trading.services.short_swing.signal_board", return_value=board):
+            resp = self.client.get("/swing/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Swing")
+        self.assertContains(resp, "BHEL")
+        self.assertContains(resp, "KALYANKJIL")
+        self.assertContains(resp, "Stop loss")
+        self.assertContains(resp, "₹406")
+        self.assertContains(resp, "₹491")
+        self.assertContains(resp, "Target 1.5R")
+        self.assertContains(resp, "6 months")
+        self.assertContains(resp, "1 year")
 

@@ -26,6 +26,7 @@ from stage_analysis_v2.services.backtester import (
 )
 from stage_analysis_v2.services.signal_history import collect_stage_v2_signal_history
 from stage_analysis_v2.services.cup_breakout import CupParams, run_cup_breakout_backtest
+from stage_analysis_v2.services.rs_pullback_swing import run_rs_pullback_backtest
 from stage_analysis_v2.services.strategy_catalog import (
     BACKTEST_STRATEGY_CHOICES,
     CUP_100_END,
@@ -36,8 +37,10 @@ from stage_analysis_v2.services.strategy_catalog import (
     STRATEGY_CUP,
     STRATEGY_STAGE_V2,
     coerce_cup_params,
+    coerce_rs_pullback_params,
     coerce_supertrend_params,
     is_cup_strategy,
+    is_rs_pullback_strategy,
     is_supertrend_strategy,
     is_union_strategy,
     normalize_strategy,
@@ -64,7 +67,7 @@ def _user(request: HttpRequest):
 
 
 def _parse_backtest_symbols(universe: str, symbol: str, symbols_raw: str) -> list[str]:
-    if universe in ("nifty200", "nifty100", "nifty_smallcap250", "smallcap250"):
+    if universe in ("nifty200", "nifty100", "nifty500", "nifty_500", "nifty_smallcap250", "smallcap250"):
         return resolve_universe_symbols(universe)
 
     raw = symbols_raw if universe == "custom" else symbol
@@ -521,6 +524,17 @@ def backtest(request: HttpRequest) -> HttpResponse:
             )
             for key, val in coerced.items():
                 data[key] = val
+        elif is_rs_pullback_strategy(sid):
+            coerced = coerce_rs_pullback_params(
+                sid,
+                risk_pct=data.get("risk_pct"),
+                max_hold_days=data.get("max_hold_days"),
+                cooldown_days=data.get("cooldown_days"),
+                max_pos_pct=data.get("max_pos_pct"),
+                target_rr=data.get("target_rr"),
+            )
+            for key, val in coerced.items():
+                data[key] = val
         elif is_cup_strategy(sid):
             coerced = coerce_cup_params(
                 sid,
@@ -685,6 +699,25 @@ def backtest(request: HttpRequest) -> HttpResponse:
                     max_pos_pct=float(cd.get("max_pos_pct") or st_defs["max_pos_pct"]),
                     entry_filters=entry_filters,
                 )
+            elif is_rs_pullback_strategy(strategy_id):
+                rs_defs = strategy_defaults(strategy_id)
+                bt_result = run_rs_pullback_backtest(
+                    symbols=symbol_list,
+                    start_date=cd["start_date"],
+                    end_date=cd["end_date"],
+                    capital=float(cd["capital"]),
+                    strategy_id=strategy_id,
+                    risk_pct=float(cd.get("risk_pct") or rs_defs["risk_pct"]),
+                    max_hold_days=int(cd.get("max_hold_days") or rs_defs["max_hold_days"]),
+                    cooldown_days=int(
+                        cd.get("cooldown_days")
+                        if cd.get("cooldown_days") is not None
+                        else rs_defs["cooldown_days"]
+                    ),
+                    max_pos_pct=float(cd.get("max_pos_pct") or rs_defs["max_pos_pct"]),
+                    target_rr=float(cd.get("target_rr") or rs_defs["target_rr"]),
+                    entry_filters=entry_filters,
+                )
             elif is_supertrend_strategy(strategy_id):
                 st_defs = strategy_defaults(strategy_id)
                 bt_result = run_supertrend_swing_backtest(
@@ -826,8 +859,11 @@ def backtest(request: HttpRequest) -> HttpResponse:
         "max_pe": "50",
     }
 
+    form.fields["strategy"].choices = list(BACKTEST_STRATEGY_CHOICES)
+
     return render(request, "stage_analysis_v2/backtest.html", {
         "form": form,
+        "strategy_choices": list(BACKTEST_STRATEGY_CHOICES),
         "bt_result": bt_result,
         "signal_log": list(bt_result.signal_log) if bt_result else [],
         "trade_log": trades_as_json(bt_result) if bt_result else [],

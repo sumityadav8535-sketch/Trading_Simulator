@@ -3,45 +3,18 @@
   "timeframe": "5m",
   "universe": "nifty200",
   "window": {
-    "start": "2026-06-03 09:15:00+05:30",
-    "end": "2026-09-01 15:10:00+05:30",
-    "stocks": 204
+    "start": "2026-06-05",
+    "end": "2026-09-25",
+    "stocks": 204,
+    "note": "5-minute bars. One name per day, largest gap, +1% target, stop 2\u00d7 prior-session 5-minute ATR, full 5\u00d7 book."
   },
-  "idea": "Qualify 9:15 vs yesterday 15:10 close, gap-down 2%-6% with RSI 45\u201370, buy 09:30 only if it holds the 9:15 close, target 0.5% from entry.",
+  "idea": "Buy the largest 2\u20136% gap-down in Nifty 200 at 9:30 if it is holding the 9:15 close and yesterday\u2019s RSI is 45\u201370. Target +1%. Stop 2\u00d7 the 5-minute ATR. One name, full 5\u00d7 book.",
   "strategy": {
     "name": "Gap-down bounce \u00b7 RSI 45\u201370",
-    "mode": "down_bounce",
-    "side": "long",
-    "gap_min": 0.02,
-    "gap_max": 0.06,
-    "rsi_lo": 45.0,
-    "rsi_hi": 70.0,
-    "sl_atr": 1.5,
-    "risk_pct": 8.0,
-    "max_pos": 0,
-    "top_k": 0,
-    "max_deploy": 0.5,
-    "leverage": 5.0,
-    "capital": 100000.0,
-    "tp_kind": "pct0.5",
-    "entry_hhmm": "09:30",
-    "prior_close_hhmm": "15:10",
-    "require_bounce": true,
-    "entry": [
-      "Yesterday\u2019s 15:10 5m close vs today\u2019s 9:15 open (skip closing-auction bars)",
-      "Gap down \u2265 2% and \u2264 6% (skip crash gaps >6%)",
-      "Yesterday\u2019s daily RSI(14) between 45 and 70",
-      "Price > \u20b960",
-      "Wait for the 9:30 open",
-      "9:30 open must be \u2265 9:15 close (bounce confirmation \u2014 skip if still falling)",
-      "Take every name that passes (no top-4 cap)"
-    ],
-    "exit": [
-      "Target: 0.5% above the 9:30 entry",
-      "Stop: 1.5 \u00d7 5-minute ATR below the 9:30 entry",
-      "Flatten 15:15 IST if not filled",
-      "8% equity risk, 5\u00d7 MIS cap, 50% of buying power per name"
-    ]
+    "tp_kind": "pct1.0",
+    "sl_atr": 2.0,
+    "top_k": 1,
+    "max_deploy": 1.0
   },
   "fill_stats": [
     {
@@ -111,122 +84,122 @@
     }
   ],
   "story": {
-    "name": "down_bounce 930_bounce pct0.5 g2%-6% sl1.5",
-    "trades": 37,
-    "win_rate": 70.27,
-    "profit_factor": 3.47,
-    "net_pnl": 25276.0,
-    "total_return_pct": 25.28,
-    "max_dd_pct": 5.01,
-    "avg_daily_pnl": 1685.07,
-    "median_daily_pnl": 1458.06,
-    "days_ge_2k": 7,
-    "days_ge_5k": 0,
-    "trading_days": 15,
-    "pct_days_ge_2k": 46.7,
-    "worst_day": -3804.27,
-    "best_day": 3919.43,
-    "oos_avg_daily": 1720.8,
-    "oos_pnl": 8604.02,
-    "oos_wr": 72.73,
-    "oos_days_ge_2k": 2,
-    "oos_days": 5,
-    "avg_hold_bars": 0.0,
+    "name": "Largest gap-down \u00b7 9:30 bounce \u00b7 +1% \u00b7 stop 2\u00d7 ATR",
+    "trades": 21,
+    "win_rate": 71.4,
+    "profit_factor": 4.23,
+    "net_pnl": 55393.07,
+    "total_return_pct": 55.39,
+    "max_dd_pct": 6.17,
+    "avg_daily_pnl": 2637.77,
+    "median_daily_pnl": 4395.18,
+    "days_ge_5k": 5,
+    "trading_days": 21,
+    "worst_day": -4193.12,
+    "best_day": 6242.82,
+    "oos_pnl": 32723.51,
+    "oos_wr": null,
+    "months": [
+      {
+        "month": "2026-06",
+        "trades": 4,
+        "pnl": 9312.72,
+        "wr": 75.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 8,
+        "pnl": 8439.09,
+        "wr": 50.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 3,
+        "pnl": 13594.64,
+        "wr": 100.0
+      },
+      {
+        "month": "2026-09",
+        "trades": 6,
+        "pnl": 24046.61,
+        "wr": 83.3
+      }
+    ],
     "params": {
       "mode": "down_bounce",
-      "target": "pct0.5",
+      "target": "pct1.0",
       "entry": "09:30",
       "bounce": true,
       "prior_close": "15:10",
       "gap_min": 0.02,
       "gap_max": 0.06,
-      "rsi_lo": 45.0,
-      "rsi_hi": 70.0,
-      "sl_atr": 1.5,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "sl_atr": 2.0,
       "risk_pct": 8.0,
-      "max_pos": 0,
-      "top_k": 0,
-      "max_deploy": 0.5
-    },
-    "months": [
-      {
-        "month": "2026-06",
-        "trades": 11,
-        "pnl": 2322.51,
-        "wr": 54.5
-      },
-      {
-        "month": "2026-07",
-        "trades": 20,
-        "pnl": 17910.12,
-        "wr": 80.0
-      },
-      {
-        "month": "2026-08",
-        "trades": 6,
-        "pnl": 5043.37,
-        "wr": 66.7
-      }
-    ]
+      "max_pos": 1,
+      "top_k": 1,
+      "max_deploy": 1.0
+    }
   },
   "result": {
-    "name": "down_bounce 930_bounce pct0.5 g2%-6% sl1.5",
-    "trades": 37,
-    "win_rate": 70.27,
-    "profit_factor": 3.47,
-    "net_pnl": 25276.0,
-    "total_return_pct": 25.28,
-    "max_dd_pct": 5.01,
-    "avg_daily_pnl": 1685.07,
-    "median_daily_pnl": 1458.06,
-    "days_ge_2k": 7,
-    "days_ge_5k": 0,
-    "trading_days": 15,
-    "pct_days_ge_2k": 46.7,
-    "worst_day": -3804.27,
-    "best_day": 3919.43,
-    "oos_avg_daily": 1720.8,
-    "oos_pnl": 8604.02,
-    "oos_wr": 72.73,
-    "oos_days_ge_2k": 2,
-    "oos_days": 5,
-    "avg_hold_bars": 0.0,
+    "name": "Largest gap-down \u00b7 9:30 bounce \u00b7 +1% \u00b7 stop 2\u00d7 ATR",
+    "trades": 21,
+    "win_rate": 71.4,
+    "profit_factor": 4.23,
+    "net_pnl": 55393.07,
+    "total_return_pct": 55.39,
+    "max_dd_pct": 6.17,
+    "avg_daily_pnl": 2637.77,
+    "median_daily_pnl": 4395.18,
+    "days_ge_5k": 5,
+    "trading_days": 21,
+    "worst_day": -4193.12,
+    "best_day": 6242.82,
+    "oos_pnl": 32723.51,
+    "oos_wr": null,
+    "months": [
+      {
+        "month": "2026-06",
+        "trades": 4,
+        "pnl": 9312.72,
+        "wr": 75.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 8,
+        "pnl": 8439.09,
+        "wr": 50.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 3,
+        "pnl": 13594.64,
+        "wr": 100.0
+      },
+      {
+        "month": "2026-09",
+        "trades": 6,
+        "pnl": 24046.61,
+        "wr": 83.3
+      }
+    ],
     "params": {
       "mode": "down_bounce",
-      "target": "pct0.5",
+      "target": "pct1.0",
       "entry": "09:30",
       "bounce": true,
       "prior_close": "15:10",
       "gap_min": 0.02,
       "gap_max": 0.06,
-      "rsi_lo": 45.0,
-      "rsi_hi": 70.0,
-      "sl_atr": 1.5,
+      "rsi_lo": 45,
+      "rsi_hi": 70,
+      "sl_atr": 2.0,
       "risk_pct": 8.0,
-      "max_pos": 0,
-      "top_k": 0,
-      "max_deploy": 0.5
-    },
-    "months": [
-      {
-        "month": "2026-06",
-        "trades": 11,
-        "pnl": 2322.51,
-        "wr": 54.5
-      },
-      {
-        "month": "2026-07",
-        "trades": 20,
-        "pnl": 17910.12,
-        "wr": 80.0
-      },
-      {
-        "month": "2026-08",
-        "trades": 6,
-        "pnl": 5043.37,
-        "wr": 66.7
-      }
-    ]
+      "max_pos": 1,
+      "top_k": 1,
+      "max_deploy": 1.0
+    }
   },
   "winner": {
     "name": "both_fill fill g3% sl0.6 r10 p5",

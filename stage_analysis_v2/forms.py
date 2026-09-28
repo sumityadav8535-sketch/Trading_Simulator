@@ -25,10 +25,15 @@ from stage_analysis_v2.services.cup_breakout import (
     CUP_EXIT_EMA20,
 )
 from stage_analysis_v2.services.strategy_catalog import (
-    BACKTEST_STRATEGY_CHOICES,
     DEFAULT_STAGE_MAX_POS_PCT,
     DEFAULT_STRATEGY,
 )
+
+
+def _backtest_strategy_choices():
+    # Callable so the dropdown always reads the current catalog (not a stale import).
+    from stage_analysis_v2.services.strategy_catalog import BACKTEST_STRATEGY_CHOICES as live
+    return list(live)
 from stage_analysis_v2.services.tech_filters import DEFAULT_TECH_FILTER, TECH_FILTER_CHOICES
 from stage_analysis_v2.services.top_picks import get_sector_list
 
@@ -94,11 +99,12 @@ class StageV2BacktestForm(forms.Form):
         ("single", "Single stock"),
         ("custom", "Custom list"),
         ("nifty200", "Nifty 200"),
+        ("nifty500", "Nifty 500"),
         ("nifty_smallcap250", "Nifty Smallcap 250"),
     ]
 
     strategy = forms.ChoiceField(
-        choices=BACKTEST_STRATEGY_CHOICES,
+        choices=_backtest_strategy_choices,
         initial=DEFAULT_STRATEGY,
         label="Strategy",
         help_text="Which engine to backtest. Supertrend / cup use their own researched rules.",

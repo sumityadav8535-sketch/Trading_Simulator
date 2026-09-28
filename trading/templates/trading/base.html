@@ -292,6 +292,9 @@
         <a href="{% url 'intraday_gap' %}" class="nav-link {% if request.resolver_match.url_name == 'intraday_gap' %}active{% endif %}">
           <span class="nav-dot"></span> Gap Open
         </a>
+        <a href="{% url 'short_swing' %}" class="nav-link {% if request.resolver_match.url_name == 'short_swing' %}active{% endif %}">
+          <span class="nav-dot"></span> Swing Trading
+        </a>
         <a href="{% url 'fundamental_swing' %}" class="nav-link {% if request.resolver_match.url_name == 'fundamental_swing' %}active{% endif %}">
           <span class="nav-dot"></span> Fundamental Swing
         </a>

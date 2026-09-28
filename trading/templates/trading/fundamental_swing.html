@@ -39,7 +39,7 @@
     <p class="page-sub max-w-2xl">
       Nifty 200 · {{ params.top_n }} name{{ params.top_n|pluralize }} · rebalance {{ params.rebalance|default:"july" }} ·
       rank {{ params.rank_by|default:"score" }} · tech {{ params.tech|default:"none" }}.
-      Screen: revenue ≥{{ params.min_revenue_growth }}%, earnings ≥{{ params.min_earnings_growth }}%, ROE ≥{{ params.min_roe }}%.
+      Screen: revenue ≥{{ params.min_revenue_growth }}%, earnings ≥{{ params.min_earnings_growth }}%, ROE ≥{{ params.min_roe }}%{% if params.min_fcf_yield != None %}, free cash flow positive{% endif %}.
     </p>
   </div>
   <a href="{% url 'fundamental_swing' %}?rebuild=1" class="btn btn-secondary text-xs">Rebuild cache</a>

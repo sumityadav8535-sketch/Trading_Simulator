@@ -20,13 +20,14 @@
       <span class="text-emerald-300 font-semibold uppercase tracking-wide text-xs">Strategy</span>
       <select name="strategy" id="strategy-select"
               class="block w-full mt-1 bg-slate-800 border border-emerald-600 rounded px-3 py-2 text-base font-medium">
-        {% for val, label in form.fields.strategy.choices %}
+        {% for val, label in strategy_choices %}
         <option value="{{ val }}" {% if form.strategy.value == val or not form.strategy.value and val == 'stage_v2' %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
     </label>
     <p id="strategy-blurb" class="mt-2 text-[12px] text-slate-400 leading-relaxed"></p>
     <p class="st-only hidden mt-1 text-[11px] text-amber-300/80">Supertrend scan of Nifty 200 takes ~15–30 seconds.</p>
+    <p class="rs-only hidden mt-1 text-[11px] text-amber-300/80">RS Pullback scan of Nifty 200 takes ~10–20 seconds (EMA20 tag in leaders).</p>
     <p class="cup-only hidden mt-1 text-[11px] text-amber-300/80">Cup scan of Nifty 200 takes ~20–40 seconds (daily geometry + volume filters).</p>
   </div>
 
@@ -121,6 +122,7 @@
                value="{{ form.target_rr.value|default:2.5 }}"
                class="block w-full mt-1 bg-slate-800 border border-emerald-700 rounded px-3 py-2 text-sm">
         <span class="text-[10px] text-slate-500 stage-only">Default 2.5 · try 1.5 / 2 / 3</span>
+        <span class="text-[10px] text-slate-500 rs-only hidden">RS Pullback default 1.5R</span>
         <span class="text-[10px] text-slate-500 cup-only hidden">Cup default 2 · also 3R</span>
       </label>
       <label class="block text-xs stage-only">
@@ -549,6 +551,7 @@
   const ST_IDS = { st_pullback_quality: true, st_pullback_trend_rsi: true, st_union_minervini: true };
   const UNION_IDS = { st_union_minervini: true };
   const CUP_IDS = { cup_breakout: true };
+  const RS_IDS = { rs_pullback: true };
 
   // Target R:R quick presets
   const rrInput = document.querySelector('input[name="target_rr"]');
@@ -638,17 +641,22 @@
   function isCupStrategy(id) {
     return !!CUP_IDS[id];
   }
+  function isRsStrategy(id) {
+    return !!RS_IDS[id];
+  }
 
   function syncStrategyUI(id) {
     const st = isStStrategy(id);
     const union = !!UNION_IDS[id];
     const cup = isCupStrategy(id);
-    document.querySelectorAll('.stage-only').forEach(el => el.classList.toggle('hidden', st || cup));
-    document.querySelectorAll('.stage-or-cup').forEach(el => el.classList.toggle('hidden', st && !cup));
+    const rs = isRsStrategy(id);
+    document.querySelectorAll('.stage-only').forEach(el => el.classList.toggle('hidden', st || cup || rs));
+    document.querySelectorAll('.stage-or-cup').forEach(el => el.classList.toggle('hidden', st && !cup && !rs));
     document.querySelectorAll('.st-only').forEach(el => el.classList.toggle('hidden', !st || union));
     document.querySelectorAll('.st-union-only').forEach(el => el.classList.toggle('hidden', !union));
     document.querySelectorAll('.cup-only').forEach(el => el.classList.toggle('hidden', !cup));
-    document.querySelectorAll('.swing-pos-cap').forEach(el => el.classList.toggle('hidden', !(st || cup)));
+    document.querySelectorAll('.rs-only').forEach(el => el.classList.toggle('hidden', !rs));
+    document.querySelectorAll('.swing-pos-cap').forEach(el => el.classList.toggle('hidden', !(st || cup || rs)));
     const blurb = document.getElementById('strategy-blurb');
     if (blurb) blurb.textContent = STRATEGY_BLURBS[id] || '';
   }
@@ -677,7 +685,7 @@
   }
 
   function coerceStageLeftoversToSt(id) {
-    if (!isStStrategy(id) && !isCupStrategy(id)) return;
+    if (!isStStrategy(id) && !isCupStrategy(id) && !isRsStrategy(id)) return;
     const p = STRATEGY_PRESETS[id];
     const stage = STRATEGY_PRESETS.stage_v2 || {};
     if (!p) return;
@@ -848,7 +856,7 @@
   <div class="mt-3 flex flex-wrap gap-3 text-xs">
     <button type="button" class="js-open-signals px-2 py-1 rounded bg-slate-900 border border-emerald-700 text-emerald-300 hover:bg-emerald-950/60 hover:border-emerald-500 cursor-pointer"
             title="Open every signal with entry, stop, exit, and chart">
-      {% if bt_result.strategy_id == 'cup_breakout' %}Cup signals{% elif bt_result.strategy_id != 'stage_v2' %}ST signals{% else %}Signals{% endif %}: <strong class="text-emerald-400">{{ bt_result.stage2_entries }}</strong>
+      {% if bt_result.strategy_id == 'cup_breakout' %}Cup signals{% elif bt_result.strategy_id == 'rs_pullback' %}RS pullbacks{% elif bt_result.strategy_id != 'stage_v2' %}ST signals{% else %}Signals{% endif %}: <strong class="text-emerald-400">{{ bt_result.stage2_entries }}</strong>
       <span class="text-[10px] text-slate-400 ml-1">click to review →</span>
     </button>
     <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700">Trades: <strong class="text-emerald-400">{{ bt_result.total_trades }}</strong></span>
@@ -871,6 +879,10 @@
     {% if bt_result.strategy_id == 'cup_breakout' %}
     <strong>Signals</strong> ({{ bt_result.stage2_entries }}) = cup breakouts that passed geometry, volume, and trend filters.
     <strong>Trades</strong> ({{ bt_result.total_trades }}) = those taken with shared capital (cash / cooldown / daily cap can skip some).
+    <strong>Wins</strong> / <strong>Losses</strong> = closed trades with P&amp;L &gt; 0 vs ≤ 0 — click either button to list them.
+    {% elif bt_result.strategy_id == 'rs_pullback' %}
+    <strong>Signals</strong> ({{ bt_result.stage2_entries }}) = ranked leader pullbacks the book actually tried (beat Nifty over 3 months, tight range, EMA20 bounce — max 3 new / 4 open). Raw EMA20 tags are not listed.
+    <strong>Trades</strong> ({{ bt_result.total_trades }}) = those filled with shared capital.
     <strong>Wins</strong> / <strong>Losses</strong> = closed trades with P&amp;L &gt; 0 vs ≤ 0 — click either button to list them.
     {% elif bt_result.strategy_id != 'stage_v2' %}
     <strong>Signals</strong> ({{ bt_result.stage2_entries }}) = Supertrend pullback setups that passed the filter.

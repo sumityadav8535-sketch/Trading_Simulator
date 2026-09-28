@@ -12,10 +12,12 @@ STRATEGY_ST_QUALITY = "st_pullback_quality"
 STRATEGY_ST_TREND_RSI = "st_pullback_trend_rsi"
 STRATEGY_ST_UNION = "st_union_minervini"
 STRATEGY_CUP = "cup_breakout"
+STRATEGY_RS_PULLBACK = "rs_pullback"
 DEFAULT_STRATEGY = STRATEGY_STAGE_V2
 
 BACKTEST_STRATEGY_CHOICES: list[tuple[str, str]] = [
     (STRATEGY_STAGE_V2, "Stage Analysis 2.0 — Stage 2 weekly"),
+    (STRATEGY_RS_PULLBACK, "RS Pullback Swing (3-15 day EMA20)"),
     (STRATEGY_ST_UNION, "Dual Supertrend + Minervini (5y swing)"),
     (STRATEGY_ST_QUALITY, "Supertrend Pullback + Quality"),
     (STRATEGY_ST_TREND_RSI, "Supertrend Pullback + Trend & RSI"),
@@ -25,6 +27,7 @@ BACKTEST_STRATEGY_CHOICES: list[tuple[str, str]] = [
 ST_STRATEGIES = frozenset({STRATEGY_ST_QUALITY, STRATEGY_ST_TREND_RSI, STRATEGY_ST_UNION})
 UNION_STRATEGIES = frozenset({STRATEGY_ST_UNION})
 CUP_STRATEGIES = frozenset({STRATEGY_CUP})
+RS_PULLBACK_STRATEGIES = frozenset({STRATEGY_RS_PULLBACK})
 VALID_STRATEGIES = frozenset(k for k, _ in BACKTEST_STRATEGY_CHOICES)
 STRATEGY_LABELS = {k: v for k, v in BACKTEST_STRATEGY_CHOICES}
 
@@ -68,6 +71,16 @@ DEFAULT_CUP_EXIT_MODE = "ema20_trail"
 CUP_100_START = "2023-01-01"
 CUP_100_END = "2023-12-31"
 
+# RS Pullback Swing — EMA20 bounce in Qullamaggie-style leaders (3–15 day hold)
+# 1.5R consistency pack: 2023/2024/2025 all green vs 2.5R which lost ~25% in 2024.
+DEFAULT_RS_RISK_PCT = 8.0
+DEFAULT_RS_MAX_HOLD_DAYS = 15
+DEFAULT_RS_COOLDOWN_DAYS = 5
+DEFAULT_RS_MAX_POS_PCT = 70.0
+DEFAULT_RS_TARGET_RR = 1.5
+DEFAULT_RS_MAX_OPEN = 4
+DEFAULT_RS_MAX_NEW = 3
+
 STRATEGY_BLURBS: dict[str, str] = {
     STRATEGY_STAGE_V2: (
         "Weekly Weinstein Stage 2 entries with configurable tech filter, "
@@ -96,6 +109,12 @@ STRATEGY_BLURBS: dict[str, str] = {
         "Loss guards: only when Nifty > EMA20, and pause 10 days after 3 consecutive losses. "
         "2023 +206%; 2024 +21% (June cut from −28% to −8%); 5y ~+1050%."
     ),
+    STRATEGY_RS_PULLBACK: (
+        "3-15 day swing: buy the bounce off EMA20 only in names that beat Nifty over 3 months "
+        "(tight 10-day range, ATR alive). Ranked by 3-month momentum; max 3 new / 4 open. "
+        "Stop under the pullback, trail 2.5 ATR, take 1.5R or time-stop at 15 sessions. "
+        "Risk 8%, max 70% in one name. 1.5R is the consistency pack (2024/2025 stay green)."
+    ),
 }
 
 
@@ -116,6 +135,10 @@ def is_union_strategy(strategy: str | None) -> bool:
 
 def is_cup_strategy(strategy: str | None) -> bool:
     return normalize_strategy(strategy) in CUP_STRATEGIES
+
+
+def is_rs_pullback_strategy(strategy: str | None) -> bool:
+    return normalize_strategy(strategy) in RS_PULLBACK_STRATEGIES
 
 
 def st_filter_pack(strategy: str | None) -> str:
@@ -148,6 +171,14 @@ def strategy_defaults(strategy: str | None) -> dict[str, Any]:
             "max_hold_days": str(DEFAULT_ST_MAX_HOLD_DAYS),
             "cooldown_days": str(DEFAULT_ST_COOLDOWN_DAYS),
             "max_pos_pct": str(int(DEFAULT_ST_MAX_POS_PCT)),
+        }
+    if sid == STRATEGY_RS_PULLBACK:
+        return {
+            "risk_pct": str(DEFAULT_RS_RISK_PCT),
+            "max_hold_days": str(DEFAULT_RS_MAX_HOLD_DAYS),
+            "cooldown_days": str(DEFAULT_RS_COOLDOWN_DAYS),
+            "max_pos_pct": str(int(DEFAULT_RS_MAX_POS_PCT)),
+            "target_rr": str(DEFAULT_RS_TARGET_RR),
         }
     if sid == STRATEGY_CUP:
         return {
@@ -309,6 +340,71 @@ def coerce_cup_params(
             "cooldown_days": cup["cooldown_days"],
             "max_pos_pct": cup["max_pos_pct"],
             "target_rr": cup["target_rr"],
+        }
+    return {
+        "risk_pct": str(risk),
+        "max_hold_days": str(hold),
+        "cooldown_days": str(cooldown),
+        "max_pos_pct": str(pos),
+        "target_rr": str(rr),
+    }
+
+
+def coerce_rs_pullback_params(
+    strategy_id: str | None,
+    *,
+    risk_pct: float | str | None,
+    max_hold_days: int | str | None,
+    cooldown_days: int | str | None,
+    max_pos_pct: float | str | None,
+    target_rr: float | str | None = None,
+) -> dict[str, str]:
+    """Swap Stage 2.0 leftover risk fields for RS Pullback researched defaults."""
+    sid = normalize_strategy(strategy_id)
+    rs = strategy_defaults(STRATEGY_RS_PULLBACK)
+    if not is_rs_pullback_strategy(sid):
+        return {
+            "risk_pct": str(risk_pct) if risk_pct is not None else rs.get("risk_pct", "8"),
+            "max_hold_days": str(max_hold_days) if max_hold_days is not None else rs.get("max_hold_days", "15"),
+            "cooldown_days": str(cooldown_days) if cooldown_days is not None else rs.get("cooldown_days", "5"),
+            "max_pos_pct": str(max_pos_pct) if max_pos_pct is not None else rs.get("max_pos_pct", "70"),
+            "target_rr": str(target_rr) if target_rr is not None else rs.get("target_rr", "1.5"),
+        }
+    stage = strategy_defaults(STRATEGY_STAGE_V2)
+
+    def _f(val, fallback) -> float:
+        try:
+            if val is None or val == "":
+                return float(fallback)
+            return float(val)
+        except (TypeError, ValueError):
+            return float(fallback)
+
+    def _i(val, fallback) -> int:
+        return int(round(_f(val, fallback)))
+
+    risk = _f(risk_pct, rs["risk_pct"])
+    hold = _i(max_hold_days, rs["max_hold_days"])
+    cooldown = _i(cooldown_days, rs["cooldown_days"])
+    pos = _f(max_pos_pct, rs["max_pos_pct"])
+    rr = _f(target_rr, rs["target_rr"])
+
+    leftovers = 0
+    if abs(risk - _f(stage["risk_pct"], 2)) < 1e-9:
+        leftovers += 1
+    if hold == _i(stage["max_hold_days"], 65):
+        leftovers += 1
+    if cooldown == _i(stage["cooldown_days"], 40):
+        leftovers += 1
+    if abs(pos - _f(stage["max_pos_pct"], 100)) < 1e-9:
+        leftovers += 1
+    if leftovers >= 2:
+        return {
+            "risk_pct": rs["risk_pct"],
+            "max_hold_days": rs["max_hold_days"],
+            "cooldown_days": rs["cooldown_days"],
+            "max_pos_pct": rs["max_pos_pct"],
+            "target_rr": rs["target_rr"],
         }
     return {
         "risk_pct": str(risk),

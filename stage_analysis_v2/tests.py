@@ -102,6 +102,7 @@ class StageV2FormTests(SimpleTestCase):
 
         values = [value for value, _label in StageV2BacktestForm.UNIVERSE_CHOICES]
         self.assertIn("nifty200", values)
+        self.assertIn("nifty500", values)
         self.assertIn("nifty_smallcap250", values)
 
 
@@ -182,6 +183,49 @@ class StrategyCatalogTests(SimpleTestCase):
         self.assertTrue(is_cup_strategy("cup_breakout"))
         self.assertFalse(is_supertrend_strategy("cup_breakout"))
         self.assertFalse(is_cup_strategy("stage_v2"))
+
+    def test_rs_pullback_is_in_dropdown_and_not_stage(self):
+        from stage_analysis_v2.services.strategy_catalog import (
+            BACKTEST_STRATEGY_CHOICES,
+            STRATEGY_RS_PULLBACK,
+            is_cup_strategy,
+            is_rs_pullback_strategy,
+            is_supertrend_strategy,
+            normalize_strategy,
+            strategy_defaults,
+        )
+
+        ids = [k for k, _ in BACKTEST_STRATEGY_CHOICES]
+        self.assertIn(STRATEGY_RS_PULLBACK, ids)
+        self.assertEqual(normalize_strategy("rs_pullback"), "rs_pullback")
+        self.assertTrue(is_rs_pullback_strategy("rs_pullback"))
+        self.assertFalse(is_supertrend_strategy("rs_pullback"))
+        self.assertFalse(is_cup_strategy("rs_pullback"))
+        defs = strategy_defaults("rs_pullback")
+        self.assertEqual(defs["max_hold_days"], "15")
+        self.assertEqual(defs["risk_pct"], "8.0")
+        self.assertEqual(defs["max_pos_pct"], "70")
+        self.assertEqual(defs["target_rr"], "1.5")
+
+        from trading.services.short_swing import F_QULLA, F_RS63, LEADERS
+        self.assertEqual(LEADERS.flags, F_QULLA | F_RS63)
+
+    def test_rs_pullback_stage_leftovers_are_replaced(self):
+        from stage_analysis_v2.services.strategy_catalog import coerce_rs_pullback_params
+
+        out = coerce_rs_pullback_params(
+            "rs_pullback",
+            risk_pct=2,
+            max_hold_days=65,
+            cooldown_days=40,
+            max_pos_pct=100,
+            target_rr=2.5,
+        )
+        self.assertEqual(out["risk_pct"], "8.0")
+        self.assertEqual(out["max_hold_days"], "15")
+        self.assertEqual(out["cooldown_days"], "5")
+        self.assertEqual(out["max_pos_pct"], "70")
+        self.assertEqual(out["target_rr"], "1.5")
 
     def test_cup_stage_leftovers_are_replaced(self):
         from stage_analysis_v2.services.strategy_catalog import coerce_cup_params
@@ -275,6 +319,10 @@ class BacktestPageTests(TestCase):
         self.assertContains(resp, "Supertrend Pullback + Quality")
         self.assertContains(resp, "Stage Analysis 2.0 — Stage 2 weekly")
         self.assertContains(resp, "Cup Breakout Strategy")
+        self.assertContains(resp, "RS Pullback Swing (3-15 day EMA20)")
+        self.assertContains(resp, 'value="rs_pullback"')
+        self.assertContains(resp, 'value="nifty500"')
+        self.assertContains(resp, "Nifty 500")
         self.assertContains(resp, "Load cup 100% pack")
         self.assertContains(resp, "Load RS 70 pack")
         self.assertContains(resp, 'name="min_rs_rating"')

@@ -143,6 +143,7 @@ class FundParams:
     rank_by: str = "score"  # score | mom3 | mom6 | rs6 | score_mom
     tech: str = "none"  # none | sma150 | trend | trend_rs | pullback | breakout
     trail_sma: int = 0  # 0, 20, 50
+    min_fcf_yield: float | None = None  # None = off; 0 = free cash flow must not be negative
 
 
 AGGRESSIVE_GROWTH = FundParams(
@@ -196,6 +197,7 @@ MOMENTUM_SWING = FundParams(
     rank_by="mom3",
     tech="sma150",
     trail_sma=0,
+    min_fcf_yield=0.0,
 )
 DEFAULT_PACKS = (MOMENTUM_SWING, AGGRESSIVE_GROWTH, QUALITY_GROWTH, GARP)
 DEFAULT_PARAMS = MOMENTUM_SWING
@@ -554,6 +556,10 @@ def passes_filters(metrics: dict[str, Any], params: FundParams) -> tuple[bool, l
         _need("de_ratio", lambda v: v <= params.max_de, f"D/E > {params.max_de:.1f}")
         if params.min_current_ratio:
             _need("current_ratio", lambda v: v >= params.min_current_ratio, "Current ratio weak")
+    if params.min_fcf_yield is not None:
+        fcf = metrics.get("fcf_yield")
+        if fcf is None or fcf < params.min_fcf_yield:
+            rejects.append("Free cash flow not positive" if params.min_fcf_yield <= 0 else f"FCF yield < {params.min_fcf_yield:.0f}%")
 
     pm = metrics.get("profit_margin")
     ni_ok = metrics.get("net_income")
@@ -1698,18 +1704,19 @@ def build_results(
     payload = {
         "strategy": STRATEGY_NAME,
         "blurb": (
-            "Nifty 200, fundamentals first (ROE, growth, margins, PE), then a technical overlay. "
-            "Default Momentum Swing: only names above SMA150, ranked by 3-month momentum, "
-            "one name, rebalanced every 21 trading days. Older packs still use a 1 July "
-            "12-month hold with no technicals."
+            "Nifty 200, fundamentals first (ROE, growth, margins, PE, positive free cash flow), "
+            "then a technical overlay. Default Momentum Swing: free cash flow not negative, "
+            "price above the 150-day average, ranked by 3-month momentum, one name, "
+            "rebalanced every 21 trading days. Older packs still use a 1 July "
+            "12-month hold and do not require free cash flow."
         ),
         "disclaimer": (
-            "Doubling in one year is rare. In Sep 2025–Sep 2026 only two Nifty 200 names "
-            "doubled (LAURUSLABS, MCX) and Nifty 50 was down. A 3-name July hold made ~12–17%. "
-            "Scanning all 200 with monthly/21-day entries, SMA/RSI/relative-strength filters "
-            "and trailing stops peaked around 78–91% in-sample — not 100% without knowing the "
-            "winners in advance. Max drawdown in the researched pack is around 20–30%. "
-            "Past backtests are not a forecast."
+            "Momentum Swing holds one name for about 21 trading days. The name must clear the "
+            "growth screen, produce free cash flow, and trade above its 150-day average. "
+            "With that cash-flow check, 2024 went from a loss to about +65%, and the last "
+            "3 years from about +119% to about +335%. The last 12 months were about +68%, "
+            "a few points under the same book with no cash-flow check. Worst drop is about 20%. "
+            "No brokerage or slippage. Past results are not a forecast."
         ),
         "params": params_to_dict(params),
         "packs": [params_to_dict(p) for p in DEFAULT_PACKS],

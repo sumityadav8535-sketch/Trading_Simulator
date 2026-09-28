@@ -31,10 +31,12 @@ from stage_analysis_v2.services.cup_breakout import (
     CupParams,
     run_cup_breakout_backtest,
 )
+from stage_analysis_v2.services.rs_pullback_swing import run_rs_pullback_backtest
 from stage_analysis_v2.services.strategy_catalog import (
     STRATEGY_CUP,
     VALID_STRATEGIES,
     is_cup_strategy,
+    is_rs_pullback_strategy,
     is_supertrend_strategy,
     is_union_strategy,
     normalize_strategy,
@@ -65,7 +67,7 @@ class Command(BaseCommand):
             "--universe",
             type=str,
             default="nifty200",
-            help="nifty200 (default) or nifty_smallcap250",
+            help="nifty200 (default), nifty500, or nifty_smallcap250",
         )
         parser.add_argument("--capital", type=float, default=1_000_000, help="Starting capital (INR)")
         parser.add_argument("--min-quality", type=int, default=0, help="Min quality score (0-100)")
@@ -202,6 +204,18 @@ class Command(BaseCommand):
         )
         if is_cup_strategy(strategy_id):
             self._run_cup(symbols, start, end, options)
+            return
+        if is_rs_pullback_strategy(strategy_id):
+            r = run_rs_pullback_backtest(
+                symbols=symbols,
+                start_date=start,
+                end_date=end,
+                capital=options["capital"],
+                risk_pct=options.get("risk_pct"),
+                max_hold_days=options.get("max_hold_days"),
+                cooldown_days=options.get("cooldown_days"),
+            )
+            self._print_result(r, options["top"])
             return
         if is_union_strategy(strategy_id):
             r = run_st_union_backtest(

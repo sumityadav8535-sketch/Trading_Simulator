@@ -36,5 +36,8 @@ NSE_NIFTY100_CSV_URL = (
 NSE_NIFTY_SMALLCAP250_CSV_URL = (
     "https://nsearchives.nseindia.com/content/indices/ind_niftysmallcap250list.csv"
 )
+NSE_NIFTY500_CSV_URL = (
+    "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
+)
 
 MIN_BARS_FOR_STRATEGY = 220

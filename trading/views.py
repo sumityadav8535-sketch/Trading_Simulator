@@ -106,12 +106,19 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     config = StrategyConfig.get_active()
     nifty_count = Stock.objects.filter(is_nifty200=True, is_active=True).count()
     market_bias = _estimate_market_bias()
+    swing_board = None
+    try:
+        from trading.services.short_swing import signal_board
+        swing_board = signal_board(lookback_days=21)
+    except Exception:
+        logger.exception("swing signal board failed")
 
     return render(request, "trading/dashboard.html", {
         "config": config,
         "nifty_count": nifty_count,
         "market_bias": market_bias,
         "price_bars": _total_price_bars(),
+        "swing_board": swing_board,
     })
 
 
@@ -1191,3 +1198,82 @@ def fundamental_swing(request: HttpRequest) -> HttpResponse:
     page["presets"] = _fundamental_presets(today)
     page["ran_custom"] = bool(run)
     return render(request, "trading/fundamental_swing.html", page)
+
+
+@require_GET
+def short_swing(request: HttpRequest) -> HttpResponse:
+    from dataclasses import asdict
+
+    from trading.services.charts import build_equity_curve, build_rs_pullback_signal_bars
+    from trading.services.short_swing import (
+        DEFAULT_CAPITAL,
+        DEFAULT_PACKS,
+        load_page,
+        params_by_name,
+        parse_iso_date,
+        run_window,
+        signal_board,
+    )
+
+    rebuild = request.GET.get("rebuild") in {"1", "true", "yes"}
+    today = date.today()
+    params = params_by_name(request.GET.get("pack"))
+    page = load_page(rebuild=rebuild, params=params, asof=today)
+    page["params"] = asdict(params)
+
+    start = parse_iso_date(request.GET.get("start"))
+    end = parse_iso_date(request.GET.get("end"))
+    run = request.GET.get("run") in {"1", "true", "yes"}
+    try:
+        capital = float(request.GET.get("capital") or DEFAULT_CAPITAL)
+        if capital <= 0:
+            capital = DEFAULT_CAPITAL
+    except (TypeError, ValueError):
+        capital = DEFAULT_CAPITAL
+
+    custom = None
+    custom_error = None
+    if run:
+        if not start or not end:
+            custom_error = "Pick a start and end date to run a backtest."
+        elif start >= end:
+            custom_error = "End date must be after the start date."
+        else:
+            custom = run_window(start, end, params=params, capital=capital)
+            if custom.get("error"):
+                custom_error = custom.get("error")
+
+    board = {"today": [], "yesterday": [], "daily_6m": [], "daily_1y": [], "by_date": {}}
+    try:
+        board = signal_board(params, asof=today, lookback_days=365)
+    except Exception:
+        logger.exception("swing signal board failed")
+
+    charts = {}
+    custom_curve = (custom or {}).get("equity_curve") or []
+    if custom_curve:
+        charts["custom_equity"] = build_equity_curve(custom_curve)
+    windows = page.get("windows") or []
+    one = next((w for w in windows if w.get("years") == 1), None)
+    hist_curve = (one or {}).get("equity_curve") or (windows[-1].get("equity_curve") if windows else None) or []
+    if hist_curve:
+        charts["equity"] = build_equity_curve(hist_curve)
+    charts["signals_6m"] = build_rs_pullback_signal_bars(
+        board.get("daily_6m") or [], "Last 6 months — signals per day",
+    )
+    charts["signals_1y"] = build_rs_pullback_signal_bars(
+        board.get("daily_1y") or [], "Last 1 year — signals per day",
+    )
+
+    page["board"] = board
+    page["charts"] = charts
+    page["custom"] = custom
+    page["custom_error"] = custom_error
+    page["form_start"] = (start or (today - timedelta(days=365))).isoformat()
+    page["form_end"] = (end or today).isoformat()
+    page["form_capital"] = int(capital)
+    page["form_pack"] = params.name
+    page["packs"] = [asdict(p) for p in DEFAULT_PACKS]
+    page["presets"] = _fundamental_presets(today)
+    page["ran_custom"] = bool(run)
+    return render(request, "trading/short_swing.html", page)

@@ -5,8 +5,8 @@
   <div>
     <h2 class="page-title">Gap Open <span class="text-blue-600">Bounce</span></h2>
     <p class="page-sub">
-      Nifty 200 · 9:15 vs yesterday 15:10 close · gap-down 2–6% · RSI 45–70 · buy 9:30 only if it holds
-      the 9:15 close · take every qualifying name · target +0.5% · 8% risk
+      Nifty 200 · gap-down 2–6% · RSI 45–70 · buy the largest gap at 9:30 if it holds
+      the 9:15 close · target +1% · stop 2× 5-minute ATR · one name, full 5× book
     </p>
   </div>
   <div class="flex items-center gap-2 text-sm">
@@ -164,7 +164,7 @@
           <dd class="font-mono font-semibold text-red-600">₹{{ t.stop }}</dd>
         </div>
         <div>
-          <dt class="text-xs text-slate-500">Target (+0.5%)</dt>
+          <dt class="text-xs text-slate-500">Target (+1%)</dt>
           <dd class="font-mono font-semibold text-emerald-700">₹{{ t.target }}</dd>
         </div>
         <div>
@@ -177,7 +177,7 @@
         </div>
       </dl>
       <p class="text-[11px] text-slate-400 mt-3">
-        {% if t.pending %}Do not buy yet — wait for the {{ t.entry_time }} print.{% else %}Flatten 15:15 IST if +0.5% has not printed.{% endif %}
+        {% if t.pending %}Do not buy yet — wait for the {{ t.entry_time }} print.{% else %}Flatten 15:15 IST if +1% has not printed.{% endif %}
         Notional ₹{{ t.notional|floatformat:0 }}. Gap vs 9:15 open {{ t.gap_pct }}%.
       </p>
     </article>
@@ -245,7 +245,7 @@
   <div class="lg:col-span-8 space-y-4">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
       <div class="stat-card"><p class="label">Net P&amp;L</p><p class="value {% if story.net_pnl >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">₹{{ story.net_pnl|floatformat:0 }}</p></div>
-      <div class="stat-card"><p class="label">Return / 2 mo</p><p class="value">{{ story.total_return_pct|floatformat:1 }}%</p></div>
+      <div class="stat-card"><p class="label">Return</p><p class="value">{{ story.total_return_pct|floatformat:1 }}%</p></div>
       <div class="stat-card"><p class="label">Win rate</p><p class="value">{{ story.win_rate|floatformat:1 }}%</p></div>
       <div class="stat-card"><p class="label">Profit factor</p><p class="value">{{ story.profit_factor|floatformat:2 }}</p></div>
       <div class="stat-card"><p class="label">Trades</p><p class="value">{{ story.trades }}</p></div>
@@ -281,8 +281,8 @@
 <section class="card p-4 mb-5">
   <h3 class="font-bold mb-1">Why we dropped yesterday’s close as target</h3>
   <p class="text-sm text-slate-600 mb-3">
-    Full gap-fill only printed on ~1 in 3 trades, so most days were a stop-out.
-    Same 2-month window, older RSI 45–65 full-fill packs vs the live 1% target, ₹1,00,000.
+    Full gap-fill only printed on about 1 in 3 trades, so most of those days were a stop-out.
+    Older packs, same ₹1,00,000 test. The live book above is separate: one name, +1%, stop 2× ATR.
   </p>
   <div class="overflow-x-auto">
     <table class="w-full text-sm">
@@ -315,8 +315,8 @@
     </table>
   </div>
   <p class="text-xs text-slate-500 mt-3">
-    9:30 vs 9:15: the 9:15 print stops out ~40% of trades in the first 5 minutes.
-    Waiting for 9:30 and taking +1% (not prior close) is the pack that actually has a green typical day.
+    Buying the 9:15 print stopped out about 40% of trades in the first 5 minutes.
+    The live book waits for 9:30, takes only the largest gap, and aims for +1%.
   </p>
 </section>
 {% endif %}

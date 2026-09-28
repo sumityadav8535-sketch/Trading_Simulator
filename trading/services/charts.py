@@ -217,6 +217,42 @@ def build_scanner_signal_bars(daily: list[dict]) -> str:
     return fig.to_json()
 
 
+def build_rs_pullback_signal_bars(daily: list[dict], title: str = "RS Pullback signals") -> str:
+    """Bar chart: RS Pullback signal count per signal day."""
+    if not daily:
+        return json.dumps({
+            "data": [],
+            "layout": {
+                "title": "No RS Pullback signals in this period",
+                "template": "plotly_white",
+                "height": 340,
+            },
+        })
+    fig = go.Figure(data=[go.Bar(
+        x=[d["date"] for d in daily],
+        y=[d["count"] for d in daily],
+        marker_color="#2563eb",
+        customdata=[[d.get("symbols", ""), d["count"]] for d in daily],
+        hovertemplate=(
+            "<b>%{x}</b><br>"
+            "Signals: %{y}<br>"
+            "%{customdata[0]}"
+            "<extra>Click to list</extra>"
+        ),
+    )])
+    fig.update_layout(
+        title=title,
+        template="plotly_white",
+        height=340,
+        margin=dict(l=44, r=16, t=48, b=64),
+        xaxis_title="",
+        yaxis_title="Signals",
+        bargap=0.18,
+        clickmode="event+select",
+    )
+    return fig.to_json()
+
+
 def build_stage_v2_signal_bars(daily: list[dict]) -> str:
     """Bar chart: Stage 2.0 signal count per entry day, colored by avg quality."""
     if not daily:

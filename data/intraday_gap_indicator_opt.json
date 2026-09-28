@@ -1,0 +1,3359 @@
+{
+  "window": {
+    "start": "2026-04-13",
+    "end": "2026-09-25",
+    "sessions": 115,
+    "oos_from": "2026-08-07"
+  },
+  "capital": 100000.0,
+  "leverage": 5.0,
+  "live": {
+    "name": "LIVE bounce rsi45-70 g2-6 p0.5 sl1.5",
+    "exit": "p05_a15",
+    "side": "long",
+    "entry": "930",
+    "trades": 51,
+    "win_rate": 60.8,
+    "profit_factor": 1.11,
+    "net_pnl": 2588.78,
+    "avg_day": 22.51,
+    "avg_trade_day": 123.28,
+    "trade_days": 21,
+    "days_ge_5k": 0,
+    "worst_day": -6281.14,
+    "best_day": 2475.54,
+    "max_dd_pct": 6.23,
+    "max_leverage": 17.46,
+    "oos_pnl": -3382.3,
+    "oos_days": 8,
+    "months": {
+      "2026-06": {
+        "trades": 11,
+        "pnl": -4046.14,
+        "wr": 45.5
+      },
+      "2026-07": {
+        "trades": 20,
+        "pnl": 8271.6,
+        "wr": 80.0
+      },
+      "2026-08": {
+        "trades": 6,
+        "pnl": 1774.81,
+        "wr": 66.7
+      },
+      "2026-09": {
+        "trades": 14,
+        "pnl": -3411.51,
+        "wr": 42.9
+      }
+    },
+    "reasons": {
+      "tp": 31,
+      "sl": 20
+    },
+    "worst_month": -4046.14,
+    "green_months": 2,
+    "red_months": 2
+  },
+  "stage1_top": [
+    {
+      "name": "L g2-6 rsi45-70 bounce p10_a15",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 51,
+      "win_rate": 47.1,
+      "profit_factor": 1.56,
+      "net_pnl": 19243.39,
+      "avg_day": 167.33,
+      "avg_trade_day": 916.35,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -5086.31,
+      "best_day": 4628.13,
+      "max_dd_pct": 4.98,
+      "max_leverage": 17.48,
+      "oos_pnl": 3277.64,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 11,
+          "pnl": 2072.45,
+          "wr": 45.5
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 9265.18,
+          "wr": 50.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 6739.42,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 14,
+          "pnl": 1166.33,
+          "wr": 35.7
+        }
+      },
+      "reasons": {
+        "tp": 23,
+        "sl": 26,
+        "eod": 2
+      },
+      "worst_month": 1166.33,
+      "green_months": 4,
+      "red_months": 0,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsi45-70 bounce p06_or_t1030",
+      "exit": "p06_or_t1030",
+      "side": "long",
+      "entry": "930",
+      "trades": 51,
+      "win_rate": 74.5,
+      "profit_factor": 1.65,
+      "net_pnl": 14731.6,
+      "avg_day": 128.1,
+      "avg_trade_day": 701.5,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -8731.95,
+      "best_day": 4398.69,
+      "max_dd_pct": 8.64,
+      "max_leverage": 17.48,
+      "oos_pnl": 3574.88,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 11,
+          "pnl": -3569.38,
+          "wr": 63.6
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 12880.47,
+          "wr": 85.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1351.99,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 14,
+          "pnl": 4068.49,
+          "wr": 71.4
+        }
+      },
+      "reasons": {
+        "tp": 31,
+        "time": 17,
+        "sl": 3
+      },
+      "worst_month": -3569.38,
+      "green_months": 3,
+      "red_months": 1,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsi45-70 bounce half_a12",
+      "exit": "half_a12",
+      "side": "long",
+      "entry": "930",
+      "trades": 45,
+      "win_rate": 40.0,
+      "profit_factor": 1.36,
+      "net_pnl": 10924.25,
+      "avg_day": 94.99,
+      "avg_trade_day": 546.21,
+      "trade_days": 20,
+      "days_ge_5k": 1,
+      "worst_day": -3565.84,
+      "best_day": 9328.08,
+      "max_dd_pct": 5.75,
+      "max_leverage": 14.98,
+      "oos_pnl": 297.81,
+      "oos_days": 7,
+      "months": {
+        "2026-06": {
+          "trades": 10,
+          "pnl": 5238.49,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 17,
+          "pnl": 6466.88,
+          "wr": 41.2
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": -2363.96,
+          "wr": 33.3
+        },
+        "2026-09": {
+          "trades": 12,
+          "pnl": 1582.84,
+          "wr": 33.3
+        }
+      },
+      "reasons": {
+        "tp": 16,
+        "sl": 27,
+        "eod": 2
+      },
+      "worst_month": -2363.96,
+      "green_months": 3,
+      "red_months": 1,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsi45-70 bounce qtr_a10",
+      "exit": "qtr_a10",
+      "side": "long",
+      "entry": "930",
+      "trades": 45,
+      "win_rate": 44.4,
+      "profit_factor": 1.16,
+      "net_pnl": 3690.23,
+      "avg_day": 32.09,
+      "avg_trade_day": 184.51,
+      "trade_days": 20,
+      "days_ge_5k": 0,
+      "worst_day": -3701.89,
+      "best_day": 2225.84,
+      "max_dd_pct": 3.66,
+      "max_leverage": 14.97,
+      "oos_pnl": 1645.38,
+      "oos_days": 7,
+      "months": {
+        "2026-06": {
+          "trades": 10,
+          "pnl": -633.03,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 17,
+          "pnl": 1100.13,
+          "wr": 35.3
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 621.19,
+          "wr": 50.0
+        },
+        "2026-09": {
+          "trades": 12,
+          "pnl": 2601.91,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 20,
+        "sl": 24,
+        "eod": 1
+      },
+      "worst_month": -633.03,
+      "green_months": 3,
+      "red_months": 1,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g1.5-5 rsi45-70 bounce p06_or_t1030",
+      "exit": "p06_or_t1030",
+      "side": "long",
+      "entry": "930",
+      "trades": 103,
+      "win_rate": 58.3,
+      "profit_factor": 0.98,
+      "net_pnl": -1337.82,
+      "avg_day": -11.63,
+      "avg_trade_day": -36.16,
+      "trade_days": 37,
+      "days_ge_5k": 1,
+      "worst_day": -14453.9,
+      "best_day": 5200.29,
+      "max_dd_pct": 14.74,
+      "max_leverage": 49.74,
+      "oos_pnl": 3060.37,
+      "oos_days": 16,
+      "months": {
+        "2026-05": {
+          "trades": 1,
+          "pnl": -1372.32,
+          "wr": 0.0
+        },
+        "2026-06": {
+          "trades": 27,
+          "pnl": -11047.45,
+          "wr": 48.1
+        },
+        "2026-07": {
+          "trades": 42,
+          "pnl": 6072.97,
+          "wr": 64.3
+        },
+        "2026-08": {
+          "trades": 13,
+          "pnl": -1256.05,
+          "wr": 46.2
+        },
+        "2026-09": {
+          "trades": 20,
+          "pnl": 6265.05,
+          "wr": 70.0
+        }
+      },
+      "reasons": {
+        "sl": 13,
+        "tp": 50,
+        "time": 40
+      },
+      "worst_month": -11047.45,
+      "green_months": 2,
+      "red_months": 3,
+      "mask_kind": "long",
+      "glo": 0.015,
+      "ghi": 0.05,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsi45-70 nobounce qtr_a10",
+      "exit": "qtr_a10",
+      "side": "long",
+      "entry": "930",
+      "trades": 112,
+      "win_rate": 33.9,
+      "profit_factor": 0.83,
+      "net_pnl": -10492.43,
+      "avg_day": -91.24,
+      "avg_trade_day": -244.01,
+      "trade_days": 43,
+      "days_ge_5k": 0,
+      "worst_day": -5207.76,
+      "best_day": 4293.62,
+      "max_dd_pct": 18.35,
+      "max_leverage": 27.35,
+      "oos_pnl": 2875.38,
+      "oos_days": 14,
+      "months": {
+        "2026-06": {
+          "trades": 31,
+          "pnl": -8994.51,
+          "wr": 29.0
+        },
+        "2026-07": {
+          "trades": 40,
+          "pnl": -7978.49,
+          "wr": 25.0
+        },
+        "2026-08": {
+          "trades": 15,
+          "pnl": 4460.05,
+          "wr": 53.3
+        },
+        "2026-09": {
+          "trades": 26,
+          "pnl": 2020.49,
+          "wr": 42.3
+        }
+      },
+      "reasons": {
+        "tp": 38,
+        "sl": 72,
+        "eod": 2
+      },
+      "worst_month": -8994.51,
+      "green_months": 2,
+      "red_months": 2,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": false
+    },
+    {
+      "name": "L g1.5-5 rsi45-70 nobounce p06_or_t1030",
+      "exit": "p06_or_t1030",
+      "side": "long",
+      "entry": "930",
+      "trades": 227,
+      "win_rate": 49.8,
+      "profit_factor": 0.81,
+      "net_pnl": -22022.38,
+      "avg_day": -191.5,
+      "avg_trade_day": -379.7,
+      "trade_days": 58,
+      "days_ge_5k": 3,
+      "worst_day": -18826.0,
+      "best_day": 7680.9,
+      "max_dd_pct": 28.48,
+      "max_leverage": 89.28,
+      "oos_pnl": 3122.17,
+      "oos_days": 22,
+      "months": {
+        "2026-04": {
+          "trades": 1,
+          "pnl": -794.97,
+          "wr": 0.0
+        },
+        "2026-05": {
+          "trades": 1,
+          "pnl": -1361.61,
+          "wr": 0.0
+        },
+        "2026-06": {
+          "trades": 63,
+          "pnl": -18093.97,
+          "wr": 42.9
+        },
+        "2026-07": {
+          "trades": 93,
+          "pnl": -8233.25,
+          "wr": 50.5
+        },
+        "2026-08": {
+          "trades": 24,
+          "pnl": 3617.0,
+          "wr": 58.3
+        },
+        "2026-09": {
+          "trades": 45,
+          "pnl": 2844.46,
+          "wr": 55.6
+        }
+      },
+      "reasons": {
+        "sl": 70,
+        "tp": 99,
+        "time": 58
+      },
+      "worst_month": -18093.97,
+      "green_months": 2,
+      "red_months": 4,
+      "mask_kind": "long",
+      "glo": 0.015,
+      "ghi": 0.05,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": false
+    },
+    {
+      "name": "L g1-4.5 rsi45-70 bounce p06_or_t1030",
+      "exit": "p06_or_t1030",
+      "side": "long",
+      "entry": "930",
+      "trades": 246,
+      "win_rate": 51.2,
+      "profit_factor": 0.67,
+      "net_pnl": -39335.53,
+      "avg_day": -342.05,
+      "avg_trade_day": -702.42,
+      "trade_days": 56,
+      "days_ge_5k": 1,
+      "worst_day": -43855.76,
+      "best_day": 5869.26,
+      "max_dd_pct": 48.36,
+      "max_leverage": 113.9,
+      "oos_pnl": 2811.8,
+      "oos_days": 21,
+      "months": {
+        "2026-05": {
+          "trades": 1,
+          "pnl": -1372.32,
+          "wr": 0.0
+        },
+        "2026-06": {
+          "trades": 80,
+          "pnl": -40255.84,
+          "wr": 42.5
+        },
+        "2026-07": {
+          "trades": 88,
+          "pnl": -1621.57,
+          "wr": 55.7
+        },
+        "2026-08": {
+          "trades": 28,
+          "pnl": -738.69,
+          "wr": 42.9
+        },
+        "2026-09": {
+          "trades": 49,
+          "pnl": 4652.85,
+          "wr": 63.3
+        }
+      },
+      "reasons": {
+        "sl": 40,
+        "tp": 110,
+        "time": 96
+      },
+      "worst_month": -40255.84,
+      "green_months": 1,
+      "red_months": 4,
+      "mask_kind": "long",
+      "glo": 0.01,
+      "ghi": 0.045,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g1-3 rsi45-70 bounce p06_or_t1030",
+      "exit": "p06_or_t1030",
+      "side": "long",
+      "entry": "930",
+      "trades": 235,
+      "win_rate": 49.4,
+      "profit_factor": 0.62,
+      "net_pnl": -44368.01,
+      "avg_day": -385.81,
+      "avg_trade_day": -806.69,
+      "trade_days": 55,
+      "days_ge_5k": 1,
+      "worst_day": -43855.76,
+      "best_day": 5320.91,
+      "max_dd_pct": 50.61,
+      "max_leverage": 113.9,
+      "oos_pnl": 1806.76,
+      "oos_days": 20,
+      "months": {
+        "2026-05": {
+          "trades": 1,
+          "pnl": -1372.32,
+          "wr": 0.0
+        },
+        "2026-06": {
+          "trades": 79,
+          "pnl": -40860.07,
+          "wr": 41.8
+        },
+        "2026-07": {
+          "trades": 82,
+          "pnl": -4991.91,
+          "wr": 52.4
+        },
+        "2026-08": {
+          "trades": 27,
+          "pnl": -1072.26,
+          "wr": 40.7
+        },
+        "2026-09": {
+          "trades": 46,
+          "pnl": 3928.52,
+          "wr": 63.0
+        }
+      },
+      "reasons": {
+        "sl": 40,
+        "tp": 101,
+        "time": 94
+      },
+      "worst_month": -40860.07,
+      "green_months": 1,
+      "red_months": 4,
+      "mask_kind": "long",
+      "glo": 0.01,
+      "ghi": 0.03,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g1-3 rsi40-65 bounce r15_or",
+      "exit": "r15_or",
+      "side": "long",
+      "entry": "930",
+      "trades": 275,
+      "win_rate": 44.0,
+      "profit_factor": 0.38,
+      "net_pnl": -92281.32,
+      "avg_day": -802.45,
+      "avg_trade_day": -1647.88,
+      "trade_days": 56,
+      "days_ge_5k": 1,
+      "worst_day": -95140.1,
+      "best_day": 8593.8,
+      "max_dd_pct": 93.64,
+      "max_leverage": 144.25,
+      "oos_pnl": 1.89,
+      "oos_days": 22,
+      "months": {
+        "2026-05": {
+          "trades": 2,
+          "pnl": -3092.12,
+          "wr": 0.0
+        },
+        "2026-06": {
+          "trades": 96,
+          "pnl": -85288.15,
+          "wr": 34.4
+        },
+        "2026-07": {
+          "trades": 85,
+          "pnl": -4390.78,
+          "wr": 44.7
+        },
+        "2026-08": {
+          "trades": 27,
+          "pnl": 222.17,
+          "wr": 48.1
+        },
+        "2026-09": {
+          "trades": 65,
+          "pnl": 267.58,
+          "wr": 56.9
+        }
+      },
+      "reasons": {
+        "eod": 94,
+        "sl": 105,
+        "tp": 76
+      },
+      "worst_month": -85288.15,
+      "green_months": 2,
+      "red_months": 3,
+      "mask_kind": "long",
+      "glo": 0.01,
+      "ghi": 0.03,
+      "rlo": 40,
+      "rhi": 65,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsi40-65 bounce p10_a15",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 56,
+      "win_rate": 41.1,
+      "profit_factor": 1.18,
+      "net_pnl": 7104.77,
+      "avg_day": 61.78,
+      "avg_trade_day": 284.19,
+      "trade_days": 25,
+      "days_ge_5k": 0,
+      "worst_day": -4044.31,
+      "best_day": 4394.55,
+      "max_dd_pct": 5.98,
+      "max_leverage": 19.98,
+      "oos_pnl": -3358.88,
+      "oos_days": 9,
+      "months": {
+        "2026-06": {
+          "trades": 12,
+          "pnl": 873.63,
+          "wr": 41.7
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 5195.5,
+          "wr": 45.0
+        },
+        "2026-08": {
+          "trades": 8,
+          "pnl": 3728.55,
+          "wr": 50.0
+        },
+        "2026-09": {
+          "trades": 16,
+          "pnl": -2692.89,
+          "wr": 31.2
+        }
+      },
+      "reasons": {
+        "tp": 20,
+        "sl": 32,
+        "eod": 4
+      },
+      "worst_month": -2692.89,
+      "green_months": 3,
+      "red_months": 1,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 40,
+      "rhi": 65,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsiAny bounce p10_a15",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 90,
+      "win_rate": 41.1,
+      "profit_factor": 1.09,
+      "net_pnl": 6412.1,
+      "avg_day": 55.76,
+      "avg_trade_day": 178.11,
+      "trade_days": 36,
+      "days_ge_5k": 2,
+      "worst_day": -5624.82,
+      "best_day": 11978.12,
+      "max_dd_pct": 9.92,
+      "max_leverage": 24.91,
+      "oos_pnl": -9773.2,
+      "oos_days": 15,
+      "months": {
+        "2026-06": {
+          "trades": 21,
+          "pnl": 275.14,
+          "wr": 38.1
+        },
+        "2026-07": {
+          "trades": 35,
+          "pnl": 9109.19,
+          "wr": 48.6
+        },
+        "2026-08": {
+          "trades": 13,
+          "pnl": 1205.22,
+          "wr": 38.5
+        },
+        "2026-09": {
+          "trades": 21,
+          "pnl": -4177.44,
+          "wr": 33.3
+        }
+      },
+      "reasons": {
+        "tp": 33,
+        "sl": 52,
+        "eod": 5
+      },
+      "worst_month": -4177.44,
+      "green_months": 3,
+      "red_months": 1,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": null,
+      "rhi": null,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsi45-70 bounce p06_t1030",
+      "exit": "p06_t1030",
+      "side": "long",
+      "entry": "930",
+      "trades": 51,
+      "win_rate": 56.9,
+      "profit_factor": 1.23,
+      "net_pnl": 5903.69,
+      "avg_day": 51.34,
+      "avg_trade_day": 281.13,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -6033.67,
+      "best_day": 2551.85,
+      "max_dd_pct": 5.97,
+      "max_leverage": 17.47,
+      "oos_pnl": -1654.79,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 11,
+          "pnl": -2841.14,
+          "wr": 45.5
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 8098.03,
+          "wr": 70.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 2549.94,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 14,
+          "pnl": -1903.15,
+          "wr": 42.9
+        }
+      },
+      "reasons": {
+        "tp": 26,
+        "sl": 21,
+        "time": 4
+      },
+      "worst_month": -2841.14,
+      "green_months": 2,
+      "red_months": 2,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsi45-70 bounce p08_a12",
+      "exit": "p08_a12",
+      "side": "long",
+      "entry": "930",
+      "trades": 51,
+      "win_rate": 43.1,
+      "profit_factor": 1.18,
+      "net_pnl": 5560.61,
+      "avg_day": 48.35,
+      "avg_trade_day": 264.79,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -4513.62,
+      "best_day": 3286.44,
+      "max_dd_pct": 4.44,
+      "max_leverage": 17.47,
+      "oos_pnl": -1366.09,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 11,
+          "pnl": 836.88,
+          "wr": 45.5
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 2803.39,
+          "wr": 45.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 2268.72,
+          "wr": 50.0
+        },
+        "2026-09": {
+          "trades": 14,
+          "pnl": -348.38,
+          "wr": 35.7
+        }
+      },
+      "reasons": {
+        "tp": 22,
+        "sl": 28,
+        "eod": 1
+      },
+      "worst_month": -348.38,
+      "green_months": 3,
+      "red_months": 1,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "L g2-6 rsi40-65 bounce p06_or_t1030",
+      "exit": "p06_or_t1030",
+      "side": "long",
+      "entry": "930",
+      "trades": 56,
+      "win_rate": 66.1,
+      "profit_factor": 1.12,
+      "net_pnl": 3546.79,
+      "avg_day": 30.84,
+      "avg_trade_day": 141.87,
+      "trade_days": 25,
+      "days_ge_5k": 0,
+      "worst_day": -9225.04,
+      "best_day": 4296.67,
+      "max_dd_pct": 10.49,
+      "max_leverage": 19.96,
+      "oos_pnl": -1849.29,
+      "oos_days": 9,
+      "months": {
+        "2026-06": {
+          "trades": 12,
+          "pnl": -8216.58,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 11851.78,
+          "wr": 85.0
+        },
+        "2026-08": {
+          "trades": 8,
+          "pnl": -2493.93,
+          "wr": 50.0
+        },
+        "2026-09": {
+          "trades": 16,
+          "pnl": 2405.51,
+          "wr": 62.5
+        }
+      },
+      "reasons": {
+        "tp": 30,
+        "time": 22,
+        "sl": 4
+      },
+      "worst_month": -8216.58,
+      "green_months": 2,
+      "red_months": 2,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 40,
+      "rhi": 65,
+      "bounce": true
+    }
+  ],
+  "filters": [
+    {
+      "name": "LIVE+or_bull",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 32,
+      "win_rate": 65.6,
+      "profit_factor": 1.19,
+      "net_pnl": 2811.48,
+      "avg_day": 24.45,
+      "avg_trade_day": 175.72,
+      "trade_days": 16,
+      "days_ge_5k": 0,
+      "worst_day": -6281.14,
+      "best_day": 1680.14,
+      "max_dd_pct": 6.23,
+      "max_leverage": 14.94,
+      "oos_pnl": 1698.26,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 9,
+          "pnl": -3845.31,
+          "wr": 44.4
+        },
+        "2026-07": {
+          "trades": 12,
+          "pnl": 3278.37,
+          "wr": 75.0
+        },
+        "2026-08": {
+          "trades": 3,
+          "pnl": 2536.84,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 8,
+          "pnl": 841.56,
+          "wr": 62.5
+        }
+      },
+      "reasons": {
+        "tp": 21,
+        "sl": 11
+      },
+      "worst_month": -3845.31,
+      "green_months": 3,
+      "red_months": 1,
+      "filter": "or_bull"
+    },
+    {
+      "name": "LIVE+or_loc60",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 32,
+      "win_rate": 53.1,
+      "profit_factor": 0.77,
+      "net_pnl": -4220.56,
+      "avg_day": -36.7,
+      "avg_trade_day": -301.47,
+      "trade_days": 14,
+      "days_ge_5k": 0,
+      "worst_day": -6219.33,
+      "best_day": 1647.41,
+      "max_dd_pct": 6.22,
+      "max_leverage": 14.97,
+      "oos_pnl": -3541.46,
+      "oos_days": 4,
+      "months": {
+        "2026-06": {
+          "trades": 8,
+          "pnl": -4637.77,
+          "wr": 37.5
+        },
+        "2026-07": {
+          "trades": 13,
+          "pnl": 2311.26,
+          "wr": 69.2
+        },
+        "2026-08": {
+          "trades": 3,
+          "pnl": 879.93,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 8,
+          "pnl": -2773.99,
+          "wr": 37.5
+        }
+      },
+      "reasons": {
+        "sl": 15,
+        "tp": 17
+      },
+      "worst_month": -4637.77,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "or_loc60"
+    },
+    {
+      "name": "LIVE+or_loc70",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 26,
+      "win_rate": 53.8,
+      "profit_factor": 0.74,
+      "net_pnl": -3985.44,
+      "avg_day": -34.66,
+      "avg_trade_day": -332.12,
+      "trade_days": 12,
+      "days_ge_5k": 0,
+      "worst_day": -6219.33,
+      "best_day": 1632.88,
+      "max_dd_pct": 6.22,
+      "max_leverage": 14.93,
+      "oos_pnl": -2616.37,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 7,
+          "pnl": -5425.98,
+          "wr": 28.6
+        },
+        "2026-07": {
+          "trades": 11,
+          "pnl": 2424.04,
+          "wr": 72.7
+        },
+        "2026-08": {
+          "trades": 2,
+          "pnl": 1632.88,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 6,
+          "pnl": -2616.36,
+          "wr": 33.3
+        }
+      },
+      "reasons": {
+        "sl": 12,
+        "tp": 14
+      },
+      "worst_month": -5425.98,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "or_loc70"
+    },
+    {
+      "name": "LIVE+above_vwap",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 42,
+      "win_rate": 54.8,
+      "profit_factor": 0.86,
+      "net_pnl": -3177.45,
+      "avg_day": -27.63,
+      "avg_trade_day": -186.91,
+      "trade_days": 17,
+      "days_ge_5k": 0,
+      "worst_day": -6281.14,
+      "best_day": 2438.75,
+      "max_dd_pct": 6.44,
+      "max_leverage": 17.47,
+      "oos_pnl": -4776.62,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 9,
+          "pnl": -5642.32,
+          "wr": 33.3
+        },
+        "2026-07": {
+          "trades": 17,
+          "pnl": 5561.33,
+          "wr": 76.5
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": 851.18,
+          "wr": 60.0
+        },
+        "2026-09": {
+          "trades": 11,
+          "pnl": -3947.66,
+          "wr": 36.4
+        }
+      },
+      "reasons": {
+        "tp": 23,
+        "sl": 19
+      },
+      "worst_month": -5642.32,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "above_vwap"
+    },
+    {
+      "name": "LIVE+rvol12",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 37,
+      "win_rate": 62.2,
+      "profit_factor": 1.22,
+      "net_pnl": 3518.72,
+      "avg_day": 30.6,
+      "avg_trade_day": 206.98,
+      "trade_days": 17,
+      "days_ge_5k": 0,
+      "worst_day": -2937.03,
+      "best_day": 2541.79,
+      "max_dd_pct": 2.94,
+      "max_leverage": 17.49,
+      "oos_pnl": -816.91,
+      "oos_days": 6,
+      "months": {
+        "2026-06": {
+          "trades": 6,
+          "pnl": -1504.6,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 13,
+          "pnl": 4127.35,
+          "wr": 76.9
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1748.21,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 12,
+          "pnl": -852.22,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "sl": 14,
+        "tp": 23
+      },
+      "worst_month": -1504.6,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "rvol12"
+    },
+    {
+      "name": "LIVE+rvol_not_climax",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 23,
+      "win_rate": 52.2,
+      "profit_factor": 0.75,
+      "net_pnl": -3214.09,
+      "avg_day": -27.95,
+      "avg_trade_day": -267.84,
+      "trade_days": 12,
+      "days_ge_5k": 0,
+      "worst_day": -6281.14,
+      "best_day": 2461.25,
+      "max_dd_pct": 6.23,
+      "max_leverage": 14.94,
+      "oos_pnl": -3353.1,
+      "oos_days": 4,
+      "months": {
+        "2026-06": {
+          "trades": 8,
+          "pnl": -4633.52,
+          "wr": 37.5
+        },
+        "2026-07": {
+          "trades": 10,
+          "pnl": 4772.52,
+          "wr": 80.0
+        },
+        "2026-08": {
+          "trades": 1,
+          "pnl": -895.2,
+          "wr": 0.0
+        },
+        "2026-09": {
+          "trades": 4,
+          "pnl": -2457.9,
+          "wr": 25.0
+        }
+      },
+      "reasons": {
+        "tp": 12,
+        "sl": 11
+      },
+      "worst_month": -4633.52,
+      "green_months": 1,
+      "red_months": 3,
+      "filter": "rvol_not_climax"
+    },
+    {
+      "name": "LIVE+adx_low",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 26,
+      "win_rate": 53.8,
+      "profit_factor": 0.83,
+      "net_pnl": -2288.42,
+      "avg_day": -19.9,
+      "avg_trade_day": -176.03,
+      "trade_days": 13,
+      "days_ge_5k": 0,
+      "worst_day": -7134.81,
+      "best_day": 1622.13,
+      "max_dd_pct": 7.07,
+      "max_leverage": 12.44,
+      "oos_pnl": -417.0,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 9,
+          "pnl": -5693.96,
+          "wr": 33.3
+        },
+        "2026-07": {
+          "trades": 8,
+          "pnl": 3009.08,
+          "wr": 75.0
+        },
+        "2026-08": {
+          "trades": 2,
+          "pnl": 1645.61,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 7,
+          "pnl": -1249.14,
+          "wr": 42.9
+        }
+      },
+      "reasons": {
+        "tp": 14,
+        "sl": 12
+      },
+      "worst_month": -5693.96,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "adx_low"
+    },
+    {
+      "name": "LIVE+htf_up",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 23,
+      "win_rate": 60.9,
+      "profit_factor": 1.01,
+      "net_pnl": 158.55,
+      "avg_day": 1.38,
+      "avg_trade_day": 13.21,
+      "trade_days": 12,
+      "days_ge_5k": 0,
+      "worst_day": -3334.27,
+      "best_day": 2473.19,
+      "max_dd_pct": 3.33,
+      "max_leverage": 9.96,
+      "oos_pnl": -503.43,
+      "oos_days": 4,
+      "months": {
+        "2026-06": {
+          "trades": 4,
+          "pnl": -3334.27,
+          "wr": 25.0
+        },
+        "2026-07": {
+          "trades": 15,
+          "pnl": 3996.23,
+          "wr": 73.3
+        },
+        "2026-08": {
+          "trades": 2,
+          "pnl": 1713.26,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 2,
+          "pnl": -2216.69,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "sl": 9,
+        "tp": 14
+      },
+      "worst_month": -3334.27,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "htf_up"
+    },
+    {
+      "name": "LIVE+not_downtrend",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 35,
+      "win_rate": 57.1,
+      "profit_factor": 0.92,
+      "net_pnl": -1393.35,
+      "avg_day": -12.12,
+      "avg_trade_day": -73.33,
+      "trade_days": 19,
+      "days_ge_5k": 0,
+      "worst_day": -4667.59,
+      "best_day": 2461.71,
+      "max_dd_pct": 4.84,
+      "max_leverage": 12.44,
+      "oos_pnl": -3056.2,
+      "oos_days": 7,
+      "months": {
+        "2026-06": {
+          "trades": 8,
+          "pnl": -4030.77,
+          "wr": 37.5
+        },
+        "2026-07": {
+          "trades": 16,
+          "pnl": 4851.09,
+          "wr": 75.0
+        },
+        "2026-08": {
+          "trades": 4,
+          "pnl": 1656.09,
+          "wr": 75.0
+        },
+        "2026-09": {
+          "trades": 7,
+          "pnl": -3869.79,
+          "wr": 28.6
+        }
+      },
+      "reasons": {
+        "tp": 20,
+        "sl": 15
+      },
+      "worst_month": -4030.77,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "not_downtrend"
+    },
+    {
+      "name": "LIVE+above_pdl",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 10,
+      "win_rate": 70.0,
+      "profit_factor": 1.17,
+      "net_pnl": 876.83,
+      "avg_day": 7.62,
+      "avg_trade_day": 97.43,
+      "trade_days": 9,
+      "days_ge_5k": 0,
+      "worst_day": -2438.09,
+      "best_day": 1675.31,
+      "max_dd_pct": 3.14,
+      "max_leverage": 4.99,
+      "oos_pnl": 917.12,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 2,
+          "pnl": -991.47,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 5,
+          "pnl": 951.19,
+          "wr": 80.0
+        },
+        "2026-08": {
+          "trades": 1,
+          "pnl": -772.1,
+          "wr": 0.0
+        },
+        "2026-09": {
+          "trades": 2,
+          "pnl": 1689.22,
+          "wr": 100.0
+        }
+      },
+      "reasons": {
+        "tp": 7,
+        "sl": 3
+      },
+      "worst_month": -991.47,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "above_pdl"
+    },
+    {
+      "name": "LIVE+nifty_flat",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 18,
+      "win_rate": 77.8,
+      "profit_factor": 2.1,
+      "net_pnl": 6434.57,
+      "avg_day": 55.95,
+      "avg_trade_day": 584.96,
+      "trade_days": 11,
+      "days_ge_5k": 0,
+      "worst_day": -1595.49,
+      "best_day": 1745.61,
+      "max_dd_pct": 1.48,
+      "max_leverage": 9.94,
+      "oos_pnl": 241.87,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 2,
+          "pnl": 1701.71,
+          "wr": 100.0
+        },
+        "2026-07": {
+          "trades": 7,
+          "pnl": 2745.38,
+          "wr": 85.7
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1777.09,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 3,
+          "pnl": 210.39,
+          "wr": 66.7
+        }
+      },
+      "reasons": {
+        "tp": 14,
+        "sl": 4
+      },
+      "worst_month": 210.39,
+      "green_months": 4,
+      "red_months": 0,
+      "filter": "nifty_flat"
+    },
+    {
+      "name": "LIVE+nifty_ok",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 38,
+      "win_rate": 71.1,
+      "profit_factor": 1.79,
+      "net_pnl": 10840.1,
+      "avg_day": 94.26,
+      "avg_trade_day": 570.53,
+      "trade_days": 19,
+      "days_ge_5k": 0,
+      "worst_day": -1665.37,
+      "best_day": 2639.1,
+      "max_dd_pct": 2.78,
+      "max_leverage": 9.98,
+      "oos_pnl": -2165.59,
+      "oos_days": 7,
+      "months": {
+        "2026-06": {
+          "trades": 5,
+          "pnl": 2340.62,
+          "wr": 80.0
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 8806.71,
+          "wr": 80.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1898.34,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 7,
+          "pnl": -2205.58,
+          "wr": 42.9
+        }
+      },
+      "reasons": {
+        "tp": 27,
+        "sl": 11
+      },
+      "worst_month": -2205.58,
+      "green_months": 3,
+      "red_months": 1,
+      "filter": "nifty_ok"
+    },
+    {
+      "name": "LIVE+nifty_or_green",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 25,
+      "win_rate": 48.0,
+      "profit_factor": 0.6,
+      "net_pnl": -6526.98,
+      "avg_day": -56.76,
+      "avg_trade_day": -815.87,
+      "trade_days": 8,
+      "days_ge_5k": 0,
+      "worst_day": -6219.33,
+      "best_day": 1585.65,
+      "max_dd_pct": 7.21,
+      "max_leverage": 17.47,
+      "oos_pnl": -2651.85,
+      "oos_days": 2,
+      "months": {
+        "2026-06": {
+          "trades": 6,
+          "pnl": -6219.33,
+          "wr": 16.7
+        },
+        "2026-07": {
+          "trades": 11,
+          "pnl": 2344.19,
+          "wr": 72.7
+        },
+        "2026-09": {
+          "trades": 8,
+          "pnl": -2651.85,
+          "wr": 37.5
+        }
+      },
+      "reasons": {
+        "sl": 13,
+        "tp": 12
+      },
+      "worst_month": -6219.33,
+      "green_months": 1,
+      "red_months": 2,
+      "filter": "nifty_or_green"
+    },
+    {
+      "name": "LIVE+rsi5_20_45",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 29,
+      "win_rate": 65.5,
+      "profit_factor": 1.48,
+      "net_pnl": 5354.95,
+      "avg_day": 46.56,
+      "avg_trade_day": 297.5,
+      "trade_days": 18,
+      "days_ge_5k": 0,
+      "worst_day": -2827.86,
+      "best_day": 2556.67,
+      "max_dd_pct": 2.8,
+      "max_leverage": 9.94,
+      "oos_pnl": -975.7,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 7,
+          "pnl": -330.46,
+          "wr": 57.1
+        },
+        "2026-07": {
+          "trades": 13,
+          "pnl": 5775.02,
+          "wr": 76.9
+        },
+        "2026-08": {
+          "trades": 2,
+          "pnl": 1786.91,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 7,
+          "pnl": -1876.52,
+          "wr": 42.9
+        }
+      },
+      "reasons": {
+        "tp": 19,
+        "sl": 10
+      },
+      "worst_month": -1876.52,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "rsi5_20_45"
+    },
+    {
+      "name": "LIVE+gapvol_0.5_1.8",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 31,
+      "win_rate": 64.5,
+      "profit_factor": 1.1,
+      "net_pnl": 1587.69,
+      "avg_day": 13.81,
+      "avg_trade_day": 88.21,
+      "trade_days": 18,
+      "days_ge_5k": 0,
+      "worst_day": -6281.14,
+      "best_day": 2485.71,
+      "max_dd_pct": 6.23,
+      "max_leverage": 14.94,
+      "oos_pnl": -290.18,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 10,
+          "pnl": -3037.34,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 13,
+          "pnl": 4059.37,
+          "wr": 76.9
+        },
+        "2026-08": {
+          "trades": 2,
+          "pnl": 1718.28,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 6,
+          "pnl": -1152.63,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 20,
+        "sl": 11
+      },
+      "worst_month": -3037.34,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "gapvol_0.5_1.8"
+    },
+    {
+      "name": "LIVE+not_chasing",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 50,
+      "win_rate": 60.0,
+      "profit_factor": 1.07,
+      "net_pnl": 1711.23,
+      "avg_day": 14.88,
+      "avg_trade_day": 81.49,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -6281.14,
+      "best_day": 2475.54,
+      "max_dd_pct": 6.23,
+      "max_leverage": 14.97,
+      "oos_pnl": -4259.85,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 11,
+          "pnl": -4046.14,
+          "wr": 45.5
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 8271.6,
+          "wr": 80.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1774.81,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 13,
+          "pnl": -4289.07,
+          "wr": 38.5
+        }
+      },
+      "reasons": {
+        "tp": 30,
+        "sl": 20
+      },
+      "worst_month": -4289.07,
+      "green_months": 2,
+      "red_months": 2,
+      "filter": "not_chasing"
+    }
+  ],
+  "stacks": [
+    {
+      "name": "L g2-6 rsi45-70 bounce p10_a15",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 51,
+      "win_rate": 47.1,
+      "profit_factor": 1.56,
+      "net_pnl": 19243.39,
+      "avg_day": 167.33,
+      "avg_trade_day": 916.35,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -5086.31,
+      "best_day": 4628.13,
+      "max_dd_pct": 4.98,
+      "max_leverage": 17.48,
+      "oos_pnl": 3277.64,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 11,
+          "pnl": 2072.45,
+          "wr": 45.5
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 9265.18,
+          "wr": 50.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 6739.42,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 14,
+          "pnl": 1166.33,
+          "wr": 35.7
+        }
+      },
+      "reasons": {
+        "tp": 23,
+        "sl": 26,
+        "eod": 2
+      },
+      "worst_month": 1166.33,
+      "green_months": 4,
+      "red_months": 0,
+      "mask_kind": "long",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "LEAD+nifty_flat p10_a15",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 18,
+      "win_rate": 72.2,
+      "profit_factor": 3.67,
+      "net_pnl": 21044.29,
+      "avg_day": 182.99,
+      "avg_trade_day": 1913.12,
+      "trade_days": 11,
+      "days_ge_5k": 0,
+      "worst_day": -1816.76,
+      "best_day": 4592.23,
+      "max_dd_pct": 1.48,
+      "max_leverage": 9.98,
+      "oos_pnl": 5276.87,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 2,
+          "pnl": 4234.88,
+          "wr": 100.0
+        },
+        "2026-07": {
+          "trades": 7,
+          "pnl": 6940.3,
+          "wr": 71.4
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 6698.2,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 3,
+          "pnl": 3170.89,
+          "wr": 66.7
+        }
+      },
+      "reasons": {
+        "tp": 12,
+        "sl": 5,
+        "eod": 1
+      },
+      "worst_month": 3170.89,
+      "green_months": 4,
+      "red_months": 0,
+      "filters": [
+        "nifty_flat"
+      ],
+      "base": "lead",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "LEAD+or_bull p10_a15",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 32,
+      "win_rate": 46.9,
+      "profit_factor": 1.46,
+      "net_pnl": 10206.89,
+      "avg_day": 88.76,
+      "avg_trade_day": 637.93,
+      "trade_days": 16,
+      "days_ge_5k": 0,
+      "worst_day": -5086.31,
+      "best_day": 4151.87,
+      "max_dd_pct": 4.98,
+      "max_leverage": 14.94,
+      "oos_pnl": 6313.62,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 9,
+          "pnl": 1055.45,
+          "wr": 44.4
+        },
+        "2026-07": {
+          "trades": 12,
+          "pnl": -1314.04,
+          "wr": 33.3
+        },
+        "2026-08": {
+          "trades": 3,
+          "pnl": 6329.38,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 8,
+          "pnl": 4136.1,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 15,
+        "sl": 16,
+        "eod": 1
+      },
+      "worst_month": -1314.04,
+      "green_months": 3,
+      "red_months": 1,
+      "filters": [
+        "or_bull"
+      ],
+      "base": "lead",
+      "glo": 0.02,
+      "ghi": 0.06,
+      "rlo": 45,
+      "rhi": 70,
+      "bounce": true
+    },
+    {
+      "name": "LIVE+nifty_flat",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 18,
+      "win_rate": 77.8,
+      "profit_factor": 2.1,
+      "net_pnl": 6434.57,
+      "avg_day": 55.95,
+      "avg_trade_day": 584.96,
+      "trade_days": 11,
+      "days_ge_5k": 0,
+      "worst_day": -1595.49,
+      "best_day": 1745.61,
+      "max_dd_pct": 1.48,
+      "max_leverage": 9.94,
+      "oos_pnl": 241.87,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 2,
+          "pnl": 1701.71,
+          "wr": 100.0
+        },
+        "2026-07": {
+          "trades": 7,
+          "pnl": 2745.38,
+          "wr": 85.7
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1777.09,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 3,
+          "pnl": 210.39,
+          "wr": 66.7
+        }
+      },
+      "reasons": {
+        "tp": 14,
+        "sl": 4
+      },
+      "worst_month": 210.39,
+      "green_months": 4,
+      "red_months": 0,
+      "filters": [
+        "nifty_flat"
+      ],
+      "base": "live"
+    },
+    {
+      "name": "LIVE+nifty_flat+or_bull",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 11,
+      "win_rate": 81.8,
+      "profit_factor": 1.94,
+      "net_pnl": 3759.6,
+      "avg_day": 32.69,
+      "avg_trade_day": 417.73,
+      "trade_days": 9,
+      "days_ge_5k": 0,
+      "worst_day": -1572.49,
+      "best_day": 1698.35,
+      "max_dd_pct": 1.53,
+      "max_leverage": 4.99,
+      "oos_pnl": 1071.03,
+      "oos_days": 4,
+      "months": {
+        "2026-06": {
+          "trades": 2,
+          "pnl": 1701.71,
+          "wr": 100.0
+        },
+        "2026-07": {
+          "trades": 3,
+          "pnl": -711.5,
+          "wr": 66.7
+        },
+        "2026-08": {
+          "trades": 3,
+          "pnl": 2569.22,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 3,
+          "pnl": 200.16,
+          "wr": 66.7
+        }
+      },
+      "reasons": {
+        "tp": 9,
+        "sl": 2
+      },
+      "worst_month": -711.5,
+      "green_months": 3,
+      "red_months": 1,
+      "filters": [
+        "nifty_flat",
+        "or_bull"
+      ],
+      "base": "live"
+    },
+    {
+      "name": "LIVE+or_bull",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 32,
+      "win_rate": 65.6,
+      "profit_factor": 1.19,
+      "net_pnl": 2811.48,
+      "avg_day": 24.45,
+      "avg_trade_day": 175.72,
+      "trade_days": 16,
+      "days_ge_5k": 0,
+      "worst_day": -6281.14,
+      "best_day": 1680.14,
+      "max_dd_pct": 6.23,
+      "max_leverage": 14.94,
+      "oos_pnl": 1698.26,
+      "oos_days": 5,
+      "months": {
+        "2026-06": {
+          "trades": 9,
+          "pnl": -3845.31,
+          "wr": 44.4
+        },
+        "2026-07": {
+          "trades": 12,
+          "pnl": 3278.37,
+          "wr": 75.0
+        },
+        "2026-08": {
+          "trades": 3,
+          "pnl": 2536.84,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 8,
+          "pnl": 841.56,
+          "wr": 62.5
+        }
+      },
+      "reasons": {
+        "tp": 21,
+        "sl": 11
+      },
+      "worst_month": -3845.31,
+      "green_months": 3,
+      "red_months": 1,
+      "filters": [
+        "or_bull"
+      ],
+      "base": "live"
+    }
+  ],
+  "shorts_top": [
+    {
+      "name": "S g1.5-5 rsi55-80 p08_or",
+      "exit": "p08_or",
+      "side": "short",
+      "entry": "930",
+      "trades": 29,
+      "win_rate": 69.0,
+      "profit_factor": 1.4,
+      "net_pnl": 8690.83,
+      "avg_day": 75.57,
+      "avg_trade_day": 457.41,
+      "trade_days": 19,
+      "days_ge_5k": 0,
+      "worst_day": -12256.28,
+      "best_day": 4815.28,
+      "max_dd_pct": 12.34,
+      "max_leverage": 7.5,
+      "oos_pnl": 5558.88,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 7,
+          "pnl": 731.65,
+          "wr": 57.1
+        },
+        "2026-07": {
+          "trades": 10,
+          "pnl": -3641.52,
+          "wr": 70.0
+        },
+        "2026-08": {
+          "trades": 9,
+          "pnl": 9302.99,
+          "wr": 77.8
+        },
+        "2026-09": {
+          "trades": 3,
+          "pnl": 2297.73,
+          "wr": 66.7
+        }
+      },
+      "reasons": {
+        "eod": 7,
+        "tp": 18,
+        "sl": 4
+      },
+      "worst_month": -3641.52,
+      "green_months": 3,
+      "red_months": 1
+    },
+    {
+      "name": "S g2-6 rsi55-80 p08_or",
+      "exit": "p08_or",
+      "side": "short",
+      "entry": "930",
+      "trades": 16,
+      "win_rate": 75.0,
+      "profit_factor": 1.39,
+      "net_pnl": 5390.62,
+      "avg_day": 46.87,
+      "avg_trade_day": 490.06,
+      "trade_days": 11,
+      "days_ge_5k": 0,
+      "worst_day": -12117.44,
+      "best_day": 3343.41,
+      "max_dd_pct": 11.06,
+      "max_leverage": 5.0,
+      "oos_pnl": 4842.91,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 3,
+          "pnl": 1226.34,
+          "wr": 66.7
+        },
+        "2026-07": {
+          "trades": 7,
+          "pnl": -3799.9,
+          "wr": 71.4
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": 6302.93,
+          "wr": 80.0
+        },
+        "2026-09": {
+          "trades": 1,
+          "pnl": 1661.25,
+          "wr": 100.0
+        }
+      },
+      "reasons": {
+        "eod": 2,
+        "tp": 12,
+        "sl": 2
+      },
+      "worst_month": -3799.9,
+      "green_months": 3,
+      "red_months": 1
+    },
+    {
+      "name": "S g1-4 rsi55-80 p08_or",
+      "exit": "p08_or",
+      "side": "short",
+      "entry": "930",
+      "trades": 82,
+      "win_rate": 65.9,
+      "profit_factor": 0.93,
+      "net_pnl": -5921.03,
+      "avg_day": -51.49,
+      "avg_trade_day": -185.03,
+      "trade_days": 32,
+      "days_ge_5k": 2,
+      "worst_day": -11864.99,
+      "best_day": 8737.52,
+      "max_dd_pct": 26.79,
+      "max_leverage": 22.42,
+      "oos_pnl": 12084.66,
+      "oos_days": 10,
+      "months": {
+        "2026-06": {
+          "trades": 24,
+          "pnl": 1602.1,
+          "wr": 62.5
+        },
+        "2026-07": {
+          "trades": 23,
+          "pnl": -9626.64,
+          "wr": 69.6
+        },
+        "2026-08": {
+          "trades": 23,
+          "pnl": -6334.94,
+          "wr": 56.5
+        },
+        "2026-09": {
+          "trades": 12,
+          "pnl": 8438.46,
+          "wr": 83.3
+        }
+      },
+      "reasons": {
+        "eod": 14,
+        "tp": 48,
+        "sl": 20
+      },
+      "worst_month": -9626.64,
+      "green_months": 2,
+      "red_months": 2
+    },
+    {
+      "name": "S g2-6 rsi55-80 p06_a10",
+      "exit": "p06_a10",
+      "side": "short",
+      "entry": "930",
+      "trades": 16,
+      "win_rate": 43.8,
+      "profit_factor": 0.64,
+      "net_pnl": -4232.37,
+      "avg_day": -36.8,
+      "avg_trade_day": -384.76,
+      "trade_days": 11,
+      "days_ge_5k": 0,
+      "worst_day": -5628.83,
+      "best_day": 2237.66,
+      "max_dd_pct": 7.73,
+      "max_leverage": 5.0,
+      "oos_pnl": -3664.69,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 3,
+          "pnl": 1386.18,
+          "wr": 66.7
+        },
+        "2026-07": {
+          "trades": 7,
+          "pnl": -4097.0,
+          "wr": 42.9
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": -723.38,
+          "wr": 40.0
+        },
+        "2026-09": {
+          "trades": 1,
+          "pnl": -798.17,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "sl": 9,
+        "tp": 7
+      },
+      "worst_month": -4097.0,
+      "green_months": 1,
+      "red_months": 3
+    },
+    {
+      "name": "S g2-6 rsi55-80 p05_a15",
+      "exit": "p05_a15",
+      "side": "short",
+      "entry": "930",
+      "trades": 16,
+      "win_rate": 56.2,
+      "profit_factor": 0.55,
+      "net_pnl": -6168.41,
+      "avg_day": -53.64,
+      "avg_trade_day": -560.76,
+      "trade_days": 11,
+      "days_ge_5k": 0,
+      "worst_day": -8031.49,
+      "best_day": 1704.02,
+      "max_dd_pct": 8.81,
+      "max_leverage": 5.0,
+      "oos_pnl": -2643.28,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 3,
+          "pnl": 671.47,
+          "wr": 66.7
+        },
+        "2026-07": {
+          "trades": 7,
+          "pnl": -5811.64,
+          "wr": 57.1
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": -41.59,
+          "wr": 60.0
+        },
+        "2026-09": {
+          "trades": 1,
+          "pnl": -986.69,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "sl": 7,
+        "tp": 9
+      },
+      "worst_month": -5811.64,
+      "green_months": 1,
+      "red_months": 3
+    },
+    {
+      "name": "S g2-6 rsi55-80 half_a12",
+      "exit": "half_a12",
+      "side": "short",
+      "entry": "930",
+      "trades": 15,
+      "win_rate": 33.3,
+      "profit_factor": 0.4,
+      "net_pnl": -8374.2,
+      "avg_day": -72.82,
+      "avg_trade_day": -761.29,
+      "trade_days": 11,
+      "days_ge_5k": 0,
+      "worst_day": -6421.86,
+      "best_day": 1677.29,
+      "max_dd_pct": 8.84,
+      "max_leverage": 5.0,
+      "oos_pnl": -3917.12,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 3,
+          "pnl": -253.22,
+          "wr": 33.3
+        },
+        "2026-07": {
+          "trades": 7,
+          "pnl": -5881.13,
+          "wr": 42.9
+        },
+        "2026-08": {
+          "trades": 4,
+          "pnl": -1396.32,
+          "wr": 25.0
+        },
+        "2026-09": {
+          "trades": 1,
+          "pnl": -843.52,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "sl": 9,
+        "tp": 6
+      },
+      "worst_month": -5881.13,
+      "green_months": 0,
+      "red_months": 4
+    },
+    {
+      "name": "S g2-6 rsi55-80 p06_t1030",
+      "exit": "p06_t1030",
+      "side": "short",
+      "entry": "930",
+      "trades": 16,
+      "win_rate": 43.8,
+      "profit_factor": 0.44,
+      "net_pnl": -8855.9,
+      "avg_day": -77.01,
+      "avg_trade_day": -805.08,
+      "trade_days": 11,
+      "days_ge_5k": 0,
+      "worst_day": -7924.65,
+      "best_day": 2206.85,
+      "max_dd_pct": 11.18,
+      "max_leverage": 5.0,
+      "oos_pnl": -4518.45,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 3,
+          "pnl": 1166.65,
+          "wr": 66.7
+        },
+        "2026-07": {
+          "trades": 7,
+          "pnl": -7566.56,
+          "wr": 42.9
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": -1493.65,
+          "wr": 40.0
+        },
+        "2026-09": {
+          "trades": 1,
+          "pnl": -962.33,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "sl": 9,
+        "tp": 6,
+        "time": 1
+      },
+      "worst_month": -7566.56,
+      "green_months": 1,
+      "red_months": 3
+    },
+    {
+      "name": "S g1.5-5 rsi55-80 p06_a10",
+      "exit": "p06_a10",
+      "side": "short",
+      "entry": "930",
+      "trades": 29,
+      "win_rate": 37.9,
+      "profit_factor": 0.54,
+      "net_pnl": -10085.14,
+      "avg_day": -87.7,
+      "avg_trade_day": -530.8,
+      "trade_days": 19,
+      "days_ge_5k": 0,
+      "worst_day": -5560.18,
+      "best_day": 2205.01,
+      "max_dd_pct": 12.29,
+      "max_leverage": 7.5,
+      "oos_pnl": -3722.07,
+      "oos_days": 3,
+      "months": {
+        "2026-06": {
+          "trades": 7,
+          "pnl": -940.98,
+          "wr": 42.9
+        },
+        "2026-07": {
+          "trades": 10,
+          "pnl": -4769.14,
+          "wr": 40.0
+        },
+        "2026-08": {
+          "trades": 9,
+          "pnl": -3347.75,
+          "wr": 33.3
+        },
+        "2026-09": {
+          "trades": 3,
+          "pnl": -1027.27,
+          "wr": 33.3
+        }
+      },
+      "reasons": {
+        "tp": 11,
+        "sl": 18
+      },
+      "worst_month": -4769.14,
+      "green_months": 0,
+      "red_months": 4
+    }
+  ],
+  "orb": [
+    {
+      "name": "ORB935 down0.8-4 r15_or",
+      "exit": "r15_or",
+      "side": "long",
+      "entry": "935",
+      "trades": 42,
+      "win_rate": 45.2,
+      "profit_factor": 0.64,
+      "net_pnl": -22924.78,
+      "avg_day": -199.35,
+      "avg_trade_day": -996.73,
+      "trade_days": 23,
+      "days_ge_5k": 1,
+      "worst_day": -17571.88,
+      "best_day": 5059.65,
+      "max_dd_pct": 28.08,
+      "max_leverage": 24.79,
+      "oos_pnl": 213.61,
+      "oos_days": 10,
+      "months": {
+        "2026-06": {
+          "trades": 12,
+          "pnl": -14731.97,
+          "wr": 33.3
+        },
+        "2026-07": {
+          "trades": 19,
+          "pnl": -8406.41,
+          "wr": 47.4
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": 1069.79,
+          "wr": 60.0
+        },
+        "2026-09": {
+          "trades": 6,
+          "pnl": -856.17,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "eod": 20,
+        "tp": 11,
+        "sl": 11
+      },
+      "worst_month": -14731.97,
+      "green_months": 1,
+      "red_months": 3
+    },
+    {
+      "name": "ORB935 down0.8-4 p08_a12",
+      "exit": "p08_a12",
+      "side": "long",
+      "entry": "935",
+      "trades": 42,
+      "win_rate": 23.8,
+      "profit_factor": 0.44,
+      "net_pnl": -16880.95,
+      "avg_day": -146.79,
+      "avg_trade_day": -733.95,
+      "trade_days": 23,
+      "days_ge_5k": 0,
+      "worst_day": -10878.6,
+      "best_day": 2622.48,
+      "max_dd_pct": 19.22,
+      "max_leverage": 24.79,
+      "oos_pnl": 1057.23,
+      "oos_days": 10,
+      "months": {
+        "2026-06": {
+          "trades": 12,
+          "pnl": -10183.01,
+          "wr": 8.3
+        },
+        "2026-07": {
+          "trades": 19,
+          "pnl": -7755.17,
+          "wr": 21.1
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": 301.06,
+          "wr": 40.0
+        },
+        "2026-09": {
+          "trades": 6,
+          "pnl": 756.17,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "sl": 32,
+        "tp": 10
+      },
+      "worst_month": -10183.01,
+      "green_months": 2,
+      "red_months": 2
+    },
+    {
+      "name": "ORB935 down0.8-4 p08_or",
+      "exit": "p08_or",
+      "side": "long",
+      "entry": "935",
+      "trades": 42,
+      "win_rate": 52.4,
+      "profit_factor": 0.44,
+      "net_pnl": -32096.77,
+      "avg_day": -279.1,
+      "avg_trade_day": -1395.51,
+      "trade_days": 23,
+      "days_ge_5k": 0,
+      "worst_day": -9173.25,
+      "best_day": 2565.13,
+      "max_dd_pct": 32.1,
+      "max_leverage": 24.79,
+      "oos_pnl": -4157.65,
+      "oos_days": 10,
+      "months": {
+        "2026-06": {
+          "trades": 12,
+          "pnl": -10191.2,
+          "wr": 58.3
+        },
+        "2026-07": {
+          "trades": 19,
+          "pnl": -17747.93,
+          "wr": 47.4
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": -1322.78,
+          "wr": 60.0
+        },
+        "2026-09": {
+          "trades": 6,
+          "pnl": -2834.86,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "eod": 13,
+        "tp": 18,
+        "sl": 11
+      },
+      "worst_month": -17747.93,
+      "green_months": 0,
+      "red_months": 4
+    },
+    {
+      "name": "ORB935 down0.8-4 p10_a15",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "935",
+      "trades": 42,
+      "win_rate": 26.2,
+      "profit_factor": 0.57,
+      "net_pnl": -14779.36,
+      "avg_day": -128.52,
+      "avg_trade_day": -642.58,
+      "trade_days": 23,
+      "days_ge_5k": 0,
+      "worst_day": -12607.47,
+      "best_day": 3500.47,
+      "max_dd_pct": 18.72,
+      "max_leverage": 24.79,
+      "oos_pnl": 2241.6,
+      "oos_days": 10,
+      "months": {
+        "2026-06": {
+          "trades": 12,
+          "pnl": -11580.26,
+          "wr": 8.3
+        },
+        "2026-07": {
+          "trades": 19,
+          "pnl": -5440.72,
+          "wr": 26.3
+        },
+        "2026-08": {
+          "trades": 5,
+          "pnl": 795.71,
+          "wr": 40.0
+        },
+        "2026-09": {
+          "trades": 6,
+          "pnl": 1445.88,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "sl": 31,
+        "tp": 11
+      },
+      "worst_month": -11580.26,
+      "green_months": 2,
+      "red_months": 2
+    },
+    {
+      "name": "ORB935 up0.4-2 r15_or",
+      "exit": "r15_or",
+      "side": "long",
+      "entry": "935",
+      "trades": 95,
+      "win_rate": 54.7,
+      "profit_factor": 1.01,
+      "net_pnl": 790.36,
+      "avg_day": 6.87,
+      "avg_trade_day": 17.96,
+      "trade_days": 44,
+      "days_ge_5k": 11,
+      "worst_day": -15134.6,
+      "best_day": 12794.07,
+      "max_dd_pct": 24.07,
+      "max_leverage": 17.05,
+      "oos_pnl": -23826.17,
+      "oos_days": 12,
+      "months": {
+        "2026-06": {
+          "trades": 28,
+          "pnl": 373.1,
+          "wr": 53.6
+        },
+        "2026-07": {
+          "trades": 33,
+          "pnl": 17244.73,
+          "wr": 60.6
+        },
+        "2026-08": {
+          "trades": 29,
+          "pnl": -2196.89,
+          "wr": 58.6
+        },
+        "2026-09": {
+          "trades": 5,
+          "pnl": -14630.59,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "eod": 44,
+        "sl": 30,
+        "tp": 21
+      },
+      "worst_month": -14630.59,
+      "green_months": 2,
+      "red_months": 2
+    },
+    {
+      "name": "ORB935 up0.4-2 p08_a12",
+      "exit": "p08_a12",
+      "side": "long",
+      "entry": "935",
+      "trades": 95,
+      "win_rate": 33.7,
+      "profit_factor": 0.81,
+      "net_pnl": -11079.23,
+      "avg_day": -96.34,
+      "avg_trade_day": -251.8,
+      "trade_days": 44,
+      "days_ge_5k": 0,
+      "worst_day": -3718.94,
+      "best_day": 2894.86,
+      "max_dd_pct": 15.3,
+      "max_leverage": 16.38,
+      "oos_pnl": -5466.37,
+      "oos_days": 12,
+      "months": {
+        "2026-06": {
+          "trades": 28,
+          "pnl": -15302.04,
+          "wr": 17.9
+        },
+        "2026-07": {
+          "trades": 33,
+          "pnl": 11488.05,
+          "wr": 54.5
+        },
+        "2026-08": {
+          "trades": 29,
+          "pnl": -2947.83,
+          "wr": 31.0
+        },
+        "2026-09": {
+          "trades": 5,
+          "pnl": -4317.43,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "sl": 63,
+        "tp": 32
+      },
+      "worst_month": -15302.04,
+      "green_months": 1,
+      "red_months": 3
+    },
+    {
+      "name": "ORB935 up0.4-2 p08_or",
+      "exit": "p08_or",
+      "side": "long",
+      "entry": "935",
+      "trades": 95,
+      "win_rate": 62.1,
+      "profit_factor": 0.79,
+      "net_pnl": -21466.39,
+      "avg_day": -186.66,
+      "avg_trade_day": -487.87,
+      "trade_days": 44,
+      "days_ge_5k": 1,
+      "worst_day": -14139.73,
+      "best_day": 5214.2,
+      "max_dd_pct": 25.11,
+      "max_leverage": 16.31,
+      "oos_pnl": -15606.82,
+      "oos_days": 12,
+      "months": {
+        "2026-06": {
+          "trades": 28,
+          "pnl": -14138.65,
+          "wr": 60.7
+        },
+        "2026-07": {
+          "trades": 33,
+          "pnl": 8009.22,
+          "wr": 72.7
+        },
+        "2026-08": {
+          "trades": 29,
+          "pnl": -3812.34,
+          "wr": 62.1
+        },
+        "2026-09": {
+          "trades": 5,
+          "pnl": -11524.63,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "tp": 55,
+        "eod": 14,
+        "sl": 26
+      },
+      "worst_month": -14138.65,
+      "green_months": 1,
+      "red_months": 3
+    },
+    {
+      "name": "ORB935 up0.4-2 p10_a15",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "935",
+      "trades": 95,
+      "win_rate": 30.5,
+      "profit_factor": 0.75,
+      "net_pnl": -17316.45,
+      "avg_day": -150.58,
+      "avg_trade_day": -393.56,
+      "trade_days": 44,
+      "days_ge_5k": 1,
+      "worst_day": -4529.65,
+      "best_day": 5598.02,
+      "max_dd_pct": 17.32,
+      "max_leverage": 16.41,
+      "oos_pnl": -9003.79,
+      "oos_days": 12,
+      "months": {
+        "2026-06": {
+          "trades": 28,
+          "pnl": -10796.43,
+          "wr": 25.0
+        },
+        "2026-07": {
+          "trades": 33,
+          "pnl": 5512.02,
+          "wr": 42.4
+        },
+        "2026-08": {
+          "trades": 29,
+          "pnl": -7460.6,
+          "wr": 27.6
+        },
+        "2026-09": {
+          "trades": 5,
+          "pnl": -4571.45,
+          "wr": 0.0
+        }
+      },
+      "reasons": {
+        "sl": 66,
+        "tp": 26,
+        "eod": 3
+      },
+      "worst_month": -10796.43,
+      "green_months": 1,
+      "red_months": 3
+    }
+  ],
+  "size_sweep": [
+    {
+      "name": "SIZE live size, all names",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 51,
+      "win_rate": 47.1,
+      "profit_factor": 1.56,
+      "net_pnl": 19243.39,
+      "avg_day": 167.33,
+      "avg_trade_day": 916.35,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -5086.31,
+      "best_day": 4628.13,
+      "max_dd_pct": 4.98,
+      "max_leverage": 17.48,
+      "oos_pnl": 3277.64,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 11,
+          "pnl": 2072.45,
+          "wr": 45.5
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 9265.18,
+          "wr": 50.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 6739.42,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 14,
+          "pnl": 1166.33,
+          "wr": 35.7
+        }
+      },
+      "reasons": {
+        "tp": 23,
+        "sl": 26,
+        "eod": 2
+      },
+      "worst_month": 1166.33,
+      "green_months": 4,
+      "red_months": 0
+    },
+    {
+      "name": "SIZE top 2, 5x cap",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 34,
+      "win_rate": 52.9,
+      "profit_factor": 2.06,
+      "net_pnl": 20642.35,
+      "avg_day": 179.5,
+      "avg_trade_day": 982.97,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -3073.04,
+      "best_day": 4592.23,
+      "max_dd_pct": 4.2,
+      "max_leverage": 5.0,
+      "oos_pnl": 6449.95,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 6,
+          "pnl": 2521.94,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 14,
+          "pnl": 7078.22,
+          "wr": 50.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 6663.65,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 8,
+          "pnl": 4378.53,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 17,
+        "sl": 15,
+        "eod": 2
+      },
+      "worst_month": 2521.94,
+      "green_months": 4,
+      "red_months": 0
+    },
+    {
+      "name": "SIZE top 1, full 5x",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 21,
+      "win_rate": 57.1,
+      "profit_factor": 2.4,
+      "net_pnl": 31944.03,
+      "avg_day": 277.77,
+      "avg_trade_day": 1521.14,
+      "trade_days": 21,
+      "days_ge_5k": 2,
+      "worst_day": -4029.49,
+      "best_day": 5461.89,
+      "max_dd_pct": 5.03,
+      "max_leverage": 5.0,
+      "oos_pnl": 14161.3,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 4,
+          "pnl": 3380.45,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 8,
+          "pnl": 9664.02,
+          "wr": 50.0
+        },
+        "2026-08": {
+          "trades": 3,
+          "pnl": 13069.73,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 6,
+          "pnl": 5829.84,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 11,
+        "sl": 8,
+        "eod": 2
+      },
+      "worst_month": 3380.45,
+      "green_months": 4,
+      "red_months": 0
+    },
+    {
+      "name": "SIZE top 3, 5x cap",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 42,
+      "win_rate": 52.4,
+      "profit_factor": 2.04,
+      "net_pnl": 16547.64,
+      "avg_day": 143.89,
+      "avg_trade_day": 787.98,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -2874.07,
+      "best_day": 4339.29,
+      "max_dd_pct": 2.93,
+      "max_leverage": 5.0,
+      "oos_pnl": 5142.34,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 8,
+          "pnl": 1997.57,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 18,
+          "pnl": 6334.27,
+          "wr": 50.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 4451.33,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 10,
+          "pnl": 3764.48,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 21,
+        "sl": 19,
+        "eod": 2
+      },
+      "worst_month": 1997.57,
+      "green_months": 4,
+      "red_months": 0
+    },
+    {
+      "name": "SIZE all names, each 25% BP",
+      "exit": "p10_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 49,
+      "win_rate": 49.0,
+      "profit_factor": 1.93,
+      "net_pnl": 12503.13,
+      "avg_day": 108.72,
+      "avg_trade_day": 595.39,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -1500.68,
+      "best_day": 2192.72,
+      "max_dd_pct": 2.17,
+      "max_leverage": 5.0,
+      "oos_pnl": 3214.65,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 10,
+          "pnl": 2489.66,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 4606.09,
+          "wr": 50.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 3188.89,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 13,
+          "pnl": 2218.49,
+          "wr": 38.5
+        }
+      },
+      "reasons": {
+        "tp": 23,
+        "sl": 24,
+        "eod": 2
+      },
+      "worst_month": 2218.49,
+      "green_months": 4,
+      "red_months": 0
+    },
+    {
+      "name": "LIVE SIZE live size, all names",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 51,
+      "win_rate": 60.8,
+      "profit_factor": 1.11,
+      "net_pnl": 2588.78,
+      "avg_day": 22.51,
+      "avg_trade_day": 123.28,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -6281.14,
+      "best_day": 2475.54,
+      "max_dd_pct": 6.23,
+      "max_leverage": 17.46,
+      "oos_pnl": -3382.3,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 11,
+          "pnl": -4046.14,
+          "wr": 45.5
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 8271.6,
+          "wr": 80.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1774.81,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 14,
+          "pnl": -3411.51,
+          "wr": 42.9
+        }
+      },
+      "reasons": {
+        "tp": 31,
+        "sl": 20
+      },
+      "worst_month": -4046.14,
+      "green_months": 2,
+      "red_months": 2
+    },
+    {
+      "name": "LIVE SIZE top 2, 5x cap",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 34,
+      "win_rate": 70.6,
+      "profit_factor": 1.83,
+      "net_pnl": 9619.22,
+      "avg_day": 83.65,
+      "avg_trade_day": 458.06,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -2650.94,
+      "best_day": 1825.61,
+      "max_dd_pct": 2.63,
+      "max_leverage": 5.0,
+      "oos_pnl": -1349.56,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 6,
+          "pnl": -1199.69,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 14,
+          "pnl": 10342.84,
+          "wr": 92.9
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1857.23,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 8,
+          "pnl": -1381.18,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 24,
+        "sl": 10
+      },
+      "worst_month": -1381.18,
+      "green_months": 2,
+      "red_months": 2
+    },
+    {
+      "name": "LIVE SIZE top 1, full 5x",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 21,
+      "win_rate": 76.2,
+      "profit_factor": 2.16,
+      "net_pnl": 15590.63,
+      "avg_day": 135.57,
+      "avg_trade_day": 742.41,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -3528.71,
+      "best_day": 2008.67,
+      "max_dd_pct": 4.19,
+      "max_leverage": 5.0,
+      "oos_pnl": 1044.24,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 4,
+          "pnl": -1516.69,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 8,
+          "pnl": 14160.17,
+          "wr": 100.0
+        },
+        "2026-08": {
+          "trades": 3,
+          "pnl": 5820.97,
+          "wr": 100.0
+        },
+        "2026-09": {
+          "trades": 6,
+          "pnl": -2873.81,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 16,
+        "sl": 5
+      },
+      "worst_month": -2873.81,
+      "green_months": 2,
+      "red_months": 2
+    },
+    {
+      "name": "LIVE SIZE top 3, 5x cap",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 42,
+      "win_rate": 66.7,
+      "profit_factor": 1.55,
+      "net_pnl": 5788.82,
+      "avg_day": 50.34,
+      "avg_trade_day": 275.66,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -2852.94,
+      "best_day": 1755.98,
+      "max_dd_pct": 2.84,
+      "max_leverage": 5.0,
+      "oos_pnl": -910.17,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 8,
+          "pnl": -1321.67,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 18,
+          "pnl": 6824.18,
+          "wr": 83.3
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 1217.61,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 10,
+          "pnl": -931.29,
+          "wr": 50.0
+        }
+      },
+      "reasons": {
+        "tp": 28,
+        "sl": 14
+      },
+      "worst_month": -1321.67,
+      "green_months": 2,
+      "red_months": 2
+    },
+    {
+      "name": "LIVE SIZE all names, each 25% BP",
+      "exit": "p05_a15",
+      "side": "long",
+      "entry": "930",
+      "trades": 49,
+      "win_rate": 63.3,
+      "profit_factor": 1.35,
+      "net_pnl": 3354.76,
+      "avg_day": 29.17,
+      "avg_trade_day": 159.75,
+      "trade_days": 21,
+      "days_ge_5k": 0,
+      "worst_day": -1731.57,
+      "best_day": 1270.9,
+      "max_dd_pct": 1.72,
+      "max_leverage": 5.0,
+      "oos_pnl": -1115.49,
+      "oos_days": 8,
+      "months": {
+        "2026-06": {
+          "trades": 10,
+          "pnl": -588.49,
+          "wr": 50.0
+        },
+        "2026-07": {
+          "trades": 20,
+          "pnl": 4185.93,
+          "wr": 80.0
+        },
+        "2026-08": {
+          "trades": 6,
+          "pnl": 890.4,
+          "wr": 66.7
+        },
+        "2026-09": {
+          "trades": 13,
+          "pnl": -1133.08,
+          "wr": 46.2
+        }
+      },
+      "reasons": {
+        "tp": 31,
+        "sl": 18
+      },
+      "worst_month": -1133.08,
+      "green_months": 2,
+      "red_months": 2
+    }
+  ],
+  "anchor": "L g2-6 rsi45-70 bounce p10_a15"
+}

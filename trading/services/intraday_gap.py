@@ -31,15 +31,15 @@ GAP_MIN = 0.02
 GAP_MAX = 0.06
 RSI_LO = 45.0
 RSI_HI = 70.0
-SL_ATR = 1.5
+SL_ATR = 2.0
 RISK_PCT = 8.0
-MAX_POS = 0  # 0 = take every name that passes
-TOP_K = 0
-MAX_DEPLOY = 0.50
+MAX_POS = 1
+TOP_K = 1  # largest gap only — extra names took the book past 5×
+MAX_DEPLOY = 1.0
 MIN_PRICE = 60.0
 FORCE_EXIT = time(15, 15)
 # Small bounce target — 1% rarely fills on real overnight gaps.
-TP_KIND = "pct0.5"
+TP_KIND = "pct1.0"
 ENTRY_HHMM = "09:30"
 # Last regular 5m close before the 15:15 auction (the 667.50 DLF print, not 691).
 PRIOR_CLOSE_HHMM = "15:10"
@@ -79,13 +79,13 @@ STRATEGY = {
         "Price > ₹60",
         "Wait for the 9:30 open",
         "9:30 open must be ≥ 9:15 close (bounce confirmation — skip if still falling)",
-        "Take every name that passes (no top-4 cap)",
+        "Trade only the largest gap that day",
     ],
     "exit": [
-        "Target: 0.5% above the 9:30 entry",
-        "Stop: 1.5 × 5-minute ATR below the 9:30 entry",
+        "Target: 1% above the 9:30 entry",
+        "Stop: 2 × 5-minute ATR below the 9:30 entry",
         "Flatten 15:15 IST if not filled",
-        "8% equity risk, 5× MIS cap, 50% of buying power per name",
+        "One name uses the full 5× buying power (8% equity risk, capped at 5×)",
     ],
 }
 
@@ -1112,20 +1112,6 @@ def load_gap_page() -> dict[str, Any]:
         key = (row.get("entry"), row.get("tp"))
         if key in wanted:
             compare.append({**row, "label": wanted[key], "live": False})
-    pro_path = Path(settings.BASE_DIR) / "data" / "intraday_gap_pro_hunt.json"
-    if pro_path.exists():
-        try:
-            pro = json.loads(pro_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            pro = {}
-        for row in pro.get("rows") or []:
-            if row.get("label") == "T bounce 1.0% size-up":
-                compare.insert(0, {
-                    **row,
-                    "label": "Live · 9:30 bounce + 1%",
-                    "live": True,
-                })
-                break
     compare.sort(key=lambda r: 0 if r.get("live") else 1)
     return {
         "hunt": hunt,

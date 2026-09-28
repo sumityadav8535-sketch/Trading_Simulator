@@ -1,0 +1,232 @@
+{% extends "trading/base.html" %}
+{% block title %}Swing Trading — Trading Simulator{% endblock %}
+{% block extra_head %}
+<style>
+  .sig-row { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; padding:0.7rem 0.15rem; border-bottom:1px solid #f1f5f9; }
+  .sig-row:last-child { border-bottom:0; }
+  .period-btn { font-size:0.8rem; font-weight:600; padding:0.32rem 0.8rem; border-radius:999px; border:1px solid #dbe3ee; background:#fff; color:#334155; cursor:pointer; }
+  .period-btn.on { background:#2563eb; border-color:#2563eb; color:#fff; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="flex flex-wrap justify-between items-start gap-3 mb-6">
+  <div>
+    <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400 mb-1">Nifty 200 · 3–15 day swing</p>
+    <h2 class="page-title">Swing <span class="text-blue-600">Trading</span></h2>
+    <p class="page-sub">Beat Nifty over 3 months, then the top 3 names that day. Buy next open. Stop under the pullback. Take 1.5R, trail 2.5 ATR, or time-stop at 15 days.</p>
+  </div>
+  <a href="{% url 'stage_analysis_v2:backtest' %}?strategy=rs_pullback" class="btn btn-secondary text-xs">Full backtest →</a>
+</div>
+
+<div class="grid md:grid-cols-2 gap-5 mb-8">
+  <section class="card p-5">
+    <div class="flex items-start justify-between gap-3 mb-2">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-700">{{ board.today_title|default:"Today" }}</p>
+        <h3 class="text-xl font-bold text-slate-900">{{ board.today_label|default:"" }}</h3>
+      </div>
+      <span class="badge badge-green">{{ board.today|length }}</span>
+    </div>
+    <p class="text-xs text-slate-500 mb-3">Top {{ params.max_new }} ranked leaders this session. Numbers below are the live plan: entry, stop, 1.5R target.</p>
+    {% if board.today %}
+      {% for p in board.today %}
+        {% include "trading/partials/swing_pick_card.html" %}
+      {% endfor %}
+    {% else %}
+      <p class="text-sm text-slate-500 py-6 text-center">No signal today.</p>
+    {% endif %}
+  </section>
+
+  <section class="card p-5">
+    <div class="flex items-start justify-between gap-3 mb-2">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">{{ board.yesterday_title|default:"Yesterday" }}</p>
+        <h3 class="text-xl font-bold text-slate-900">{{ board.yesterday_label|default:"" }}</h3>
+      </div>
+      <span class="badge badge-slate">{{ board.yesterday|length }}</span>
+    </div>
+    <p class="text-xs text-slate-500 mb-3">Top ranked leaders on the prior session, with the same entry / stop / target.</p>
+    {% if board.yesterday %}
+      {% for p in board.yesterday %}
+        {% include "trading/partials/swing_pick_card.html" %}
+      {% endfor %}
+    {% else %}
+      <p class="text-sm text-slate-500 py-6 text-center">No signal yesterday.</p>
+    {% endif %}
+  </section>
+</div>
+
+<section class="card p-5 mb-8">
+  <div class="flex flex-wrap items-end justify-between gap-3 mb-3">
+    <div>
+      <h3 class="text-lg font-bold text-slate-900">Signal history</h3>
+      <p class="text-xs text-slate-500 mt-0.5">Bars = ranked names the book would try that day (max {{ params.max_new }}). Click a bar to list them.</p>
+    </div>
+    <div class="flex gap-2">
+      <button type="button" class="period-btn on" data-period="6m" id="btn-6m">6 months</button>
+      <button type="button" class="period-btn" data-period="1y" id="btn-1y">1 year</button>
+    </div>
+  </div>
+  <div id="swing-sig-chart" class="w-full" style="height:340px"></div>
+  <div id="swing-day-panel" class="hidden mt-4 pt-4 border-t border-slate-100">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold text-slate-900" id="swing-day-title"></h4>
+      <button type="button" id="swing-day-close" class="text-xs text-slate-500 hover:text-slate-800">Close</button>
+    </div>
+    <div id="swing-day-list" class="text-sm"></div>
+  </div>
+</section>
+
+{% if open_book %}
+<section class="card p-5 mb-8">
+  <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 mb-3">Open now · {{ open_book|length }} of {{ params.max_open }}</p>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    {% for p in open_book %}
+    <div class="rounded-xl border border-slate-200 p-3">
+      <p class="font-bold text-slate-900">{{ p.symbol }}</p>
+      <p class="text-xs text-slate-500 mt-0.5">{{ p.hold }}d held · last ₹{{ p.last_px }}</p>
+      <div class="grid grid-cols-3 gap-1 mt-2 text-[11px]">
+        <div>
+          <p class="uppercase tracking-wide text-slate-400 font-semibold">Entry</p>
+          <p class="font-semibold text-slate-800">₹{{ p.entry_px }}</p>
+        </div>
+        <div>
+          <p class="uppercase tracking-wide text-red-500 font-semibold">Stop</p>
+          <p class="font-semibold text-red-600">₹{{ p.stop }}</p>
+        </div>
+        <div>
+          <p class="uppercase tracking-wide text-emerald-600 font-semibold">Target</p>
+          <p class="font-semibold text-emerald-700">₹{{ p.target }}</p>
+        </div>
+      </div>
+      <p class="text-sm font-semibold mt-2 {% if p.pnl_pct >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">
+        {% if p.pnl_pct > 0 %}+{% endif %}{{ p.pnl_pct }}%
+      </p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<details class="card p-5 mb-6">
+  <summary class="cursor-pointer font-semibold text-slate-800">Run a backtest</summary>
+  <form method="get" action="{% url 'short_swing' %}" class="mt-4">
+    <input type="hidden" name="pack" value="{{ form_pack }}">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 items-end">
+      <label class="text-xs font-semibold text-slate-500 uppercase">Start
+        <input type="date" name="start" value="{{ form_start }}" class="input w-full mt-1">
+      </label>
+      <label class="text-xs font-semibold text-slate-500 uppercase">End
+        <input type="date" name="end" value="{{ form_end }}" class="input w-full mt-1">
+      </label>
+      <label class="text-xs font-semibold text-slate-500 uppercase">Capital ₹
+        <input type="number" name="capital" value="{{ form_capital }}" min="10000" step="10000" class="input w-full mt-1">
+      </label>
+      <button type="submit" name="run" value="1" class="btn btn-primary w-full">Run</button>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-3">
+      {% for p in presets %}
+      <a class="period-btn" href="{% url 'short_swing' %}?pack={{ form_pack|urlencode }}&amp;start={{ p.start }}&amp;end={{ p.end }}&amp;run=1&amp;capital={{ form_capital }}">{{ p.label }}</a>
+      {% endfor %}
+    </div>
+  </form>
+</details>
+
+{% if custom_error %}
+<div class="flash mb-5 border-red-200 bg-red-50 text-red-800">{{ custom_error }}</div>
+{% endif %}
+
+{% if custom and not custom_error %}
+<section class="mb-8">
+  <h3 class="text-lg font-bold text-slate-900 mb-3">Backtest {{ custom.title }}</h3>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+    <div class="stat-card">
+      <p class="label">Return</p>
+      <p class="value {% if custom.total_return_pct >= 100 %}text-emerald-600{% elif custom.total_return_pct < 0 %}text-red-600{% endif %}">{{ custom.total_return_pct }}%</p>
+    </div>
+    <div class="stat-card"><p class="label">CAGR</p><p class="value">{{ custom.cagr_pct }}%</p></div>
+    <div class="stat-card"><p class="label">Max DD</p><p class="value text-red-500">{{ custom.max_drawdown_pct }}%</p></div>
+    <div class="stat-card"><p class="label">Nifty 50</p><p class="value">{% if custom.benchmark_pct != None %}{{ custom.benchmark_pct }}%{% else %}—{% endif %}</p></div>
+    <div class="stat-card"><p class="label">Win rate</p><p class="value">{{ custom.win_rate }}%</p></div>
+  </div>
+  {% if charts.custom_equity %}
+  <div class="card p-4 mb-4"><div id="swing-custom-equity" class="w-full" style="height:320px"></div></div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if windows %}
+<section class="mb-6">
+  <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500 mb-3">Saved results</h3>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+    {% for w in windows %}
+    <div class="card p-4">
+      <p class="text-xs text-slate-500">{{ w.title }}</p>
+      <p class="text-2xl font-bold {% if w.total_return_pct >= 100 %}text-emerald-700{% elif w.total_return_pct < 0 %}text-red-600{% endif %}">{{ w.total_return_pct }}%</p>
+      <p class="text-[11px] text-slate-400 mt-1">Nifty {{ w.benchmark_pct }}% · {{ w.avg_hold }}d hold</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{{ board.by_date|json_script:"swing-by-date" }}
+{% if charts.signals_6m %}
+<script>
+  const swing6m = {{ charts.signals_6m|safe }};
+  const swing1y = {{ charts.signals_1y|safe }};
+  const byDate = JSON.parse(document.getElementById("swing-by-date").textContent || "{}");
+  let showing = "6m";
+  function draw() {
+    const fig = showing === "1y" ? swing1y : swing6m;
+    Plotly.newPlot("swing-sig-chart", fig.data, fig.layout, {responsive: true, displayModeBar: false});
+    const el = document.getElementById("swing-sig-chart");
+    el.on("plotly_click", (ev) => {
+      const pt = ev.points && ev.points[0];
+      if (!pt) return;
+      const day = pt.x;
+      const rows = byDate[day] || [];
+      document.getElementById("swing-day-title").textContent = day + " · " + rows.length + " signal" + (rows.length === 1 ? "" : "s");
+      document.getElementById("swing-day-list").innerHTML = rows.length
+        ? rows.map(r => {
+            const inr = (n) => n == null ? "—" : "₹" + Number(n).toLocaleString("en-IN", {maximumFractionDigits: 2});
+            const entryNote = r.entry_known ? ("Open " + (r.entry_date || "")) : "Next open (est.)";
+            return (
+              '<div class="rounded-xl border border-slate-200 p-3 mb-2 last:mb-0">' +
+                '<div class="flex items-start justify-between gap-3 mb-2">' +
+                  '<div><p class="font-bold text-slate-900">' + r.symbol + '</p>' +
+                  '<p class="text-xs text-slate-500">Buy ' + entryNote + '</p></div>' +
+                  '<span class="text-sm font-semibold">3m ' + (r.ret63_pct ?? "—") + '%</span>' +
+                '</div>' +
+                '<div class="grid grid-cols-3 gap-2 text-sm">' +
+                  '<div class="rounded-lg bg-slate-50 border border-slate-100 p-2"><p class="text-[10px] uppercase font-semibold text-slate-500">Entry</p><p class="font-bold">' + inr(r.entry ?? r.close) + '</p></div>' +
+                  '<div class="rounded-lg bg-red-50 border border-red-100 p-2"><p class="text-[10px] uppercase font-semibold text-red-700">Stop</p><p class="font-bold text-red-600">' + inr(r.stop) + '</p></div>' +
+                  '<div class="rounded-lg bg-emerald-50 border border-emerald-100 p-2"><p class="text-[10px] uppercase font-semibold text-emerald-700">Target</p><p class="font-bold text-emerald-700">' + inr(r.target) + '</p></div>' +
+                '</div>' +
+              '</div>'
+            );
+          }).join("")
+        : '<p class="text-sm text-slate-500">No names stored for this day.</p>';
+      document.getElementById("swing-day-panel").classList.remove("hidden");
+    });
+  }
+  draw();
+  document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      showing = btn.getAttribute("data-period");
+      document.querySelectorAll(".period-btn[data-period]").forEach(b => b.classList.toggle("on", b === btn));
+      draw();
+    });
+  });
+  document.getElementById("swing-day-close").addEventListener("click", () => {
+    document.getElementById("swing-day-panel").classList.add("hidden");
+  });
+</script>
+{% endif %}
+{% if charts.custom_equity %}
+<script>
+  const swingCustomEq = {{ charts.custom_equity|safe }};
+  Plotly.newPlot("swing-custom-equity", swingCustomEq.data, swingCustomEq.layout, {responsive: true, displayModeBar: false});
+</script>
+{% endif %}
+{% endblock %}

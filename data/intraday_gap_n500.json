@@ -1,0 +1,476 @@
+{
+  "universe_db": 501,
+  "with_5m": 500,
+  "loaded": 500,
+  "still_missing": [
+    "DUMMYHEG"
+  ],
+  "common_start": "2026-07-06",
+  "common_end": "2026-09-25",
+  "common_sessions": 59,
+  "nifty500": {
+    "name": "Nifty 500",
+    "trades": 30,
+    "win_rate": 40.0,
+    "profit_factor": 0.82,
+    "net_pnl": -9186.1,
+    "avg_trade_day": -306.2,
+    "days_ge_5k": 0,
+    "worst_day": -4446.76,
+    "best_day": 4190.31,
+    "outside_nifty200": 16,
+    "sessions": 59,
+    "months": {
+      "2026-07": {
+        "trades": 11,
+        "pnl": -11724.37,
+        "wins": 3,
+        "wr": 27.3
+      },
+      "2026-08": {
+        "trades": 9,
+        "pnl": -225.68,
+        "wins": 4,
+        "wr": 44.4
+      },
+      "2026-09": {
+        "trades": 10,
+        "pnl": 2763.95,
+        "wins": 5,
+        "wr": 50.0
+      }
+    }
+  },
+  "nifty200": {
+    "name": "Nifty 200",
+    "trades": 16,
+    "win_rate": 68.8,
+    "profit_factor": 4.05,
+    "net_pnl": 36471.14,
+    "avg_trade_day": 2279.45,
+    "days_ge_5k": 2,
+    "worst_day": -3683.34,
+    "best_day": 5485.12,
+    "outside_nifty200": 0,
+    "sessions": 59,
+    "months": {
+      "2026-07": {
+        "trades": 7,
+        "pnl": 3411.37,
+        "wins": 3,
+        "wr": 42.9
+      },
+      "2026-08": {
+        "trades": 3,
+        "pnl": 11925.61,
+        "wins": 3,
+        "wr": 100.0
+      },
+      "2026-09": {
+        "trades": 6,
+        "pnl": 21134.16,
+        "wins": 5,
+        "wr": 83.3
+      }
+    }
+  },
+  "engine_500": {
+    "trades": 30,
+    "win_rate": 40.0,
+    "profit_factor": 0.82,
+    "net_pnl": -9186.1,
+    "max_dd_pct": 18.68,
+    "oos_pnl": 2763.95,
+    "worst_day": -4446.76,
+    "days_ge_5k": 0,
+    "months": {
+      "2026-07": {
+        "trades": 11,
+        "pnl": -11724.37,
+        "wr": 27.3
+      },
+      "2026-08": {
+        "trades": 9,
+        "pnl": -225.68,
+        "wr": 44.4
+      },
+      "2026-09": {
+        "trades": 10,
+        "pnl": 2763.95,
+        "wr": 50.0
+      }
+    }
+  },
+  "different_picks": [
+    {
+      "session": "2026-09-11",
+      "n500": "HFCL",
+      "n500_pnl": 3842.51,
+      "n200": "HINDZINC",
+      "n200_pnl": 4919.12
+    },
+    {
+      "session": "2026-09-25",
+      "n500": "HOMEFIRST",
+      "n500_pnl": -2771.81,
+      "n200": "PHOENIXLTD",
+      "n200_pnl": 5485.12
+    }
+  ],
+  "only_on_500": [
+    {
+      "session": "2026-07-17",
+      "symbol": "HFCL",
+      "gap": -2.64,
+      "pnl": -4446.76,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-07-21",
+      "symbol": "TARIL",
+      "gap": -5.91,
+      "pnl": -3682.08,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-07-24",
+      "symbol": "ACUTAAS",
+      "gap": -2.79,
+      "pnl": -4111.45,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-07-27",
+      "symbol": "NIACL",
+      "gap": -3.72,
+      "pnl": -2857.56,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-03",
+      "symbol": "LATENTVIEW",
+      "gap": -5.11,
+      "pnl": -2820.37,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-07",
+      "symbol": "CHENNPETRO",
+      "gap": -4.58,
+      "pnl": -2365.2,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-10",
+      "symbol": "DELHIVERY",
+      "gap": -3.89,
+      "pnl": 3631.6,
+      "reason": "tp",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-11",
+      "symbol": "JUBLPHARMA",
+      "gap": -4.14,
+      "pnl": -4126.07,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-19",
+      "symbol": "ASTERDM",
+      "gap": -5.22,
+      "pnl": -1362.35,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-27",
+      "symbol": "THELEELA",
+      "gap": -2.13,
+      "pnl": -2716.19,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-02",
+      "symbol": "HFCL",
+      "gap": -2.68,
+      "pnl": -1609.85,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-04",
+      "symbol": "GICRE",
+      "gap": -3.58,
+      "pnl": 3622.63,
+      "reason": "tp",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-15",
+      "symbol": "AIIL",
+      "gap": -2.97,
+      "pnl": -4109.05,
+      "reason": "eod",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-22",
+      "symbol": "KAYNES",
+      "gap": -2.12,
+      "pnl": -4105.45,
+      "reason": "sl",
+      "in_nifty200": false
+    }
+  ],
+  "trades_500": [
+    {
+      "session": "2026-07-08",
+      "symbol": "HINDPETRO",
+      "gap": -3.4,
+      "pnl": 4190.31,
+      "reason": "tp",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-07-13",
+      "symbol": "BAJAJHLDNG",
+      "gap": -3.33,
+      "pnl": -2020.41,
+      "reason": "sl",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-07-14",
+      "symbol": "ASIANPAINT",
+      "gap": -2.41,
+      "pnl": -641.41,
+      "reason": "eod",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-07-17",
+      "symbol": "HFCL",
+      "gap": -2.64,
+      "pnl": -4446.76,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-07-20",
+      "symbol": "OBEROIRLTY",
+      "gap": -2.91,
+      "pnl": 4068.5,
+      "reason": "tp",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-07-21",
+      "symbol": "TARIL",
+      "gap": -5.91,
+      "pnl": -3682.08,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-07-23",
+      "symbol": "HINDPETRO",
+      "gap": -3.04,
+      "pnl": -2623.23,
+      "reason": "sl",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-07-24",
+      "symbol": "ACUTAAS",
+      "gap": -2.79,
+      "pnl": -4111.45,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-07-27",
+      "symbol": "NIACL",
+      "gap": -3.72,
+      "pnl": -2857.56,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-07-30",
+      "symbol": "PREMIERENE",
+      "gap": -3.79,
+      "pnl": -3144.84,
+      "reason": "sl",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-07-31",
+      "symbol": "MPHASIS",
+      "gap": -4.11,
+      "pnl": 3544.56,
+      "reason": "tp",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-08-03",
+      "symbol": "LATENTVIEW",
+      "gap": -5.11,
+      "pnl": -2820.37,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-06",
+      "symbol": "GVT&D",
+      "gap": -5.77,
+      "pnl": 3553.7,
+      "reason": "tp",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-08-07",
+      "symbol": "CHENNPETRO",
+      "gap": -4.58,
+      "pnl": -2365.2,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-10",
+      "symbol": "DELHIVERY",
+      "gap": -3.89,
+      "pnl": 3631.6,
+      "reason": "tp",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-11",
+      "symbol": "JUBLPHARMA",
+      "gap": -4.14,
+      "pnl": -4126.07,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-14",
+      "symbol": "NATIONALUM",
+      "gap": -5.63,
+      "pnl": 3610.09,
+      "reason": "tp",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-08-19",
+      "symbol": "ASTERDM",
+      "gap": -5.22,
+      "pnl": -1362.35,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-27",
+      "symbol": "THELEELA",
+      "gap": -2.13,
+      "pnl": -2716.19,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-08-31",
+      "symbol": "HINDZINC",
+      "gap": -3.45,
+      "pnl": 2369.11,
+      "reason": "eod",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-09-02",
+      "symbol": "HFCL",
+      "gap": -2.68,
+      "pnl": -1609.85,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-04",
+      "symbol": "GICRE",
+      "gap": -3.58,
+      "pnl": 3622.63,
+      "reason": "tp",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-08",
+      "symbol": "NAUKRI",
+      "gap": -2.41,
+      "pnl": 3768.14,
+      "reason": "tp",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-09-09",
+      "symbol": "BSE",
+      "gap": -2.71,
+      "pnl": -2174.63,
+      "reason": "sl",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-09-11",
+      "symbol": "HFCL",
+      "gap": -2.77,
+      "pnl": 3842.51,
+      "reason": "tp",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-15",
+      "symbol": "AIIL",
+      "gap": -2.97,
+      "pnl": -4109.05,
+      "reason": "eod",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-18",
+      "symbol": "TATAINVEST",
+      "gap": -3.32,
+      "pnl": 2539.28,
+      "reason": "tp",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-09-22",
+      "symbol": "KAYNES",
+      "gap": -2.12,
+      "pnl": -4105.45,
+      "reason": "sl",
+      "in_nifty200": false
+    },
+    {
+      "session": "2026-09-24",
+      "symbol": "NAUKRI",
+      "gap": -5.2,
+      "pnl": 3762.18,
+      "reason": "tp",
+      "in_nifty200": true
+    },
+    {
+      "session": "2026-09-25",
+      "symbol": "HOMEFIRST",
+      "gap": -3.45,
+      "pnl": -2771.81,
+      "reason": "sl",
+      "in_nifty200": false
+    }
+  ]
+}
