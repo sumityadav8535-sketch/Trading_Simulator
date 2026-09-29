@@ -51,14 +51,6 @@ class ChartForm(forms.Form):
     symbol = forms.ChoiceField(required=True)
 
 
-class FnoForm(forms.Form):
-    INSTRUMENT_CHOICES = [
-        ("NIFTY", "Nifty 50 Futures"),
-        ("BANKNIFTY", "Bank Nifty Futures"),
-    ]
-    instrument = forms.ChoiceField(choices=INSTRUMENT_CHOICES, initial="NIFTY")
-
-
 class IntradayForm(forms.Form):
     INTERVAL_CHOICES = [
         ("1m", "1 minute"),

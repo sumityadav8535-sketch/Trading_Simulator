@@ -91,10 +91,10 @@
 <section class="card p-6 mb-8">
   <div class="flex items-start justify-between gap-3 mb-3">
     <div>
-      <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500">F&amp;O · Gap · startup scan</h3>
+      <h3 class="text-sm font-bold uppercase tracking-wide text-slate-500">Gap Open · startup scan</h3>
       <p class="text-xs text-slate-500 mt-1">
-        Runs once when the app starts: remaining 5m bars through today, then F&amp;O Live,
-        F&amp;O Long, and Gap Open. Navigating around the app does not scan again.
+        Runs once when the app starts: remaining 5m bars through today, then Gap Open.
+        Navigating around the app does not scan again.
       </p>
     </div>
   </div>
@@ -121,13 +121,6 @@
         </div>
         <span class="text-blue-600 font-semibold text-sm">Open →</span>
       </a>
-      <a href="{% url 'fno_live' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
-        <div>
-          <p class="font-semibold text-slate-900">F&amp;O Live</p>
-          <p class="text-sm text-slate-500">Index futures signals &amp; charts</p>
-        </div>
-        <span class="text-blue-600 font-semibold text-sm">Open →</span>
-      </a>
       <a href="{% url 'short_swing' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
         <div>
           <p class="font-semibold text-slate-900">Swing Trading</p>
@@ -142,10 +135,10 @@
         </div>
         <span class="text-blue-600 font-semibold text-sm">Open →</span>
       </a>
-      <a href="{% url 'paper_trading' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
+      <a href="{% url 'intraday_gap' %}" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition">
         <div>
-          <p class="font-semibold text-slate-900">Paper Trading</p>
-          <p class="text-sm text-slate-500">Simulated positions and P&amp;L</p>
+          <p class="font-semibold text-slate-900">Gap Open</p>
+          <p class="text-sm text-slate-500">Nifty 200 gap-down intraday book</p>
         </div>
         <span class="text-blue-600 font-semibold text-sm">Open →</span>
       </a>

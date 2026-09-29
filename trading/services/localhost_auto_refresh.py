@@ -1,6 +1,6 @@
 """
 On localhost (DEBUG), fetch remaining 5m history through today and scan
-F&O Live, F&O Long, and Gap Open for today / previous session / last signal.
+Gap Open for today / previous session / last signal.
 """
 from __future__ import annotations
 
@@ -16,7 +16,6 @@ from zoneinfo import ZoneInfo
 from django.conf import settings
 from django.utils import timezone
 
-from trading.services.fno_engine import INSTRUMENTS
 from trading.services.intraday_data import get_market_status
 from trading.services.intraday_history_sync import (
     get_history_coverage,
@@ -128,74 +127,6 @@ def previous_session_date(as_of: date, known: Optional[set[date]] = None) -> dat
     return d
 
 
-def _session_dates_from_frame(df) -> list[date]:
-    if df is None or getattr(df, "empty", True):
-        return []
-    try:
-        return sorted({d for d in df.index.date})
-    except Exception:
-        return []
-
-
-def _compact_trades(trades: list[dict], instrument: Optional[str] = None) -> list[dict]:
-    out = []
-    for t in trades or []:
-        out.append({
-            "instrument": t.get("instrument") or instrument,
-            "symbol": t.get("symbol") or t.get("instrument") or instrument,
-            "side": t.get("side"),
-            "result": t.get("result"),
-            "entry_time": t.get("entry_time"),
-            "exit_time": t.get("exit_time"),
-            "pnl_inr": t.get("pnl_inr") if t.get("pnl_inr") is not None else t.get("pnl"),
-            "ml_prob": t.get("ml_prob"),
-            "gap_pct": t.get("gap_pct"),
-        })
-    return out
-
-
-def combine_fno_days(parts: list[dict], session: date, label: str) -> dict[str, Any]:
-    trades: list[dict] = []
-    bars = 0
-    messages = []
-    instruments = []
-    for raw in parts:
-        inst = raw.get("instrument")
-        if inst:
-            instruments.append(inst)
-        day_trades = _compact_trades(raw.get("trades") or [], inst)
-        for t in day_trades:
-            t["instrument"] = inst
-        trades.extend(day_trades)
-        bars += int(raw.get("bars_today") or 0)
-        if raw.get("message"):
-            messages.append(f"{inst or '?'}: {raw['message']}")
-    wins = sum(1 for t in trades if str(t.get("result") or "").upper() in ("WIN",))
-    losses = sum(1 for t in trades if str(t.get("result") or "").upper() in ("LOSS",))
-    net = round(sum(float(t.get("pnl_inr") or 0) for t in trades), 2)
-    count = len(trades)
-    if count:
-        message = f"{count} trade(s) · {wins}W / {losses}L · ₹{net:,.0f}"
-        status = "traded"
-    else:
-        message = "No strategy trades"
-        status = "flat" if bars else "no_data"
-    return {
-        "date": session.isoformat(),
-        "label": label,
-        "status": status,
-        "trade_count": count,
-        "wins": wins,
-        "losses": losses,
-        "net_pnl": net,
-        "bars": bars,
-        "instruments": instruments,
-        "trades": trades,
-        "message": message,
-        "detail": messages,
-    }
-
-
 def pick_last_signal(days: list[dict]) -> Optional[dict[str, Any]]:
     """Newest day (in the given order, newest-first) that actually traded."""
     for day in days:
@@ -230,75 +161,6 @@ def _gap_to_day(summary: dict, session: date, label: str) -> dict[str, Any]:
         "trades": trades,
         "message": summary.get("note") or summary.get("headline") or "",
         "headline": summary.get("headline"),
-    }
-
-
-def _scan_fno_side(
-    side: str,
-    today: date,
-    yesterday: date,
-    *,
-    lookback: int = LOOKBACK_SESSIONS,
-) -> dict[str, Any]:
-    from trading.services.fno_day_check import check_today_trades
-    from trading.services.fno_engine import enrich_features
-    from trading.services.fno_live import load_stored_instrument_bars
-    from trading.services.fno_long_day_check import check_today_long_trades
-
-    checker = check_today_trades if side == "short" else check_today_long_trades
-    known: set[date] = set()
-    stored: dict[str, Any] = {}
-    for key in INSTRUMENTS:
-        df = load_stored_instrument_bars(key)
-        known.update(_session_dates_from_frame(df))
-        if df is not None and not getattr(df, "empty", True):
-            stored[key] = enrich_features(df)
-        else:
-            stored[key] = df
-
-    extra = sorted(d for d in known if d < yesterday)
-    extra = extra[-max(lookback - 2, 0):]
-    extra.reverse()  # newest first after today/yesterday
-
-    def _run(session: date) -> dict:
-        parts = []
-        for key in INSTRUMENTS:
-            bars = stored.get(key)
-            if bars is None or getattr(bars, "empty", True):
-                parts.append(checker(key, session=session, force_fetch=False))
-            else:
-                parts.append(checker(key, session=session, force_fetch=False, bars=bars))
-        label = (
-            "Today" if session == today
-            else "Yesterday" if session == yesterday
-            else session.strftime("%a %d %b")
-        )
-        return combine_fno_days(parts, session, label)
-
-    today_day = _run(today)
-    yest_day = _run(yesterday)
-    other_days = []
-    last = pick_last_signal([today_day, yest_day])
-    if last is None:
-        for sess in extra:
-            day = _run(sess)
-            other_days.append(day)
-            if int(day.get("trade_count") or 0) > 0:
-                last = day
-                break
-    else:
-        # still expose the most recent extra day with a trade for "any other day"
-        for sess in extra:
-            day = _run(sess)
-            if int(day.get("trade_count") or 0) > 0:
-                other_days.append(day)
-                break
-
-    return {
-        "today": today_day,
-        "yesterday": yest_day,
-        "other": other_days[0] if other_days else None,
-        "last_signal": last,
     }
 
 
@@ -351,16 +213,10 @@ def _scan_gap(today: date, yesterday: date, *, lookback: int = LOOKBACK_SESSIONS
 
 def scan_recent_signals(lookback: int = LOOKBACK_SESSIONS) -> dict[str, Any]:
     today = _now_ist().date()
-    from trading.services.fno_live import load_stored_instrument_bars
     from trading.services.intraday_gap import known_gap_sessions
 
     known: set[date] = set(known_gap_sessions())
-    for key in INSTRUMENTS:
-        known.update(_session_dates_from_frame(load_stored_instrument_bars(key)))
     yesterday = previous_session_date(today, known)
-
-    fno_short = _scan_fno_side("short", today, yesterday, lookback=lookback)
-    fno_long = _scan_fno_side("long", today, yesterday, lookback=lookback)
     gap = _scan_gap(today, yesterday, lookback=lookback)
 
     return {
@@ -368,8 +224,6 @@ def scan_recent_signals(lookback: int = LOOKBACK_SESSIONS) -> dict[str, Any]:
         "today": today.isoformat(),
         "yesterday": yesterday.isoformat(),
         "checked_at": timezone.now().isoformat(),
-        "fno_short": fno_short,
-        "fno_long": fno_long,
         "gap": gap,
     }
 
@@ -427,7 +281,7 @@ def _execute() -> None:
         _set_status(
             phase="scanning",
             skipped_fetch=skipped,
-            message="Checking F&O Live, F&O Long, and Gap Open signals…",
+            message="Checking Gap Open signals…",
         )
         signals = scan_recent_signals()
         _set_status(

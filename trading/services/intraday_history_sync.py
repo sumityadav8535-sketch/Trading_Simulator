@@ -1,6 +1,6 @@
 """
 Backfill / refresh stored 5m intraday pickle history for Nifty 100 / Nifty 200
-equities and F&O index proxies (NIFTY / BANKNIFTY) up through the click day (IST).
+equities up through the click day (IST).
 """
 from __future__ import annotations
 
@@ -17,7 +17,6 @@ import yfinance as yf
 from django.utils import timezone
 
 from trading.constants import NIFTY100_INDEX_TICKER
-from trading.services.fno_engine import INSTRUMENTS, normalize_df
 from trading.services.nifty100 import ensure_nifty100_marked, get_nifty100_symbols
 from trading.services.nse_price_sync import yfinance_ticker
 
@@ -26,7 +25,6 @@ logger = logging.getLogger(__name__)
 IST = ZoneInfo("Asia/Kolkata")
 ROOT = Path(__file__).resolve().parent.parent.parent
 EQUITY_DIR = ROOT / "data" / "intraday_5m"
-FNO_DIR = ROOT / "data" / "intraday_fno"
 INDEX_PKL = "_NIFTY100_INDEX.pkl"
 
 # yfinance 5m history is limited (~60 calendar days)
@@ -44,7 +42,6 @@ _status: dict = {
     "target_date": None,
     "progress": {"done": 0, "total": 0},
     "equities": {},
-    "fno": {},
     "error": None,
 }
 
@@ -245,18 +242,17 @@ def equity_symbols_for_sync() -> list[str]:
 
 
 def history_needs_update(target: Optional[date] = None) -> bool:
-    """True when stored 5m equities or F&O pickles are short of `target` (today IST)."""
+    """True when stored 5m equity pickles are short of `target` (today IST)."""
     cov = get_history_coverage()
     want = (target or _target_date()).isoformat()
     if cov.get("target_date") != want:
         return True
-    return bool(cov.get("equities", {}).get("stale") or cov.get("fno", {}).get("stale"))
+    return bool(cov.get("equities", {}).get("stale"))
 
 
 def get_history_coverage() -> dict:
     """Snapshot of stored history date ranges (no network)."""
     EQUITY_DIR.mkdir(parents=True, exist_ok=True)
-    FNO_DIR.mkdir(parents=True, exist_ok=True)
 
     equity_files = sorted(EQUITY_DIR.glob("*.pkl"))
     eq_max = None
@@ -270,16 +266,6 @@ def get_history_coverage() -> dict:
         if dmin and (eq_min is None or dmin < eq_min):
             eq_min = dmin
 
-    fno_info = {}
-    for key in INSTRUMENTS:
-        path = FNO_DIR / f"{key}.pkl"
-        df = _read_pickle(path)
-        fno_info[key] = {
-            "last_date": _last_bar_date(df).isoformat() if _last_bar_date(df) else None,
-            "last_bar": _last_bar_ts(df).isoformat() if _last_bar_ts(df) is not None else None,
-            "bars": int(len(df)),
-        }
-
     target = _target_date()
     return {
         "target_date": target.isoformat(),
@@ -288,15 +274,6 @@ def get_history_coverage() -> dict:
             "first_date": eq_min.isoformat() if eq_min else None,
             "last_date": eq_max.isoformat() if eq_max else None,
             "stale": (eq_max is None) or (eq_max < target),
-        },
-        "fno": {
-            "instruments": fno_info,
-            "stale": any(
-                (info["last_date"] is None) or (date.fromisoformat(info["last_date"]) < target)
-                for info in fno_info.values()
-            )
-            if fno_info
-            else True,
         },
         "sync": get_sync_status(),
     }
@@ -421,80 +398,10 @@ def _sync_equities(target: date, progress_base: int, progress_total: int) -> dic
     return stats
 
 
-def _sync_fno(target: date, progress_done: int, progress_total: int) -> dict:
-    FNO_DIR.mkdir(parents=True, exist_ok=True)
-    stats = {
-        "checked": 0,
-        "updated": 0,
-        "skipped": 0,
-        "bars_added": 0,
-        "errors": [],
-        "instruments": {},
-    }
-
-    for key, meta in INSTRUMENTS.items():
-        stats["checked"] += 1
-        path = FNO_DIR / f"{key}.pkl"
-        hist = _read_pickle(path)
-        before = _last_bar_date(hist)
-        ticker = meta["ticker"]
-        try:
-            if not _needs_update(hist, target):
-                stats["skipped"] += 1
-                stats["instruments"][key] = {
-                    "last_date": before.isoformat() if before else None,
-                    "bars_added": 0,
-                    "skipped": True,
-                }
-                continue
-
-            start = _fetch_start_for(hist, target)
-            raw = _download_single(ticker, start, target)
-            fresh = normalize_df(raw)
-            if fresh.empty:
-                stats["skipped"] += 1
-                stats["instruments"][key] = {
-                    "last_date": before.isoformat() if before else None,
-                    "bars_added": 0,
-                    "skipped": True,
-                    "note": "no fresh data",
-                }
-                continue
-
-            before_n = len(hist)
-            merged = _merge_bars(hist, fresh)
-            merged = merged[merged.index.date <= target]
-            merged.to_pickle(path)
-            added = max(0, len(merged) - before_n)
-            stats["updated"] += 1
-            stats["bars_added"] += added
-            after = _last_bar_date(merged)
-            stats["instruments"][key] = {
-                "last_date": after.isoformat() if after else None,
-                "bars_added": added,
-                "skipped": False,
-            }
-        except Exception as exc:
-            logger.exception("F&O sync failed for %s", key)
-            stats["errors"].append(f"{key}: {exc}")
-            stats["instruments"][key] = {
-                "last_date": before.isoformat() if before else None,
-                "error": str(exc),
-            }
-
-        progress_done += 1
-        _set_status(
-            message=f"Syncing F&O… {key}",
-            progress={"done": progress_done, "total": progress_total},
-        )
-
-    return stats
-
-
 def _execute_sync(target: date) -> dict:
     """Core sync body. Caller must hold `_sync_lock`."""
     equity_count = len(equity_symbols_for_sync())
-    total = equity_count + 1 + len(INSTRUMENTS)
+    total = equity_count + 1
 
     _set_status(
         running=True,
@@ -504,19 +411,16 @@ def _execute_sync(target: date) -> dict:
         target_date=target.isoformat(),
         progress={"done": 0, "total": total},
         equities={},
-        fno={},
         error=None,
     )
 
     try:
         eq_stats = _sync_equities(target, progress_base=0, progress_total=total)
-        fno_stats = _sync_fno(target, progress_done=equity_count + 1, progress_total=total)
 
         result = {
             "ok": True,
             "target_date": target.isoformat(),
             "equities": eq_stats,
-            "fno": fno_stats,
             "coverage": get_history_coverage(),
         }
         _set_status(
@@ -524,12 +428,10 @@ def _execute_sync(target: date) -> dict:
             finished_at=timezone.now().isoformat(),
             message=(
                 f"Done through {target.isoformat()} — "
-                f"equities +{eq_stats.get('bars_added', 0)} bars, "
-                f"F&O +{fno_stats.get('bars_added', 0)} bars"
+                f"equities +{eq_stats.get('bars_added', 0)} bars"
             ),
             progress={"done": total, "total": total},
             equities=eq_stats,
-            fno=fno_stats,
             error=None,
         )
         return result
@@ -546,7 +448,7 @@ def _execute_sync(target: date) -> dict:
 
 def run_intraday_history_sync(target: Optional[date] = None) -> dict:
     """
-    Synchronously fill equity + F&O 5m pickles through `target` (default: today IST).
+    Synchronously fill equity 5m pickles through `target` (default: today IST).
     Concurrent calls are rejected.
     """
     if not _sync_lock.acquire(blocking=False):
@@ -580,7 +482,6 @@ def start_intraday_history_sync_async(target: Optional[date] = None) -> dict:
         target_date=target.isoformat(),
         progress={"done": 0, "total": 0},
         equities={},
-        fno={},
         error=None,
     )
 

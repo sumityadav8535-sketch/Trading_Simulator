@@ -263,7 +263,7 @@
         <div class="logo">TS</div>
         <div>
           <h1>Trading Simulator</h1>
-          <p>Stage · F&amp;O · Paper</p>
+          <p>Stage · Swing · Gap</p>
         </div>
       </div>
 
@@ -283,12 +283,6 @@
         <a href="{% url 'strategy_builder:builder' %}" class="nav-link {% if request.resolver_match.app_name == 'strategy_builder' %}active{% endif %}">
           <span class="nav-dot"></span> Strategy Builder
         </a>
-        <a href="{% url 'fno_live' %}" class="nav-link {% if request.resolver_match.url_name == 'fno_live' %}active{% endif %}">
-          <span class="nav-dot"></span> F&amp;O Live
-        </a>
-        <a href="{% url 'fno_long_live' %}" class="nav-link {% if request.resolver_match.url_name == 'fno_long_live' %}active{% endif %}">
-          <span class="nav-dot"></span> F&amp;O Long
-        </a>
         <a href="{% url 'intraday_gap' %}" class="nav-link {% if request.resolver_match.url_name == 'intraday_gap' %}active{% endif %}">
           <span class="nav-dot"></span> Gap Open
         </a>
@@ -297,9 +291,6 @@
         </a>
         <a href="{% url 'fundamental_swing' %}" class="nav-link {% if request.resolver_match.url_name == 'fundamental_swing' %}active{% endif %}">
           <span class="nav-dot"></span> Fundamental Swing
-        </a>
-        <a href="{% url 'paper_trading' %}" class="nav-link {% if request.resolver_match.url_name == 'paper_trading' %}active{% endif %}">
-          <span class="nav-dot"></span> Paper Trading
         </a>
       </nav>
 
@@ -331,7 +322,7 @@
             <div class="min-w-0 flex-1">
               <p id="auto-refresh-title" class="text-sm font-semibold text-slate-800">Updating 5m history…</p>
               <p id="auto-refresh-msg" class="text-xs text-slate-600 mt-0.5">Fetching remaining bars through today</p>
-              <div id="auto-refresh-signals" class="hidden mt-2 grid gap-2 md:grid-cols-3 text-xs"></div>
+              <div id="auto-refresh-signals" class="hidden mt-2 grid gap-2 text-xs"></div>
             </div>
             <button type="button" id="auto-refresh-dismiss" class="text-slate-400 hover:text-slate-700 text-lg leading-none px-1" title="Hide">×</button>
           </div>
@@ -358,8 +349,6 @@
       if (!banner) return;
 
       const links = {
-        fno_short: { href: "{% url 'fno_live' %}", name: "F&O Live" },
-        fno_long: { href: "{% url 'fno_long_live' %}", name: "F&O Long" },
         gap: { href: "{% url 'intraday_gap' %}", name: "Gap Open" },
       };
 
@@ -442,17 +431,15 @@
           if (p.total) msgEl.textContent = (fetch.message || data.message || "") + " · " + p.done + "/" + p.total;
         }
         const sig = data.signals || {};
-        if (sig.fno_short || sig.fno_long || sig.gap) {
+        if (sig.gap) {
           sigEl.classList.remove("hidden");
-          sigEl.innerHTML = ["fno_short", "fno_long", "gap"]
-            .map(k => strategyCard(k, sig[k] || {}, sig.as_of))
-            .join("");
+          sigEl.innerHTML = strategyCard("gap", sig.gap || {}, sig.as_of);
         } else {
           sigEl.classList.add("hidden");
           sigEl.innerHTML = "";
         }
         if (board) {
-          if (sig.fno_short || sig.fno_long || sig.gap) {
+          if (sig.gap) {
             board.innerHTML = sigEl.innerHTML;
             board.classList.remove("hidden");
           } else {

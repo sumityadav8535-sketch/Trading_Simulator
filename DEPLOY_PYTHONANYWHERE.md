@@ -44,12 +44,6 @@ pip install --no-cache-dir -r requirements-pythonanywhere.txt
 
 **Do not** install full `requirements.txt` on the free plan (scikit-learn + scipy are huge and usually cause **disk quota exceeded**).
 
-If you later upgrade disk space and want F&O ML probabilities:
-
-```bash
-pip install --no-cache-dir scikit-learn
-```
-
 ---
 
 ## 4. Create a secret key

@@ -113,14 +113,13 @@
   <button type="button" id="refresh-now" class="bg-slate-700 hover:bg-slate-600 rounded px-5 py-2">Refresh now</button>
   <button type="button" id="btn-fetch-history"
           class="bg-indigo-700 hover:bg-indigo-600 rounded px-5 py-2 font-medium"
-          title="Download missing 5m bars for Nifty 100 + F&amp;O indices through today">
+          title="Download missing 5m bars for Nifty 100 equities through today">
     Fetch history to today
   </button>
   <div class="flex flex-col gap-0.5 self-center min-w-[14rem]">
     <span id="history-coverage" class="text-xs text-slate-500">
       Stored 5m:
       equities {% if history_coverage.equities.last_date %}→ {{ history_coverage.equities.last_date }}{% else %}none{% endif %}
-      · F&amp;O {% if history_coverage.fno.instruments.NIFTY.last_date %}→ {{ history_coverage.fno.instruments.NIFTY.last_date }}{% else %}none{% endif %}
     </span>
     <span id="history-sync-status" class="text-xs text-slate-400"></span>
   </div>
@@ -362,10 +361,7 @@
     const el = document.getElementById("history-coverage");
     if (!el || !cov) return;
     const eq = cov.equities || {};
-    const fno = (cov.fno && cov.fno.instruments) || {};
-    const nifty = (fno.NIFTY && fno.NIFTY.last_date) || "—";
     el.textContent = "Stored 5m: equities → " + (eq.last_date || "—")
-      + " · F&O → " + nifty
       + (cov.target_date ? " (target " + cov.target_date + ")" : "");
   }
 

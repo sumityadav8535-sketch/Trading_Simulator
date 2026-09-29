@@ -1,6 +1,5 @@
 # Slim install for PythonAnywhere free tier (~512MB disk).
-# Skips scikit-learn/scipy (~150MB+) so the site fits; F&O ML probs
-# simply stay unavailable until you upgrade disk or install sklearn later.
+# Skips scikit-learn/scipy (~150MB+) so the site fits.
 #
 #   pip install --no-cache-dir -r requirements-pythonanywhere.txt
 

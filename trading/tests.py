@@ -588,38 +588,19 @@ class LocalhostAutoRefreshTests(SimpleTestCase):
             date(2026, 8, 27),
         )
 
-    def test_combine_and_last_signal(self):
-        from datetime import date
+    def test_pick_last_signal(self):
+        from trading.services.localhost_auto_refresh import pick_last_signal
 
-        from trading.services.localhost_auto_refresh import combine_fno_days, pick_last_signal
-
-        today = date(2026, 9, 1)
-        yest = date(2026, 8, 31)
-        nifty_flat = {
-            "instrument": "NIFTY",
-            "trades": [],
-            "bars_today": 75,
-            "message": "No trades",
+        today_day = {"date": "2026-09-01", "trade_count": 0, "trades": []}
+        yest_day = {
+            "date": "2026-08-31",
+            "trade_count": 1,
+            "trades": [{"symbol": "RELIANCE", "pnl_inr": 4200}],
         }
-        bn_win = {
-            "instrument": "BANKNIFTY",
-            "trades": [{
-                "side": "SHORT", "result": "WIN", "entry_time": "10:15",
-                "exit_time": "11:00", "pnl_inr": 4200,
-            }],
-            "bars_today": 75,
-            "message": "1 trade",
-        }
-        today_day = combine_fno_days([nifty_flat, nifty_flat], today, "Today")
-        yest_day = combine_fno_days([nifty_flat, bn_win], yest, "Yesterday")
-        self.assertEqual(today_day["trade_count"], 0)
-        self.assertEqual(today_day["status"], "flat")
-        self.assertEqual(yest_day["trade_count"], 1)
-        self.assertEqual(yest_day["wins"], 1)
-        self.assertEqual(yest_day["net_pnl"], 4200)
         last = pick_last_signal([today_day, yest_day])
         self.assertEqual(last["date"], "2026-08-31")
-        self.assertEqual(last["trades"][0]["instrument"], "BANKNIFTY")
+        self.assertEqual(last["trades"][0]["symbol"], "RELIANCE")
+        self.assertIsNone(pick_last_signal([today_day]))
 
     def test_should_fetch_while_market_open(self):
         from datetime import date
@@ -690,6 +671,14 @@ class LocalhostAutoRefreshApiTests(TestCase):
         self.assertContains(resp, "startup-signal-board")
         self.assertContains(resp, "auto-refresh-banner")
         self.assertContains(resp, "api/intraday/startup/")
+        self.assertNotContains(resp, "F&amp;O Live")
+        self.assertNotContains(resp, "F&amp;O Long")
+        self.assertNotContains(resp, "Paper Trading")
+
+    def test_removed_fno_routes_are_gone(self):
+        for path in ("/fno/", "/fno/long/", "/paper/", "/api/fno/signal/", "/api/fno/long/signal/"):
+            resp = self.client.get(path)
+            self.assertEqual(resp.status_code, 404, path)
 
     def test_status_api_does_not_start_in_tests(self):
         from trading.services.localhost_auto_refresh import reset_auto_refresh_for_tests

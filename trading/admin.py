@@ -3,10 +3,6 @@ from django.contrib import admin
 from trading.models import (
     BacktestRun,
     DailyPrice,
-    PaperAccount,
-    PaperEvent,
-    PaperPosition,
-    PaperTrade,
     Signal,
     Stock,
     StrategyConfig,
@@ -53,44 +49,3 @@ class JournalAdmin(admin.ModelAdmin):
 @admin.register(BacktestRun)
 class BacktestRunAdmin(admin.ModelAdmin):
     list_display = ("name", "start_date", "end_date", "win_rate", "profit_factor", "created_at")
-
-
-@admin.register(PaperAccount)
-class PaperAccountAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "is_active",
-        "auto_trade",
-        "cash",
-        "margin_blocked",
-        "realized_pnl",
-        "risk_pct",
-        "updated_at",
-    )
-
-
-@admin.register(PaperPosition)
-class PaperPositionAdmin(admin.ModelAdmin):
-    list_display = ("instrument", "side", "lots", "entry_price", "status", "entry_time")
-    list_filter = ("status", "instrument", "side")
-
-
-@admin.register(PaperTrade)
-class PaperTradeAdmin(admin.ModelAdmin):
-    list_display = (
-        "instrument",
-        "side",
-        "lots",
-        "entry_price",
-        "exit_price",
-        "pnl",
-        "exit_reason",
-        "session_date",
-    )
-    list_filter = ("exit_reason", "instrument", "session_date")
-
-
-@admin.register(PaperEvent)
-class PaperEventAdmin(admin.ModelAdmin):
-    list_display = ("level", "message", "created_at", "account")
-    list_filter = ("level",)
